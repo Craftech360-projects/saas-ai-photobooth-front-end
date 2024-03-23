@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // import React, { useState, useEffect } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import ImageGeneratorForm from "./components/ImageGeneratorForm"; // Adjust the import path as necessary
@@ -95,6 +96,7 @@
 
 // this is for watermark attaching
 
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ImageGeneratorForm from "./components/ImageGeneratorForm"; // Adjust the import path as necessary
@@ -156,7 +158,7 @@ function Page2() {
 
       // Send POST request to image swapping API
       const swapResponse = await fetch(
-        "https://6cac-124-40-247-18.ngrok-free.app/api/swap-face/",
+        "https://7aa8-124-40-247-18.ngrok-free.app/api/swap-face/",
         { method: "POST", body: formData }
       );
 

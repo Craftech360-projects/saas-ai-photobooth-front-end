@@ -1,11 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";// Ensure this path matches the location of your data.json file
 import { supabase } from "./supabaseClient";
 import ImageSelectionForm from "./components/ImageSelectionForm";
-import ImageGeneratorForm from "./components/ImageGeneratorForm";
 
-
-function Page2() {
+function Swap() {
   const [enhance, setEnhance] = useState(false);
   const [targetImage, setTargetImage] = useState(null);
   const navigate = useNavigate();
@@ -30,82 +29,11 @@ function Page2() {
 
   }, [sourceImageBlob, navigate]);
 
-  const selectRandomImage = (imagesArray) => {
-    const randomIndex = Math.floor(Math.random() * imagesArray.length);
-    const selectedImage = imagesArray[randomIndex];
-    setTargetImage(selectedImage);
+  const selectImage = (imagesSrc) => {
+    console.log('imagesSrcccccccccccc', imagesSrc);
+    setTargetImage(imagesSrc);
   };
 
-  // const handleSubmit = async (e) => {
-  //     e.preventDefault();
-
-  //     if (!targetImage) {
-  //       alert("Please select a target image first.");
-  //       return;
-  //     }
-
-  //     const formData = new FormData();
-
-  //     if (sourceImageBlob) {
-  //       formData.append('targetImage', new File([sourceImageBlob], "targetImage.jpg", { type: "image/jpeg" }));
-  //     } else {
-  //       alert("Target image is missing.");
-  //       return;
-  //     }
-
-  //     navigate('/loading');
-
-  //     try {
-  //       const targetImageResponse = await fetch(targetImage);
-  //       if (!targetImageResponse.ok) throw new Error("Failed to fetch target image.");
-  //       const targetImageBlob = await targetImageResponse.blob();
-  //       formData.append('sourceImage', new File([targetImageBlob], "sourceImage.jpg", { type: "image/jpeg" }));
-  //     } catch (error) {
-  //       console.error('Error fetching target image:', error);
-  //       return;
-  //     }
-
-  //     formData.append('enhance', JSON.stringify(enhance));
-
-  //     try {
-  //       const response = await fetch('https://8c66-106-51-185-121.ngrok-free.app/api/swap-face/', {
-  //         method: 'POST',
-  //         body: formData,
-  //       });
-  //       if (!response.ok) {
-  //         throw new Error('Something went wrong with the API call');
-  //       }
-  //     //   const blob = await response.blob();
-  //     const convertedBlob = await convertImageToJPEG(sourceImageBlob);
-
-  //       // Upload the blob to Supabase
-  //     //   const fileName = `${Date.now()}-result.jpg`;
-  //     //   console.log(fileName)
-  //     //   const { error: uploadError } = await supabase.storage.from('uploads').upload(fileName, blob);
-
-  //     // Upload the converted image to Supabase
-  //     const fileName = `swapped-images/${Date.now()}-result.jpg`; // Generate a unique file name
-  //     const { error: uploadError } = await supabase.storage.from('images').upload(fileName, convertedBlob, {
-  //       contentType: 'image/jpeg', // Explicitly set the MIME type
-  //     });
-
-  //       if (uploadError) {
-  //         throw uploadError;
-  //       }
-
-  //       // Retrieve the URL of the uploaded file
-  //       const { publicURL, error: urlError } = supabase.storage.from('images').getPublicUrl(fileName);
-
-  //       if (urlError) {
-  //         throw urlError;
-  //       }
-
-  //       navigate('/result', { state: { resultImageUrl: publicURL } });
-
-  //     } catch (error) {
-  //       console.error('Error:', error);
-  //     }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -132,7 +60,7 @@ function Page2() {
       }
 
       const swapResponse = await fetch(
-        "https://6cac-124-40-247-18.ngrok-free.app/api/swap-face/",
+        "https://7aa8-124-40-247-18.ngrok-free.app/api/swap-face/",
         {
           method: "POST",
           body: formData,
@@ -198,19 +126,23 @@ function Page2() {
     });
   }
 
+  function maleFunction() {
+    alert('hh')
+  }
+
   return (
     <div>
-      <h2>Edit & Swap</h2>
-      {sourceImageUrl && <img src={sourceImageUrl} alt="Captured" style={{ maxWidth: "100%", height: "auto" }} />}
+      {/* <h2>Edit & Swap</h2> */}
+      {/* {sourceImageUrl && <img src={sourceImageUrl} alt="Captured" style={{ maxWidth: "100%", height: "auto" }} />} */}
       <ImageSelectionForm
         handleSubmit={handleSubmit}
         enhance={enhance}
         setEnhance={setEnhance}
-        selectRandomImage={selectRandomImage}
+        selectImage={selectImage}
       />
       {/* <ImageGeneratorForm /> */}
     </div>
   );
 }
 
-export default Page2;
+export default Swap;

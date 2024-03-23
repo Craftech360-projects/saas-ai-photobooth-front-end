@@ -1,7 +1,23 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import captureImageIcon from '/assets/capture.png'; // Import the PNG image
 
-function Page1() {
+const CaptureButton = styled.button`
+  background-image: url(${captureImageIcon});
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  border: none;
+  width: 120px; /* Adjust width and height according to your image dimensions */
+  height: 80px;
+  cursor: pointer;
+  text-indent: -9999px; /* Hide text visually but keep it for accessibility */
+  position: relative;
+  margin-top:90px
+`;
+function Camer() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
@@ -40,21 +56,20 @@ function Page1() {
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     canvas.toBlob(blob => {
-      navigate('/edit', { state: { sourceImage: blob } });
+      navigate('/swap', { state: { sourceImage: blob } });
     }, 'image/jpeg');
   };
 
   return (
-    <div>
-      <h2>Face Swap App</h2>
-      {/* <button onClick={() => setIsCameraOn(!isCameraOn)}>
-        {isCameraOn ? "Turn Camera Off" : "Turn Camera On"}
-      </button> */}
-      {isCameraOn && <video ref={videoRef} autoPlay style={{ display: 'block' }}></video>}
+    <div style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+      {isCameraOn && <video ref={videoRef} autoPlay style={{
+        display: 'block',
+        boxShadow: isCameraOn ? '0 3px 30px rgba(0, 0, 0)' : 'none'
+      }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-      {isCameraOn && <button onClick={captureImage}>Capture Image</button>}
+      {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
     </div>
   );
 }
 
-export default Page1;
+export default Camer;

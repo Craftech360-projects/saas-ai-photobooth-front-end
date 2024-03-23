@@ -1,11 +1,30 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
+import styled, { keyframes } from 'styled-components';
+
+const spinAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  width: 80px;
+  height: 80px;
+  border-radius: 90%;
+  border-top: 9px solid #000;
+  animation: ${spinAnimation} .5s linear infinite;
+`;
+const LoadingText = styled.h2`
+  margin-top: 100px;
+`;
 
 function LoadingPage() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <h2>Processing... Please wait.</h2>
-      {/* You can add a spinner or any loading animation here */}
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+      <Spinner />
+      <LoadingText>Processing... Please wait.</LoadingText>
     </div>
+
   );
 }
 

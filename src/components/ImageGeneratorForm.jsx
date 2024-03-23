@@ -72,8 +72,10 @@
 
 
 
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 
+// eslint-disable-next-line react/prop-types
 function ImageGeneratorForm({ setGeneratedImage }) {
   // State for prompt text and generated image source
   const [promptText, setPromptText] = useState('');
@@ -82,7 +84,7 @@ function ImageGeneratorForm({ setGeneratedImage }) {
   // Function to handle form submission
   const handleGenerateImage = async (e) => {
     e.preventDefault();
-    
+
     // Combining additional text with the input text
     const additionalText = "photorealistic concept art, high quality digital art, cinematic, hyperrealism, photorealism, Nikon D850, 8K., sharp focus, emitting diodes, artillery, motherboard, by pascal blanche rutkowski repin artstation hyperrealism painting concept art of detailed character design matte painting, 4 k resolution, "; // Add your additional text here
     const fullPromptText = additionalText + promptText;
