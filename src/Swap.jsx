@@ -60,7 +60,7 @@ function Swap() {
       }
 
       const swapResponse = await fetch(
-        "https://7aa8-124-40-247-18.ngrok-free.app/api/swap-face/",
+        "https://08af-124-40-247-18.ngrok-free.app/api/swap-face/",
         {
           method: "POST",
           body: formData,

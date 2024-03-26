@@ -1,81 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 // Sample modified data structure
-const imageData = {
-  male: {
-    male_1: {
-      male_1A: "/male_1a.jpeg",
-      male_1B: "/male_1b.jpeg",
-      male_1C: "/male_1c.jpeg",
-      male_1D: "/male_1d.jpeg",
-      male_1E: "/male_1e.jpeg",
-      male_1F: "/male_1f.jpeg",
-    },
-    male_2: {
-      male_2A: "/bb3.jpeg",
-      male_2B: "/bb4.jpeg",
-      male_2C: "/bb4.jpeg",
-      male_2D: "/bb4.jpeg",
-      male_2E: "/bb4.jpeg",
-      male_2F: "/bb4.jpeg",
-    },
-    male_3: {
-      male_3A: "/bb1.jpeg",
-      male_3B: "/bb1.jpeg",
-      male_3C: "/bb1.jpeg",
-      male_3D: "/bb1.jpeg",
-      male_3E: "/bb2.jpeg",
-      male_3F: "/bb2.jpeg",
-    },
-    male_4: {
-      male_4A: "/bb1.jpeg",
-      male_4B: "/bb1.jpeg",
-      male_4C: "/bb1.jpeg",
-      male_4D: "/bb1.jpeg",
-      male_4F: "/bb3.jpeg",
-      male_4G: "/bb4.jpeg",
-    },
-  },
-  female: {
-    female_1: {
-      female_1A: "/bb1.jpeg",
-      female_1B: "/bb1.jpeg",
-      female_1C: "/bb1.jpeg",
-      female_1D: "/bb1.jpeg",
-      female_1F: "/bb3.jpeg",
-      female_1G: "/bb4.jpeg",
-    },
-    female_2: {
-      female_2A: "/bb1.jpeg",
-      female_2B: "/bb1.jpeg",
-      female_2C: "/bb1.jpeg",
-      female_2D: "/bb1.jpeg",
-      female_2F: "/bb3.jpeg",
-      female_2G: "/bb4.jpeg",
-    },
-    female_3: {
-      female_3A: "/bb1.jpeg",
-      female_3B: "/bb1.jpeg",
-      female_3C: "/bb1.jpeg",
-      female_3D: "/bb1.jpeg",
-      female_3F: "/bb3.jpeg",
-      female_3G: "/bb4.jpeg",
-    },
-    female_4: {
-      female_4A: "/bb1.jpeg",
-      female_4B: "/bb1.jpeg",
-      female_4C: "/bb1.jpeg",
-      female_4D: "/bb1.jpeg",
-      female_4F: "/bb3.jpeg",
-      female_4G: "/bb4.jpeg",
-    },
-  },
-};
 
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import maleImage from '/assets/male.png';
-import femaleImage from '/assets/female.png';
+import imageData from '../imageData.json'
+import buttonBg from '../../public/ai.png'
 function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) {
   const [gender, setGender] = useState('');
   const [character, setCharacter] = useState('');
@@ -130,102 +60,121 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  const genderImages = {
-    male: maleImage,
-    female: femaleImage,
-  };
-  const GenderContainer = styled.div`
-  width: 315px;
-  height:315px;
-  cursor: pointer;
-  margin:9px;
-  background-image: ${({ genderOption }) => `url(${genderImages[genderOption]})`};
-`;
-
-  function getImageUrl(characterName) {
-    console.log(characterName);
+  function getImageUrl(imageName) {
+    console.log(imageName);
     // Assuming you have images named according to character names, for example, "character1.jpg", "character2.jpg", etc.
-    return `/${characterName.toLowerCase().replace(/\s+/g, '-')}.jpeg`;
+    return `/${imageName.toLowerCase().replace(/\s+/g, '-')}.jpeg`;
   }
+
+  const GenderContainer = styled.div`
+  width: 228px;
+  height:228px;
+  cursor: pointer;
+  border-radius: 21px;
+  background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
+`;
 
   // Define styled component for CardContainer
   const CharacterContainer = styled.div`
-  width: 200px;
-  height: 300px;
+  width: 228px;
+  height: 228px;
   background-size: cover;
   background-repeat: no-repeat;
-  border-radius: 8px;
-  margin: 10px;
+  border-radius: 21px;
   cursor: pointer;
   /* Set background image based on character name */
-  background-image: ${({ characterName }) => `url(${getImageUrl(characterName)})`};
+  background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
 `;
 
   // Define styled component for CardContainer
   const LocationContainer = styled.div`
-width: 200px;
-height: 300px;
+width: 228px;
+height: 228px;
 background-size: cover;
 background-repeat: no-repeat;
-border-radius: 8px;
-margin: 10px;
+border-radius: 21px;
 cursor: pointer;
 /* Set background image based on character name */
-background-image: ${({ characterName }) => `url(${getImageUrl(characterName)})`};
+background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
 `;
 
   return (
     <form onSubmit={enhancedSubmit} style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+
       {gender === '' && (
-        <div style={{ display: 'flex' }}>
+        <div style={{
+          display: 'flex',
+          width: '50vw',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
           {Object.keys(imageData).map((genderOption) => (
-            <GenderContainer
-              key={genderOption}
-              genderOption={genderOption}
-              onClick={() => handleGenderChange({ target: { value: genderOption } })}
-            >
-            </GenderContainer>
+            <div key={genderOption} style={{ margin: '10px', textAlign: 'center' }}>
+              <GenderContainer
+                imageName={genderOption}
+                onClick={() => handleGenderChange({ target: { value: genderOption } })}
+              />
+              <p>{genderOption}</p>
+            </div>
           ))}
         </div>
       )}
 
+
       {gender !== '' && character === '' && (
-        <div style={{ display: 'flex' }}>
-          {Object.keys(imageData[gender]).map((characterOption) => (
-            <CharacterContainer
-              key={characterOption}
-              characterName={characterOption}
-              onClick={() => handleCharacterChange({ target: { value: characterOption } })}
-            >
-            </CharacterContainer>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '50vw' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {Object.keys(imageData[gender]).map((characterOption, index) => (
+              <div key={characterOption} style={{ margin: '10px' }}>
+                <CharacterContainer
+                  imageName={characterOption}
+                  onClick={() => handleCharacterChange({ target: { value: characterOption } })}
+                />
+                <p>{characterOption}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {character !== '' && (
-        <div style={{ display: 'flex' }}>
-          {Object.keys(locations).map((locationOption) => (
-            <LocationContainer
-              type="submit"
-              key={locationOption}
-              onClick={() => handleLocationChange({ target: { value: locationOption } })}
-              characterName={locationOption}>
-            </LocationContainer>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '68vw' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {Object.keys(locations).map((locationOption) => (
+              <div key={locationOption} style={{ margin: '10px' }}>
+                <LocationContainer
+                  type="submit"
+                  imageName={locationOption}
+                  onClick={() => handleLocationChange({ target: { value: locationOption } })}
+                />
+                <p>{locationOption}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* <label>
-          <input
-            type="checkbox"
-            checked={enhance}
-            onChange={(e) => setEnhance(e.target.checked)}
-          />
-          Enhance Image
-        </label> */}
+
       {magic !== '' && (
-        <button type="submit">Swap Faces</button>
+        <button
+          type="submit"
+          style={{
+            backgroundImage: `url(${buttonBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            width: '250px', // Adjust width as needed
+            height: '80px', // Adjust height as needed
+            border: 'none',
+            cursor: 'pointer', // Show pointer cursor on hover
+            borderRadius: '9px',
+            position: 'absolute'
+          }}
+        >
+        </button>
       )}
+
     </form>
 
 
