@@ -64,7 +64,10 @@ function Camer() {
     <div style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       {isCameraOn && <video ref={videoRef} autoPlay style={{
         display: 'block',
-        boxShadow: isCameraOn ? '0 3px 30px rgba(0, 0, 0)' : 'none'
+        boxShadow: isCameraOn ? '0 3px 30px rgba(0, 0, 0)' : 'none',
+        aspectRatio:'1920 / 1080',
+        objectFit:'cover',
+        width:'800px'
       }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}

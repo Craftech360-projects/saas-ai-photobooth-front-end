@@ -17,13 +17,13 @@ function Result() {
     <div>
       {resultImageUrl ? (
         <div style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-          <img src={resultImageUrl} alt="Swapped Result" style={{ maxWidth: '30%', height: 'auto' }} />
+          <img src={resultImageUrl} alt="Swapped Result" style={{ maxWidth: '100%', height: '60vh' }} />
           {/* Additional content or actions related to the result */}
           <div style={{ marginTop: '20px' }}>
-            <h3>Scan QR Code to View Image</h3>
-            <QRCode value={resultImageUrl} size={228} />
+            <h3 style={{color:'#fff'}}>Scan QR Code to View Image</h3>
+            <QRCode value={resultImageUrl} size={228} onClick={goHome} />
           </div>
-          <button onClick={goHome} style={{ width: '70px', border: 'none', height: '30px', position: 'absolute', bottom: '30px', cursor: 'pointer' }}>HOME</button>
+          {/* <button  style={{ width: '70px', border: 'none', height: '30px', position: 'absolute', bottom: '30px', cursor: 'pointer' }}>HOME</button> */}
         </div>
       ) : (
         <p>No image found. Please go back and try again.</p>

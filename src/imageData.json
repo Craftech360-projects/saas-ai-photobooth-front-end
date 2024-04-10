@@ -1,113 +1,21 @@
 {
-  "male": {
-    "male_1": {
-      "male_1A": "/male_1a.jpeg",
-      "male_1B": "/male_1b.jpeg",
-      "male_1C": "/male_1c.jpeg",
-      "male_1D": "/male_1d.jpeg",
-      "male_1E": "/male_1e.jpeg",
-      "male_1F": "/male_1f.jpeg",
-      "male_1G": "/male_1g.jpeg"
+
+  "wizcraft_demo": {
+    "gala": {
+      "gala_male": "/gala_male.jpeg",
+      "gala_female": "/gala_female.jpeg"
     },
-    "male_2": {
-      "male_2A": "/bb3.jpeg",
-      "male_2B": "/bb4.jpeg",
-      "male_2C": "/bb4.jpeg",
-      "male_2D": "/bb4.jpeg",
-      "male_2E": "/bb4.jpeg",
-      "male_2F": "/bb4.jpeg"
+    "gq": {
+      "gq_male": "/gq_male.jpeg",
+      "gq_female": "/gq_female.jpeg"
+    }, 
+    "osacar": {
+      "osacar_male": "/osacar_male.jpeg",
+      "osacar_female": "/osacar_female.jpeg"
     },
-    "male_3": {
-      "male_3A": "/bb1.jpeg",
-      "male_3B": "/bb1.jpeg",
-      "male_3C": "/bb1.jpeg",
-      "male_3D": "/bb1.jpeg",
-      "male_3E": "/bb2.jpeg",
-      "male_3F": "/bb2.jpeg"
-    },
-    "male_4": {
-      "male_4A": "/bb1.jpeg",
-      "male_4B": "/bb1.jpeg",
-      "male_4C": "/bb1.jpeg",
-      "male_4D": "/bb1.jpeg",
-      "male_4F": "/bb3.jpeg",
-      "male_4G": "/bb4.jpeg"
-    },
-    "male_5": {
-      "male_4A": "/bb1.jpeg",
-      "male_4B": "/bb1.jpeg",
-      "male_4C": "/bb1.jpeg",
-      "male_4D": "/bb1.jpeg",
-      "male_4F": "/bb3.jpeg",
-      "male_4G": "/bb4.jpeg"
-    }
-  },
-  "other": {
-    "male_1": {
-      "male_1A": "/male_1a.jpeg",
-      "male_1B": "/male_1b.jpeg",
-      "male_1C": "/male_1c.jpeg",
-      "male_1D": "/male_1d.jpeg",
-      "male_1E": "/male_1e.jpeg",
-      "male_1F": "/male_1f.jpeg"
-    },
-    "male_2": {
-      "male_2A": "/bb3.jpeg",
-      "male_2B": "/bb4.jpeg",
-      "male_2C": "/bb4.jpeg",
-      "male_2D": "/bb4.jpeg",
-      "male_2E": "/bb4.jpeg",
-      "male_2F": "/bb4.jpeg"
-    },
-    "male_3": {
-      "male_3A": "/bb1.jpeg",
-      "male_3B": "/bb1.jpeg",
-      "male_3C": "/bb1.jpeg",
-      "male_3D": "/bb1.jpeg",
-      "male_3E": "/bb2.jpeg",
-      "male_3F": "/bb2.jpeg"
-    },
-    "male_4": {
-      "male_4A": "/bb1.jpeg",
-      "male_4B": "/bb1.jpeg",
-      "male_4C": "/bb1.jpeg",
-      "male_4D": "/bb1.jpeg",
-      "male_4F": "/bb3.jpeg",
-      "male_4G": "/bb4.jpeg"
-    }
-  },
-  "female": {
-    "female_1": {
-      "female_1A": "/bb1.jpeg",
-      "female_1B": "/bb1.jpeg",
-      "female_1C": "/bb1.jpeg",
-      "female_1D": "/bb1.jpeg",
-      "female_1F": "/bb3.jpeg",
-      "female_1G": "/bb4.jpeg"
-    },
-    "female_2": {
-      "female_2A": "/bb1.jpeg",
-      "female_2B": "/bb1.jpeg",
-      "female_2C": "/bb1.jpeg",
-      "female_2D": "/bb1.jpeg",
-      "female_2F": "/bb3.jpeg",
-      "female_2G": "/bb4.jpeg"
-    },
-    "female_3": {
-      "female_3A": "/bb1.jpeg",
-      "female_3B": "/bb1.jpeg",
-      "female_3C": "/bb1.jpeg",
-      "female_3D": "/bb1.jpeg",
-      "female_3F": "/bb3.jpeg",
-      "female_3G": "/bb4.jpeg"
-    },
-    "female_4": {
-      "female_4A": "/bb1.jpeg",
-      "female_4B": "/bb1.jpeg",
-      "female_4C": "/bb1.jpeg",
-      "female_4D": "/bb1.jpeg",
-      "female_4F": "/bb3.jpeg",
-      "female_4G": "/bb4.jpeg"
+    "iifa": {
+      "iifa_male": "/iifa_male.jpeg",
+      "iifa_female": "/iifa_female.jpeg"
     }
   }
 }
