@@ -24,7 +24,7 @@ function LoadingPage() {
       {/* <Spinner />
       <LoadingText>Processing... Please wait.</LoadingText> */}
       {/* <video style={{ height: '100vh', width: '100%' }} src="/public/loading.mp4" loop autoPlay></video> */}
-      <img src="/public/load.gif" alt="" style={{ width: '800px' }} />
+      <img src="/public/assets/Loading.gif" alt="" style={{ height: '100vh', width: '100vw' }} />
     </div>
 
   );

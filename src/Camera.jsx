@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import captureImageIcon from '/assets/capture.png'; // Import the PNG image
+import captureImageIcon from '/assets/cp.png'; // Import the PNG image
 
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
@@ -10,12 +10,12 @@ const CaptureButton = styled.button`
   background-size: contain;
   background-color: transparent;
   border: none;
-  width: 120px; /* Adjust width and height according to your image dimensions */
-  height: 80px;
+  width: 100px; /* Adjust width and height according to your image dimensions */
+  height: 100px;
   cursor: pointer;
   text-indent: -9999px; /* Hide text visually but keep it for accessibility */
   position: relative;
-  margin-top:90px
+  margin-top:40px;
 `;
 function Camer() {
   const videoRef = useRef(null);
@@ -67,7 +67,8 @@ function Camer() {
         boxShadow: isCameraOn ? '0 3px 30px rgba(0, 0, 0)' : 'none',
         aspectRatio:'1920 / 1080',
         objectFit:'cover',
-        width:'800px'
+        width:'800px',
+        boxShadow: 'rgb(12 245 250) 0px 0px 20px'
       }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}

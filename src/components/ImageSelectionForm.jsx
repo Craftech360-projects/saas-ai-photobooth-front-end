@@ -77,20 +77,21 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
   }
 
   const GenderContainer = styled.div`
-  width: 400px;
-height: 400px;
+  width: 180px;
+height: 180px;
 background-size: 100% 100%;
 background-repeat: no-repeat;
 background-position:center;
 border-radius: 21px;
 cursor: pointer;
   background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
+  
 `;
 
   // Define styled component for CardContainer
   const CharacterContainer = styled.div`
-  width: 300px;
-  height: 300px;
+  width: 180px;
+  height: 180px;
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 21px;
@@ -101,15 +102,15 @@ cursor: pointer;
 
   // Define styled component for CardContainer
   const LocationContainer = styled.div`
-width: 280px;
-height: 280px;
+width: 180px;
+height: 180px;
 background-size: 100% 100%;
 background-repeat: no-repeat;
 background-position:center;
 border-radius: 21px;
 cursor: pointer;
 /* Set background image based on character name */
-background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
+background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
 `;
 
   return (
@@ -118,17 +119,19 @@ background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
       {gender === '' && (
         <div style={{
           display: 'flex',
-          width: '60vw',
+          flexDirection:'row',
+          width: '100vw',
           alignItems: 'center',
           flexWrap: 'wrap',
           justifyContent: 'center',
         }}>
-          {/* <h1 style={{ position: 'absolute', top: '20%',fontSize:'50px' }}>Select Your Universe</h1> */}
+          <h1 style={{ position: 'absolute', top: '20%',fontSize:'35px',color:'#fff' ,textTransform: 'uppercase'}}>Select Your Universe</h1>
           {Object.keys(imageData).map((genderOption) => (
             <div key={genderOption} style={{ margin: '40px', textAlign: 'center' }}>
               <GenderContainer
                 imageName={genderOption}
                 onClick={() => handleGenderChange({ target: { value: genderOption } })}
+                style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
               />
               <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
             </div>
@@ -138,14 +141,23 @@ background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
 
 
       {gender !== '' && character === '' && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw', paddingTop: '250px' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {/* <h1 style={{ position: 'absolute', top: '20%',fontSize:'50px' }}>Select Your Character</h1> */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw' }}>
+          <div style={{ 
+          display: 'flex',
+          flexDirection:'row',
+          width: '100vw',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+          >
+            <h1 style={{ position: 'absolute', top: '20%',fontSize:'35px',color:'#fff' ,textTransform: 'uppercase' }}>Select Your Character</h1>
             {Object.keys(imageData[gender]).map((characterOption, index) => (
               <div key={characterOption} style={{ margin: '30px', textAlign: 'center' }}>
                 <CharacterContainer
                   imageName={characterOption}
                   onClick={() => handleCharacterChange({ target: { value: characterOption } })}
+                  style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
                 />
                 <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{characterOption.replace(/_/g, ' ')}</p>
               </div>
@@ -155,15 +167,23 @@ background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
       )}
 
       {character !== '' && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90vw', paddingTop: '250px' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-          {/* <h1 style={{ position: 'absolute', top: '20%',fontSize:'50px' }}>Select Your Location</h1> */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw' }}>
+          <div style={{ 
+         display: 'flex',
+         flexDirection:'row',
+         width: '100vw',
+         alignItems: 'center',
+         flexWrap: 'wrap',
+         justifyContent: 'center',
+          }}>
+          <h1 style={{ position: 'absolute', top: '20%',fontSize:'35px',color:'#fff' ,textTransform: 'uppercase' }}>Select Your Location</h1>
             {Object.keys(locations).map((locationOption) => (
               <div key={locationOption} style={{ margin: '20px' }}>
                 <LocationContainer
                   type="submit"
                   imageName={locationOption}
                   onClick={(e) => handleLocationChange(e, locationOption)}
+                  style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
                 />
                 <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{locationOption.replace(/_/g, ' ')}</p>
               </div>

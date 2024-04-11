@@ -1,4 +1,5 @@
-"dc": {
+{
+  "dc": {
     "aquaman": {
       "burj_khalifa": "/burj_khalifa_aquaman.jpg",
       "eiffel_tower": "/eiffel_tower_aquaman.jpg",
@@ -248,4 +249,5 @@
       "sahara_desert": "/sahara_desert_zeus.jpg",
       "taj_mahal": "/taj_mahal_zeus.jpg"
     }
-  },
+  }
+}
