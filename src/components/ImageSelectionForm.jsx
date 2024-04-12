@@ -3,7 +3,7 @@
 // Sample modified data structure
 
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled , { css }  from 'styled-components';
 import imageData from '../imageData.json'
 import buttonBg from '../../public/ai.png'
 function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) {
@@ -12,29 +12,44 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
   const [magic, setMagic] = useState('');
   const [location, setLocation] = useState('');
   const [locations, setLocations] = useState({});
-
-  const handleGenderChange = (e) => {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [imageClicked, setImageClicked] = useState(false);
+  const handleGenderChange = (e,index) => {
+    setActiveIndex(index);
+    setTimeout(() => {
+      console.log(index);
     setGender(e.target.value);
     setCharacter('');
     setLocation('');
     setLocations({});
+    setActiveIndex(null)
+    }, 600);
   };
 
-  const handleCharacterChange = (e) => {
+  const handleCharacterChange = (e,index) => {
+    setActiveIndex(index);
+    setTimeout(() => {
     setCharacter(e.target.value);
     const selectedCharacterLocations = imageData[gender][e.target.value];
     setLocations(selectedCharacterLocations);
     setLocation('');
+    setActiveIndex(null)
+  }, 600);
   };
 
-  const handleLocationChange = (e, locationOption) => {
+  const handleLocationChange = (e, locationOption,index) => {
+    setActiveIndex(index);
+    setTimeout(() => {
     e.preventDefault(); // Prevent form submission
     // setLocation(locationOption); // Set the selected location
+    setImageClicked(true);
     setEnhance(true); // Set enhance to true
     selectImage(locations[locationOption]); // Select the corresponding image setLocation(e.target.value);
     setLocations({});
     setMagic(e.target.value);
     setLocations({});
+    setActiveIndex(null)
+  }, 600);
   };
 
   const enhancedSubmit = (e) => {
@@ -85,7 +100,11 @@ background-position:center;
 border-radius: 21px;
 cursor: pointer;
   background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
-  
+  transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+
+  ${({ active }) => active && css`
+    transform: scale(1.15);
+  `}
 `;
 
   // Define styled component for CardContainer
@@ -98,6 +117,11 @@ cursor: pointer;
   cursor: pointer;
   /* Set background image based on character name */
   background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
+  transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+
+  ${({ active }) => active && css`
+    transform: scale(1.15);
+  `}
 `;
 
   // Define styled component for CardContainer
@@ -111,6 +135,11 @@ border-radius: 21px;
 cursor: pointer;
 /* Set background image based on character name */
 background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
+transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+
+${({ active }) => active && css`
+  transform: scale(1.15);
+`}
 `;
 
   return (
@@ -126,11 +155,12 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
           justifyContent: 'center',
         }}>
           <h1 style={{ position: 'absolute', top: '20%',fontSize:'35px',color:'#fff' ,textTransform: 'uppercase'}}>Select Your Universe</h1>
-          {Object.keys(imageData).map((genderOption) => (
+          {Object.keys(imageData).map((genderOption,index) => (
             <div key={genderOption} style={{ margin: '40px', textAlign: 'center' }}>
               <GenderContainer
+               active={index === activeIndex} 
                 imageName={genderOption}
-                onClick={() => handleGenderChange({ target: { value: genderOption } })}
+                onClick={() => handleGenderChange({ target: { value: genderOption } },index)}
                 style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
               />
               <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
@@ -155,8 +185,9 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
             {Object.keys(imageData[gender]).map((characterOption, index) => (
               <div key={characterOption} style={{ margin: '30px', textAlign: 'center' }}>
                 <CharacterContainer
+                 active={index === activeIndex} 
                   imageName={characterOption}
-                  onClick={() => handleCharacterChange({ target: { value: characterOption } })}
+                  onClick={() => handleCharacterChange({ target: { value: characterOption } },index)}
                   style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
                 />
                 <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{characterOption.replace(/_/g, ' ')}</p>
@@ -176,13 +207,16 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
          flexWrap: 'wrap',
          justifyContent: 'center',
           }}>
-          <h1 style={{ position: 'absolute', top: '20%',fontSize:'35px',color:'#fff' ,textTransform: 'uppercase' }}>Select Your Location</h1>
-            {Object.keys(locations).map((locationOption) => (
+          {!imageClicked && ( // Render the h1 only if imageClicked is false
+        <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', color: '#fff', textTransform: 'uppercase' }}>Select Your Location</h1>
+      )}
+            {Object.keys(locations).map((locationOption,index) => (
               <div key={locationOption} style={{ margin: '20px' }}>
                 <LocationContainer
+                active={index === activeIndex} 
                   type="submit"
                   imageName={locationOption}
-                  onClick={(e) => handleLocationChange(e, locationOption)}
+                  onClick={(e) => handleLocationChange(e, locationOption,index)}
                   style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
                 />
                 <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{locationOption.replace(/_/g, ' ')}</p>
