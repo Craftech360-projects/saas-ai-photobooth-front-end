@@ -29,7 +29,8 @@ body {
   overflow: hidden;
   display: flex;
   place-items: center;
-  background-image: url("/public/assets/wizcraft.jpg");
+  /* background-color: #eeeee4; */
+  background-image: url("/public/assets/exotel.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size:cover;

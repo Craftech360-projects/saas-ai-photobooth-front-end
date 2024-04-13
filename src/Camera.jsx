@@ -3,7 +3,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import captureImageIcon from '/assets/cp.png'; // Import the PNG image
-
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
   background-repeat: no-repeat;
@@ -50,9 +49,7 @@ function Camer() {
   }, [isCameraOn]);
 
   const captureImage = () => {
-    setFlash(true);
     setTimeout(() => {
-      setFlash(false);
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
       const video = videoRef.current;
@@ -60,13 +57,21 @@ function Camer() {
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
       canvas.toBlob(blob => {
-        navigate('/swap', { state: { sourceImage: blob } });
+        // Add animation before navigation
+        const section = document.querySelector('section');
+        if (section) {
+          section.classList.add('animate__animated', 'animate__bounceOut');
+          setTimeout(() => {
+            navigate('/swap', { state: { sourceImage: blob } });
+          }, 1000); // Adjust timing as needed
+        }
       }, 'image/jpeg');
     }, 200);
   };
-
+  
+  // 'animate__animated animate__bounceOut'
   return (
-    <div style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <section style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
     <div
         style={{
           position: 'fixed',
@@ -86,11 +91,11 @@ function Camer() {
         aspectRatio:'1920 / 1080',
         objectFit:'cover',
         width:'800px',
-        boxShadow: 'rgb(12 245 250) 0px 0px 20px'
+        boxShadow: '#4cb95f 0px 0px 20px'
       }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
-    </div>
+    </section>
   );
 }
 

@@ -100,11 +100,6 @@ background-position:center;
 border-radius: 21px;
 cursor: pointer;
   background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
-  transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
-
-  ${({ active }) => active && css`
-    transform: scale(1.15);
-  `}
 `;
 
   // Define styled component for CardContainer
@@ -117,11 +112,6 @@ cursor: pointer;
   cursor: pointer;
   /* Set background image based on character name */
   background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
-  transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
-
-  ${({ active }) => active && css`
-    transform: scale(1.15);
-  `}
 `;
 
   // Define styled component for CardContainer
@@ -135,11 +125,6 @@ border-radius: 21px;
 cursor: pointer;
 /* Set background image based on character name */
 background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
-transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
-
-${({ active }) => active && css`
-  transform: scale(1.15);
-`}
 `;
 
   return (
@@ -158,6 +143,7 @@ ${({ active }) => active && css`
           {Object.keys(imageData).map((genderOption,index) => (
             <div key={genderOption} style={{ margin: '40px', textAlign: 'center' }}>
               <GenderContainer
+               className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
                active={index === activeIndex} 
                 imageName={genderOption}
                 onClick={() => handleGenderChange({ target: { value: genderOption } },index)}
@@ -185,6 +171,7 @@ ${({ active }) => active && css`
             {Object.keys(imageData[gender]).map((characterOption, index) => (
               <div key={characterOption} style={{ margin: '30px', textAlign: 'center' }}>
                 <CharacterContainer
+                className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
                  active={index === activeIndex} 
                   imageName={characterOption}
                   onClick={() => handleCharacterChange({ target: { value: characterOption } },index)}
@@ -213,6 +200,7 @@ ${({ active }) => active && css`
             {Object.keys(locations).map((locationOption,index) => (
               <div key={locationOption} style={{ margin: '20px' }}>
                 <LocationContainer
+                className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
                 active={index === activeIndex} 
                   type="submit"
                   imageName={locationOption}
@@ -230,6 +218,7 @@ ${({ active }) => active && css`
       {magic !== '' && (
         <button
           type="submit"
+          className='animate__animated animate__pulse animate__infinite	infinite'
           style={{
             backgroundImage: `url(${buttonBg})`,
             backgroundSize: 'cover',
