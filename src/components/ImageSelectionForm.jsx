@@ -3,7 +3,7 @@
 // Sample modified data structure
 
 import React, { useState, useEffect } from 'react';
-import styled , { css }  from 'styled-components';
+import styled, { css } from 'styled-components';
 import imageData from '../imageData.json'
 import buttonBg from '../../public/ai.png'
 function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) {
@@ -14,42 +14,42 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
   const [locations, setLocations] = useState({});
   const [activeIndex, setActiveIndex] = useState(null);
   const [imageClicked, setImageClicked] = useState(false);
-  const handleGenderChange = (e,index) => {
+  const handleGenderChange = (e, index) => {
     setActiveIndex(index);
     setTimeout(() => {
       console.log(index);
-    setGender(e.target.value);
-    setCharacter('');
-    setLocation('');
-    setLocations({});
-    setActiveIndex(null)
+      setGender(e.target.value);
+      setCharacter('');
+      setLocation('');
+      setLocations({});
+      setActiveIndex(null)
     }, 600);
   };
 
-  const handleCharacterChange = (e,index) => {
+  const handleCharacterChange = (e, index) => {
     setActiveIndex(index);
     setTimeout(() => {
-    setCharacter(e.target.value);
-    const selectedCharacterLocations = imageData[gender][e.target.value];
-    setLocations(selectedCharacterLocations);
-    setLocation('');
-    setActiveIndex(null)
-  }, 600);
+      setCharacter(e.target.value);
+      const selectedCharacterLocations = imageData[gender][e.target.value];
+      setLocations(selectedCharacterLocations);
+      setLocation('');
+      setActiveIndex(null)
+    }, 600);
   };
 
-  const handleLocationChange = (e, locationOption,index) => {
+  const handleLocationChange = (e, locationOption, index) => {
     setActiveIndex(index);
     setTimeout(() => {
-    e.preventDefault(); // Prevent form submission
-    // setLocation(locationOption); // Set the selected location
-    setImageClicked(true);
-    setEnhance(true); // Set enhance to true
-    selectImage(locations[locationOption]); // Select the corresponding image setLocation(e.target.value);
-    setLocations({});
-    setMagic(e.target.value);
-    setLocations({});
-    setActiveIndex(null)
-  }, 600);
+      e.preventDefault(); // Prevent form submission
+      // setLocation(locationOption); // Set the selected location
+      setImageClicked(true);
+      setEnhance(true); // Set enhance to true
+      selectImage(locations[locationOption]); // Select the corresponding image setLocation(e.target.value);
+      setLocations({});
+      setMagic(e.target.value);
+      setLocations({});
+      setActiveIndex(null)
+    }, 600);
   };
 
   const enhancedSubmit = (e) => {
@@ -133,23 +133,23 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
       {gender === '' && (
         <div style={{
           display: 'flex',
-          flexDirection:'row',
+          flexDirection: 'row',
           width: '100vw',
           alignItems: 'center',
           flexWrap: 'wrap',
           justifyContent: 'center',
         }}>
-          <h1 style={{ position: 'absolute', top: '20%',fontSize:'35px',color:'#fff' ,textTransform: 'uppercase'}}>Select Your Universe</h1>
-          {Object.keys(imageData).map((genderOption,index) => (
+          <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' }}>Select Your Universe</h1>
+          {Object.keys(imageData).map((genderOption, index) => (
             <div key={genderOption} style={{ margin: '40px', textAlign: 'center' }}>
               <GenderContainer
-               className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
-               active={index === activeIndex} 
+                className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
+                active={index === activeIndex}
                 imageName={genderOption}
-                onClick={() => handleGenderChange({ target: { value: genderOption } },index)}
-                style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
+                onClick={() => handleGenderChange({ target: { value: genderOption } }, index)}
+                style={{ boxShadow: '#4cb95f 0px 0px 10px' }}
               />
-              <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
+              <p style={{ textTransform: 'uppercase', }}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
             </div>
           ))}
         </div>
@@ -158,26 +158,26 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
 
       {gender !== '' && character === '' && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw' }}>
-          <div style={{ 
-          display: 'flex',
-          flexDirection:'row',
-          width: '100vw',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            width: '100vw',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
           >
-            <h1 style={{ position: 'absolute', top: '20%',fontSize:'35px',color:'#fff' ,textTransform: 'uppercase' }}>Select Your Character</h1>
+            <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' }}>Select Your Character</h1>
             {Object.keys(imageData[gender]).map((characterOption, index) => (
               <div key={characterOption} style={{ margin: '30px', textAlign: 'center' }}>
                 <CharacterContainer
-                className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
-                 active={index === activeIndex} 
+                  className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
+                  active={index === activeIndex}
                   imageName={characterOption}
-                  onClick={() => handleCharacterChange({ target: { value: characterOption } },index)}
-                  style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
+                  onClick={() => handleCharacterChange({ target: { value: characterOption } }, index)}
+                  style={{ boxShadow: '#4cb95f 0px 0px 10px' }}
                 />
-                <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{characterOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase' }}>{characterOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>
@@ -186,28 +186,28 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
 
       {character !== '' && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw' }}>
-          <div style={{ 
-         display: 'flex',
-         flexDirection:'row',
-         width: '100vw',
-         alignItems: 'center',
-         flexWrap: 'wrap',
-         justifyContent: 'center',
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            width: '100vw',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
           }}>
-          {!imageClicked && ( // Render the h1 only if imageClicked is false
-        <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', color: '#fff', textTransform: 'uppercase' }}>Select Your Location</h1>
-      )}
-            {Object.keys(locations).map((locationOption,index) => (
+            {!imageClicked && ( // Render the h1 only if imageClicked is false
+              <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' }}>Select Your Location</h1>
+            )}
+            {Object.keys(locations).map((locationOption, index) => (
               <div key={locationOption} style={{ margin: '20px' }}>
                 <LocationContainer
-                className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
-                active={index === activeIndex} 
+                  className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
+                  active={index === activeIndex}
                   type="submit"
                   imageName={locationOption}
-                  onClick={(e) => handleLocationChange(e, locationOption,index)}
-                  style={{boxShadow: 'rgb(12 245 250) 0px 0px 10px'}}
+                  onClick={(e) => handleLocationChange(e, locationOption, index)}
+                  style={{ boxShadow: '#4cb95f 0px 0px 10px' }}
                 />
-                <p style={{ textTransform: 'uppercase' , color:'#fff'}}>{locationOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase' }}>{locationOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>

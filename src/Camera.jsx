@@ -1,8 +1,9 @@
+/* eslint-disable no-dupe-keys */
 // eslint-disable-next-line no-unused-vars
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import captureImageIcon from '/assets/cp.png'; // Import the PNG image
+import captureImageIcon from '/assets/capture.png'; // Import the PNG image
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
   background-repeat: no-repeat;
@@ -68,11 +69,11 @@ function Camer() {
       }, 'image/jpeg');
     }, 200);
   };
-  
+
   // 'animate__animated animate__bounceOut'
   return (
     <section style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-    <div
+      <div
         style={{
           position: 'fixed',
           top: 0,
@@ -88,9 +89,9 @@ function Camer() {
       {isCameraOn && <video ref={videoRef} autoPlay style={{
         display: 'block',
         boxShadow: isCameraOn ? '0 3px 30px rgba(0, 0, 0)' : 'none',
-        aspectRatio:'1920 / 1080',
-        objectFit:'cover',
-        width:'800px',
+        aspectRatio: '1920 / 1080',
+        objectFit: 'cover',
+        width: '800px',
         boxShadow: '#4cb95f 0px 0px 20px'
       }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
