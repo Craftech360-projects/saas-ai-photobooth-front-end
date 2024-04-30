@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import imageData from '../imageData.json'
-import buttonBg from '../../public/ai.png'
+import buttonBg from '/ai.png'
 function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) {
   const [gender, setGender] = useState('');
   const [character, setCharacter] = useState('');

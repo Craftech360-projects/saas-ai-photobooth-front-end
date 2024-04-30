@@ -30,7 +30,7 @@ body {
   display: flex;
   place-items: center;
   /* background-color: #eeeee4; */
-  background-image: url("/public/assets/exotel.png");
+  background-image: url("/assets/intel.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size:cover;
