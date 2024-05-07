@@ -30,7 +30,7 @@ body {
   display: flex;
   place-items: center;
   /* background-color: #eeeee4; */
-  background-image: url("/assets/intel.png");
+  background-image: url("/assets/sentinel.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size:cover;

@@ -88,22 +88,17 @@ function Swap() {
         throw uploadError;
       }
 
-      // After successfully uploading the image, get the public URL
-      //    const { publicURL } = supabase.storage.from('images').getPublicUrl(fileName);
-
       const publicURL = `https://mxyippuwkpysdexmxrbm.supabase.co/storage/v1/object/public/images/${fileName}`;
-      console.log(publicURL, "public urlllll");
 
       if (publicURL) {
-        // Navigate to Page3 with the uploaded image URL
         navigate("/result", { state: { resultImageUrl: publicURL } });
       } else {
         console.error("Failed to get public URL");
-        navigate("/error"); // Handle the error accordingly
+        navigate("/error"); 
       }
     } catch (error) {
       console.error("Error:", error);
-      navigate("/error"); // Adjust based on your error handling
+      navigate("/error"); 
     }
   };
 
@@ -126,21 +121,14 @@ function Swap() {
     });
   }
 
-  function maleFunction() {
-    alert('hh')
-  }
-
   return (
     <div>
-      {/* <h2>Edit & Swap</h2> */}
-      {/* {sourceImageUrl && <img src={sourceImageUrl} alt="Captured" style={{ maxWidth: "100%", height: "auto" }} />} */}
       <ImageSelectionForm
         handleSubmit={handleSubmit}
         enhance={enhance}
         setEnhance={setEnhance}
         selectImage={selectImage}
       />
-      {/* <ImageGeneratorForm /> */}
     </div>
   );
 }

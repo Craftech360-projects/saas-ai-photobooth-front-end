@@ -92,7 +92,7 @@ function Camer() {
         aspectRatio: '1920 / 1080',
         objectFit: 'cover',
         width: '800px',
-        // boxShadow: '#4cb95f 0px 0px 20px'
+        boxShadow: '#e36681 0px 0px 20px'
       }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}

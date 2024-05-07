@@ -139,7 +139,7 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
           flexWrap: 'wrap',
           justifyContent: 'center',
         }}>
-          <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' }}>Select Your Universe</h1>
+          <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase', color:'#fff' }}>Select Your Universe</h1>
           {Object.keys(imageData).map((genderOption, index) => (
             <div key={genderOption} style={{ margin: '40px', textAlign: 'center' }}>
               <GenderContainer
@@ -147,9 +147,9 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
                 active={index === activeIndex}
                 imageName={genderOption}
                 onClick={() => handleGenderChange({ target: { value: genderOption } }, index)}
-                style={{ boxShadow: '#4cb95f 0px 0px 10px' }}
+                style={{ boxShadow: '#e36681 0px 0px 10px' }}
               />
-              <p style={{ textTransform: 'uppercase', }}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
+              <p style={{ textTransform: 'uppercase', color:'#fff'}}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
             </div>
           ))}
         </div>
@@ -167,7 +167,7 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
             justifyContent: 'center',
           }}
           >
-            <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' }}>Select Your Character</h1>
+            <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase',color:'#fff' }}>Select Your Character</h1>
             {Object.keys(imageData[gender]).map((characterOption, index) => (
               <div key={characterOption} style={{ margin: '30px', textAlign: 'center' }}>
                 <CharacterContainer
@@ -175,9 +175,9 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
                   active={index === activeIndex}
                   imageName={characterOption}
                   onClick={() => handleCharacterChange({ target: { value: characterOption } }, index)}
-                  style={{ boxShadow: '#4cb95f 0px 0px 10px' }}
+                  style={{ boxShadow: '#e36681 0px 0px 10px' ,color:'#fff'}}
                 />
-                <p style={{ textTransform: 'uppercase' }}>{characterOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase',color:'#fff' }}>{characterOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>
@@ -195,7 +195,7 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
             justifyContent: 'center',
           }}>
             {!imageClicked && ( // Render the h1 only if imageClicked is false
-              <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' }}>Select Your Location</h1>
+              <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' ,color:'#fff'}}>Select Your Location</h1>
             )}
             {Object.keys(locations).map((locationOption, index) => (
               <div key={locationOption} style={{ margin: '20px' }}>
@@ -205,9 +205,9 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
                   type="submit"
                   imageName={locationOption}
                   onClick={(e) => handleLocationChange(e, locationOption, index)}
-                  style={{ boxShadow: '#4cb95f 0px 0px 10px' }}
+                  style={{ boxShadow: '#e36681 0px 0px 10px', }}
                 />
-                <p style={{ textTransform: 'uppercase' }}>{locationOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase',color:'#fff' }}>{locationOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>

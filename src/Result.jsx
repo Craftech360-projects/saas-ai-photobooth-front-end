@@ -29,12 +29,12 @@ function Result() {
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            style={{ maxWidth: '100%', height: '60vh', display: imageLoaded ? 'block' : 'none', boxShadow: '#4cb95f 0px 0px 50px' }}
+            style={{ maxWidth: '100%', height: '60vh', display: imageLoaded ? 'block' : 'none', boxShadow: '#e36681 0px 0px 50px' }}
           />
           {imageLoaded && (
             <div style={{  marginTop: '100px' }}>
-              <h3 style={{ color: '#fff' }}>Scan QR Code to View Image</h3>
-              <QRCode value={resultImageUrl} size={200} onClick={goHome} style={{ boxShadow: '#4cb95f 0px 0px 50px', marginTop: '30px', }} />
+              <h5 style={{ color: '#fff' }}>Scan QR Code to View Image</h5>
+              <QRCode value={resultImageUrl} size={150} onClick={goHome} style={{  border: '20px solid #fff', borderRadius: '10px'  }} />
             </div>
           )}
         </div>
