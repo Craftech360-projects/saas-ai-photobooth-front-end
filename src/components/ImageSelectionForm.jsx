@@ -6,6 +6,14 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import imageData from '../imageData.json'
 import buttonBg from '/ai.png'
+
+import bg001 from '/assets/bg01.png';
+import bg02 from '/assets/bg02.png';
+import bg03 from '/assets/bg03.png';
+import bg04 from '/assets/bg04.png';
+import bg05 from '/assets/bg05.png';
+import bg00 from '/assets/bg00.png';
+
 function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) {
   const [gender, setGender] = useState('');
   const [character, setCharacter] = useState('');
@@ -135,21 +143,23 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
           display: 'flex',
           flexDirection: 'row',
           width: '100vw',
+          height:'100vh',
           alignItems: 'center',
           flexWrap: 'wrap',
           justifyContent: 'center',
+          backgroundImage: `url(${bg02})`
         }}>
-          <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase', color:'#fff' }}>Select Your Universe</h1>
+          {/* <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase', color:'#fff' }}>Select Your Universe</h1> */}
           {Object.keys(imageData).map((genderOption, index) => (
-            <div key={genderOption} style={{ margin: '40px', textAlign: 'center' }}>
+            <div key={genderOption} style={{ margin: '40px', textAlign: 'center', marginTop:"220px" }}>
               <GenderContainer
                 className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
                 active={index === activeIndex}
                 imageName={genderOption}
                 onClick={() => handleGenderChange({ target: { value: genderOption } }, index)}
-                style={{ boxShadow: '#e36681 0px 0px 10px' }}
+               style={{border:"10px solid #FFDA7A"}}
               />
-              <p style={{ textTransform: 'uppercase', color:'#fff'}}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
+              <p style={{ textTransform: 'uppercase', color:'#000'}}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
             </div>
           ))}
         </div>
@@ -162,22 +172,25 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
             display: 'flex',
             flexDirection: 'row',
             width: '100vw',
+            height:"100vh",
             alignItems: 'center',
             flexWrap: 'wrap',
             justifyContent: 'center',
+            backgroundImage: `url(${bg03})`
           }}
           >
-            <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase',color:'#fff' }}>Select Your Character</h1>
+            {/* <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase',color:'#fff' }}>Select Your Character</h1> */}
             {Object.keys(imageData[gender]).map((characterOption, index) => (
-              <div key={characterOption} style={{ margin: '30px', textAlign: 'center' }}>
+              <div key={characterOption} style={{ margin: '30px', textAlign: 'center', marginTop:"220px"  }}>
                 <CharacterContainer
                   className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
                   active={index === activeIndex}
                   imageName={characterOption}
                   onClick={() => handleCharacterChange({ target: { value: characterOption } }, index)}
-                  style={{ boxShadow: '#e36681 0px 0px 10px' ,color:'#fff'}}
+               style={{border:"10px solid #FFDA7A"}}
+           
                 />
-                <p style={{ textTransform: 'uppercase',color:'#fff' }}>{characterOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase',color:'#000' }}>{characterOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>
@@ -185,29 +198,31 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
       )}
 
       {character !== '' && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw',  }}>
           <div style={{
             display: 'flex',
             flexDirection: 'row',
             width: '100vw',
+            height:"100vh",
             alignItems: 'center',
             flexWrap: 'wrap',
             justifyContent: 'center',
+            backgroundImage: `url(${bg04})`
           }}>
             {!imageClicked && ( // Render the h1 only if imageClicked is false
-              <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' ,color:'#fff'}}>Select Your Location</h1>
+              <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' ,color:'#fff'}}></h1>
             )}
             {Object.keys(locations).map((locationOption, index) => (
-              <div key={locationOption} style={{ margin: '20px' }}>
+              <div key={locationOption} style={{ margin: '20px', marginTop:"200px" }}>
                 <LocationContainer
                   className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
                   active={index === activeIndex}
                   type="submit"
                   imageName={locationOption}
                   onClick={(e) => handleLocationChange(e, locationOption, index)}
-                  style={{ boxShadow: '#e36681 0px 0px 10px', }}
+                  style={{ border:"10px solid #FFDA7A" }}
                 />
-                <p style={{ textTransform: 'uppercase',color:'#fff' }}>{locationOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase',color:'#000' }}>{locationOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>
@@ -216,6 +231,21 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
 
 
       {magic !== '' && (
+        <div 
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100vw',
+          height:"100vh",
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          backgroundImage: `url(${bg05})`,
+          position:'absolute'
+        }}
+        >
+
+     
         <button
           type="submit"
           className='animate__animated animate__pulse animate__infinite	infinite'
@@ -224,15 +254,18 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            width: '250px', // Adjust width as needed
-            height: '80px', // Adjust height as needed
+            width: '380px', // Adjust width as needed
+            height: '120px', // Adjust height as needed
             border: 'none',
             cursor: 'pointer', // Show pointer cursor on hover
             borderRadius: '9px',
-            position: 'absolute'
+            position: 'absolute',
+            bottom:'45%',
+            backgroundColor:"transparent"
           }}
         >
         </button>
+        </div>
       )}
 
     </form>

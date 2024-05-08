@@ -3,19 +3,21 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import captureImageIcon from '/assets/capture.png'; // Import the PNG image
+import captureImageIcon from '/assets/button.png'; // Import the PNG image
+
+
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
   background-repeat: no-repeat;
   background-size: contain;
   background-color: transparent;
   border: none;
-  width: 100px; /* Adjust width and height according to your image dimensions */
+  width: 270px; /* Adjust width and height according to your image dimensions */
   height: 100px;
   cursor: pointer;
   text-indent: -9999px; /* Hide text visually but keep it for accessibility */
   position: relative;
-  margin-top:40px;
+  margin-top:90px;
 `;
 function Camer() {
   const videoRef = useRef(null);
@@ -72,7 +74,7 @@ function Camer() {
 
   // 'animate__animated animate__bounceOut'
   return (
-    <section style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <section style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',   }}>
       <div
         style={{
           position: 'fixed',
@@ -84,15 +86,20 @@ function Camer() {
           opacity: flash ? 1 : 0,
           pointerEvents: 'none',
           transition: 'opacity 0.2s ease',
+         
+          
         }}
       />
       {isCameraOn && <video ref={videoRef} autoPlay style={{
         display: 'block',
-        boxShadow: isCameraOn ? '0 3px 30px rgba(0, 0, 0)' : 'none',
+        boxShadow: isCameraOn ? '0 1px 10px rgba(0, 0, 0)' : 'none',
         aspectRatio: '1920 / 1080',
         objectFit: 'cover',
         width: '800px',
-        boxShadow: '#e36681 0px 0px 20px'
+        borderRadius:"50px",
+        marginTop:"160px",
+        border:'20px solid #DADEFF'
+        
       }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
