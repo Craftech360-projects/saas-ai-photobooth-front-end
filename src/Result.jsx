@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import QRCode from 'qrcode.react';
-import bg00 from '/assets/bg00.png'
+import bg00 from '/assets/bg00.png';
+import PrintImageComponent from './autoPrint';
 
 function Result() {
   const location = useLocation();
@@ -26,16 +27,18 @@ function Result() {
   return (
     <div>
       {resultImageUrl ? (
-        <div style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center',  backgroundImage: `url(${bg00})` }}>
+        <div style={{ flexDirection: 'column', textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundImage: `url(${bg00})` }}>
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            style={{ maxWidth: '100%', height: '50vh', display: imageLoaded ? 'block' : 'none', border:"30px solid #1B0048", borderRadius:"20px" }}
+            style={{ width: '70%', height: '40vh', display: imageLoaded ? 'block' : 'none', border: "30px solid #1B0048", borderRadius: "20px" }}
           />
           {imageLoaded && (
-            <div style={{  marginTop: '0px' }}>
-              {/* <h5 style={{ color: '#fff' }}>Scan QR Code to View Image</h5> */}
-              <QRCode value={resultImageUrl} size={300} onClick={goHome} style={{  border: '20px solid #1B0048', borderRadius: '20px'  }} />
+            <div style={{ marginTop: '100px' }}>
+              <h3 style={{ color: '#fff' }}>Scan QR Code to View Image</h3>
+              <QRCode value={resultImageUrl} size={280} onClick={goHome} style={{ marginTop: '30px', padding: "20px", backgroundColor: "white" }} />
+              <PrintImageComponent /> {/* Render the PrintImageComponent */}
+
             </div>
           )}
         </div>

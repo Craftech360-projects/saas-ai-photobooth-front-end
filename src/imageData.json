@@ -157,47 +157,6 @@
       "mount_everest": "/mount_everest_black_widow.jpeg",
       "sahara_desert": "/sahara_desert_black_widow.jpeg"
         }
-  }, 
-  
-  
-  
-  
-  
-  "mythology": {
-    "freyja": {
-      "burj_khalifa": "/burj_khalifa_freyja.jpg",
-      "great_wall_of_china": "/great_wall_of_china_freyja.jpg",
-      "times_square": "/times_square_freyja.jpg",
-      "mount_everest": "/mount_everest_freyja.jpg",
-      "sahara_desert": "/sahara_desert_freyja.jpg"
-        },
-    "athena": {
-      "burj_khalifa": "/burj_khalifa_athena.jpg",
-      "great_wall_of_china": "/great_wall_of_china_athena.jpg",
-      "times_square": "/times_square_athena.jpg",
-      "mount_everest": "/mount_everest_athena.jpg",
-      "sahara_desert": "/sahara_desert_athena.jpg"
-        },
-    "poseidon": {
-      "burj_khalifa": "/burj_khalifa_poseidon.jpeg",
-      "great_wall_of_china": "/great_wall_of_china_poseidon.jpg",
-      "times_square": "/times_square_poseidon.jpg",
-      "mount_everest": "/mount_everest_poseidon.jpg",
-      "sahara_desert": "/sahara_desert_poseidon.jpg"
-        },
-    "odin": {
-      "burj_khalifa": "/burj_khalifa_odin.jpeg",
-      "great_wall_of_china": "/great_wall_of_china_odin.jpg",
-      "times_square": "/times_square_odin.jpeg",
-      "mount_everest": "/mount_everest_odin.jpeg",
-      "sahara_desert": "/sahara_desert_odin.jpg"
-        },
-    "zeus": {
-      "burj_khalifa": "/burj_khalifa_zeus.jpeg",
-      "great_wall_of_china": "/great_wall_of_china_zeus.jpg",
-      "times_square": "/times_square_zeus.jpg",
-      "mount_everest": "/mount_everest_zeus.jpg",
-      "sahara_desert": "/sahara_desert_zeus.jpg"
-        }
   }
+  
 }

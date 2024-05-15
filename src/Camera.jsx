@@ -1,10 +1,120 @@
-/* eslint-disable no-dupe-keys */
-// eslint-disable-next-line no-unused-vars
+// /* eslint-disable no-dupe-keys */
+// // eslint-disable-next-line no-unused-vars
+
+
+// import React, { useRef, useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import styled from 'styled-components';
+// import captureImageIcon from '/assets/button.png'; // Import the PNG image
+
+
+// const CaptureButton = styled.button`
+//   background-image: url(${captureImageIcon});
+//   background-repeat: no-repeat;
+//   background-size: contain;
+//   background-color: transparent;
+//   border: none;
+//   width: 400px; /* Adjust width and height according to your image dimensions */
+//   height: 110px;
+//   cursor: pointer;
+//   text-indent: -9999px; /* Hide text visually but keep it for accessibility */
+//   position: relative;
+//   margin-top:90px;
+// `;
+// function Camer() {
+//   const videoRef = useRef(null);
+//   const canvasRef = useRef(null);
+//   const [isCameraOn, setIsCameraOn] = useState(true);
+//   const navigate = useNavigate();
+//   const [flash, setFlash] = useState(false);
+
+//   useEffect(() => {
+//     if (isCameraOn) {
+//       navigator.mediaDevices.getUserMedia({ video: true })
+//         .then(stream => {
+//           videoRef.current.srcObject = stream;
+//         })
+//         .catch(err => {
+//           console.error("error:", err);
+//           setIsCameraOn(false);
+//         });
+//     } else {
+//       if (videoRef.current && videoRef.current.srcObject) {
+//         let tracks = videoRef.current.srcObject.getTracks();
+//         tracks.forEach(track => track.stop());
+//       }
+//     }
+
+//     return () => {
+//       if (videoRef.current && videoRef.current.srcObject) {
+//         let tracks = videoRef.current.srcObject.getTracks();
+//         tracks.forEach(track => track.stop());
+//       }
+//     };
+//   }, [isCameraOn]);
+
+//   const captureImage = () => {
+//     setTimeout(() => {
+//       const canvas = canvasRef.current;
+//       const context = canvas.getContext('2d');
+//       const video = videoRef.current;
+//       canvas.width = video.videoWidth;
+//       canvas.height = video.videoHeight;
+//       context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+//       canvas.toBlob(blob => {
+//         // Add animation before navigation
+//         const section = document.querySelector('section');
+//         if (section) {
+//           section.classList.add('animate__animated', 'animate__bounceOut');
+//           setTimeout(() => {
+//             navigate('/swap', { state: { sourceImage: blob } });
+//           }, 1000); // Adjust timing as needed
+//         }
+//       }, 'image/jpeg');
+//     }, 200);
+//   };
+
+//   // 'animate__animated animate__bounceOut'
+//   return (
+//     <section style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',   }}>
+//       <div
+//         style={{
+//           position: 'fixed',
+//           top: 0,
+//           left: 0,
+//           width: '100vw',
+//           height: '100vh',
+//           backgroundColor: 'white',
+//           opacity: flash ? 1 : 0,
+//           pointerEvents: 'none',
+//           transition: 'opacity 0.2s ease',
+         
+          
+//         }}
+//       />
+//       {isCameraOn && <video ref={videoRef} autoPlay style={{
+//         display: 'block',
+//         boxShadow: isCameraOn ? '0 1px 10px rgba(0, 0, 0)' : 'none',
+//         aspectRatio: '1920 / 1080',
+//         objectFit: 'cover',
+//         width: '800px',
+//         borderRadius:"50px",
+//         marginTop:"160px",
+//         border:'20px solid #DADEFF'
+        
+//       }}></video>}
+//       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+//       {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
+//     </section>
+//   );
+// }
+
+// export default Camer;
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import captureImageIcon from '/assets/button.png'; // Import the PNG image
-
+import initialBackground from '/assets/initial-background.png'; // Import the initial background image
 
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
@@ -12,17 +122,19 @@ const CaptureButton = styled.button`
   background-size: contain;
   background-color: transparent;
   border: none;
-  width: 270px; /* Adjust width and height according to your image dimensions */
-  height: 100px;
+  width: 400px; /* Adjust width and height according to your image dimensions */
+  height: 110px;
   cursor: pointer;
   text-indent: -9999px; /* Hide text visually but keep it for accessibility */
   position: relative;
-  margin-top:90px;
+  margin-top: 90px;
 `;
+
 function Camer() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isCameraOn, setIsCameraOn] = useState(false);
+  const [showInitialScreen, setShowInitialScreen] = useState(true);
   const navigate = useNavigate();
   const [flash, setFlash] = useState(false);
 
@@ -51,6 +163,11 @@ function Camer() {
     };
   }, [isCameraOn]);
 
+  const handleStartCamera = () => {
+    setShowInitialScreen(false);
+    setIsCameraOn(true);
+  };
+
   const captureImage = () => {
     setTimeout(() => {
       const canvas = canvasRef.current;
@@ -72,37 +189,43 @@ function Camer() {
     }, 200);
   };
 
-  // 'animate__animated animate__bounceOut'
   return (
-    <section style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',   }}>
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          backgroundColor: 'white',
-          opacity: flash ? 1 : 0,
-          pointerEvents: 'none',
-          transition: 'opacity 0.2s ease',
-         
-          
-        }}
-      />
-      {isCameraOn && <video ref={videoRef} autoPlay style={{
-        display: 'block',
-        boxShadow: isCameraOn ? '0 1px 10px rgba(0, 0, 0)' : 'none',
-        aspectRatio: '1920 / 1080',
-        objectFit: 'cover',
-        width: '800px',
-        borderRadius:"50px",
-        marginTop:"160px",
-        border:'20px solid #DADEFF'
-        
-      }}></video>}
-      <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-      {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
+    <section style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+      {showInitialScreen ? (
+        <div style={{ position: 'relative', width: '100vw', height: '100vh', backgroundImage: `url(${initialBackground})`, backgroundSize: 'cover', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <button onClick={handleStartCamera} style={{ border:'none',width: '1080px', height: '1920px', backgroundColor: 'transparent',  }}>
+            Start Camera
+          </button>
+        </div>
+      ) : (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'white',
+              opacity: flash ? 1 : 0,
+              pointerEvents: 'none',
+              transition: 'opacity 0.2s ease',
+            }}
+          />
+          {isCameraOn && <video ref={videoRef} autoPlay style={{
+            display: 'block',
+            boxShadow: isCameraOn ? '0 1px 10px rgba(0, 0, 0)' : 'none',
+            aspectRatio: '1920 / 1080',
+            objectFit: 'cover',
+            width: '800px',
+            borderRadius: "50px",
+            marginTop: "160px",
+            border: '20px solid #DADEFF'
+          }}></video>}
+          <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+          {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
+        </>
+      )}
     </section>
   );
 }

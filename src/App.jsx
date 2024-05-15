@@ -14,6 +14,7 @@ function App() {
           <Route path="/" element={<Camer />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/result" element={<Result />} />
+
           <Route path="/loading" element={<LoadingPage />} />
         </Routes>
       </div>
