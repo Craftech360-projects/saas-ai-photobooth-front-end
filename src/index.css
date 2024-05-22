@@ -1,21 +1,11 @@
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-} */
+/* index.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Your custom styles here */
+
 @font-face {
   font-family: "Inter"; /* Provide a name for your font */
   src: url("/public/Inter-SemiBold.ttf") format("truetype"); /* Replace '/path/to/font.ttf' with the actual path to your .ttf file */
@@ -29,16 +19,33 @@ body {
   overflow: hidden;
   display: flex;
   place-items: center;
-  /* background-color: #eeeee4; */
-  background-image: url("/assets/sentinel.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size:cover;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande';
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande';
 }
+
 
 p {
   text-transform: capitalize;
   font-weight: bold;
   font-size: 16px;
 }
+
+/* Portrait Mode */
+@media (orientation: portrait) {
+  body {
+    background-image: url("/assets/portrait-background.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+/* Landscape Mode */
+@media (orientation: landscape) {
+  body {
+    background-image: url("/assets/landscape-background.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+

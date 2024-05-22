@@ -3,22 +3,48 @@
 // Sample modified data structure
 
 import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import imageData from '../imageData.json'
-import buttonBg from '/ai.png'
+import buttonBg from '/magic.png'
+import { useNavigate } from 'react-router-dom';
+import './styles.css'; 
 function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) {
-  const [gender, setGender] = useState('');
+  const [universe, setUniverse] = useState('');
   const [character, setCharacter] = useState('');
   const [magic, setMagic] = useState('');
   const [location, setLocation] = useState('');
   const [locations, setLocations] = useState({});
   const [activeIndex, setActiveIndex] = useState(null);
   const [imageClicked, setImageClicked] = useState(false);
-  const handleGenderChange = (e, index) => {
+  const navigate = useNavigate();
+
+  const goBack = () => {
+    navigate("/"); // Navigate to the previous route
+  };
+
+  const handleBackToUniverse = () => {
+    setUniverse('');
+    setCharacter('');
+    setLocation('');
+    setLocations({});
+  };
+
+  const handleBackToCharacter = () => {
+    setCharacter('');
+    setLocation('');
+    setLocations({});
+  };
+
+  const handleBackToLocation = () => {
+    setMagic('');
+    setImageClicked(false);
+    setLocations(imageData[universe][character]);
+  };
+  const handleUniverseChange = (e, index) => {
     setActiveIndex(index);
     setTimeout(() => {
       console.log(index);
-      setGender(e.target.value);
+      setUniverse(e.target.value);
       setCharacter('');
       setLocation('');
       setLocations({});
@@ -30,7 +56,7 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
     setActiveIndex(index);
     setTimeout(() => {
       setCharacter(e.target.value);
-      const selectedCharacterLocations = imageData[gender][e.target.value];
+      const selectedCharacterLocations = imageData[universe][e.target.value];
       setLocations(selectedCharacterLocations);
       setLocation('');
       setActiveIndex(null)
@@ -62,13 +88,13 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
     // Ensure location is not empty
     if (location) {
       // Find the selected location's value from imageData
-      for (const gender in imageData) {
-        for (const character in imageData[gender]) {
+      for (const universe in imageData) {
+        for (const character in imageData[universe]) {
           // Check if the selected location exists for the current character
-          if (imageData[gender][character][location]) {
-            console.log(`Selected Location Value:`, imageData[gender][character][location]);
+          if (imageData[universe][character][location]) {
+            console.log(`Selected Location Value:`, imageData[universe][character][location]);
             // Call selectImage with the selected location
-            // selectImage(imageData[gender][character][location]);
+            // selectImage(imageData[universe][character][location]);
             // setEnhance(true);
 
             return; // Exit the loop once the location is found
@@ -91,23 +117,24 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
     return `/${imageName.toLowerCase().replace(/\s+/g, '-')}.jpg`;
   }
 
-  const GenderContainer = styled.div`
-  width: 180px;
-height: 180px;
-background-size: 100% 100%;
-background-repeat: no-repeat;
-background-position:center;
-border-radius: 21px;
-cursor: pointer;
+  const UniverseContainer = styled.div`
+  width: 200px;
+  height: 200px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position:center;
+  border-radius: 21px;
+  cursor: pointer;
   background-image: ${({ imageName }) => `url(${getImageUrl(imageName)})`};
 `;
 
   // Define styled component for CardContainer
   const CharacterContainer = styled.div`
-  width: 180px;
-  height: 180px;
-  background-size: cover;
+  width: 200px;
+  height: 200px;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
+  background-position:center;
   border-radius: 21px;
   cursor: pointer;
   /* Set background image based on character name */
@@ -116,8 +143,8 @@ cursor: pointer;
 
   // Define styled component for CardContainer
   const LocationContainer = styled.div`
-width: 180px;
-height: 180px;
+width: 200px;
+height: 200px;
 background-size: 100% 100%;
 background-repeat: no-repeat;
 background-position:center;
@@ -127,112 +154,109 @@ cursor: pointer;
 background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
 `;
 
-  return (
-    <form onSubmit={enhancedSubmit} style={{ textAlign: 'center', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
 
-      {gender === '' && (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100vw',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}>
-          <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase', color:'#fff' }}>Select Your Universe</h1>
-          {Object.keys(imageData).map((genderOption, index) => (
-            <div key={genderOption} style={{ margin: '40px', textAlign: 'center' }}>
-              <GenderContainer
-                className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
+
+  return (
+    <form onSubmit={enhancedSubmit} style={{  display: 'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    width: '100vw',
+    height:'100vh',}} >
+    
+      {universe === '' && (
+        <div className="comman-div">
+          <button onClick={goBack} style={{ margin: '20px', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer',position:'absolute', bottom:'0',left:'0' }}>BACK</button>
+          <h1 className='comman-name'  style={{ position: 'absolute',  fontSize: '45px', textTransform: 'uppercase', color:'#fff' }}>Select Your Universe</h1>
+          {Object.keys(imageData).map((universeOption, index) => (
+            <div key={universeOption} style={{ margin: '20px',textAlign:'center'}}>
+              <UniverseContainer
+                className={activeIndex === index ? 'animate__animated animate__bounceOutUp' : ''}
                 active={index === activeIndex}
-                imageName={genderOption}
-                onClick={() => handleGenderChange({ target: { value: genderOption } }, index)}
-                style={{ boxShadow: '#e36681 0px 0px 10px' }}
+                imageName={universeOption}
+                onClick={() => handleUniverseChange({ target: { value: universeOption } }, index)}
+                // style={{ boxShadow: '#000 0px 0px 10px' }}
               />
-              <p style={{ textTransform: 'uppercase', color:'#fff'}}>{genderOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
+              <p style={{ textTransform: 'uppercase', color:'#fff',marginTop:'15px'}}>{universeOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
             </div>
           ))}
         </div>
       )}
 
 
-      {gender !== '' && character === '' && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw' }}>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '100vw',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-          }}
+      {universe !== '' && character === '' && (
+          <div className="comman-div"
           >
-            <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase',color:'#fff' }}>Select Your Character</h1>
-            {Object.keys(imageData[gender]).map((characterOption, index) => (
-              <div key={characterOption} style={{ margin: '30px', textAlign: 'center' }}>
+          <button onClick={handleBackToUniverse} style={{ margin: '20px',position:'absolute', bottom:'0',left:'0', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer' }}>
+            BACK
+          </button>
+            <h1 className='comman-name'  style={{ position: 'absolute',  fontSize: '45px', textTransform: 'uppercase', color:'#fff' }}>Select Your Character</h1>
+            {Object.keys(imageData[universe]).map((characterOption, index) => (
+              <div key={characterOption} style={{ margin: '20px', textAlign: 'center' }}>
                 <CharacterContainer
-                  className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
+                  className={activeIndex === index ? 'animate__animated animate__bounceOutUp' : ''}
                   active={index === activeIndex}
                   imageName={characterOption}
                   onClick={() => handleCharacterChange({ target: { value: characterOption } }, index)}
-                  style={{ boxShadow: '#e36681 0px 0px 10px' ,color:'#fff'}}
+                  // style={{ boxShadow: '#000 0px 0px 10px' ,color:'#fff'}}
                 />
-                <p style={{ textTransform: 'uppercase',color:'#fff' }}>{characterOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase',color:'#fff',marginTop:'15px' }}>{characterOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>
-        </div>
       )}
 
-      {character !== '' && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '60vw' }}>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '100vw',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-          }}>
-            {!imageClicked && ( // Render the h1 only if imageClicked is false
-              <h1 style={{ position: 'absolute', top: '20%', fontSize: '35px', textTransform: 'uppercase' ,color:'#fff'}}>Select Your Location</h1>
-            )}
+      {character !== '' && magic === '' &&(
+          <div className="comman-div">
+          <button onClick={handleBackToCharacter} style={{ margin: '20px',position:'absolute', bottom:'0',left:'0', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer' }}>
+          BACK
+          </button>
+          <h1  className='comman-name'  style={{ position: 'absolute',  fontSize: '45px', textTransform: 'uppercase', color:'#fff' }}>Select Your Location</h1>
+
             {Object.keys(locations).map((locationOption, index) => (
-              <div key={locationOption} style={{ margin: '20px' }}>
+              <div key={locationOption} style={{ margin: '20px',textAlign:'center' }}>
                 <LocationContainer
-                  className={activeIndex === index ? 'animate__animated animate__heartBeat' : ''}
+                  className={activeIndex === index ? 'animate__animated animate__bounceOutUp' : ''}
                   active={index === activeIndex}
                   type="submit"
                   imageName={locationOption}
                   onClick={(e) => handleLocationChange(e, locationOption, index)}
-                  style={{ boxShadow: '#e36681 0px 0px 10px', }}
+                  // style={{ boxShadow: '#000 0px 0px 10px', }}
                 />
-                <p style={{ textTransform: 'uppercase',color:'#fff' }}>{locationOption.replace(/_/g, ' ')}</p>
+                <p style={{ textTransform: 'uppercase',color:'#fff',marginTop:'15px' }}>{locationOption.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>
-        </div>
       )}
 
 
       {magic !== '' && (
-        <button
+    <div style={{ display: 'flex', alignItems: 'center',justifyContent:'center', width: '100vw' }}>
+          <button
           type="submit"
           className='animate__animated animate__pulse animate__infinite	infinite'
           style={{
-            backgroundImage: `url(${buttonBg})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            width: '250px', // Adjust width as needed
+            width: '300px', // Adjust width as needed
             height: '80px', // Adjust height as needed
             border: 'none',
             cursor: 'pointer', // Show pointer cursor on hover
             borderRadius: '9px',
-            position: 'absolute'
+            position: 'absolute',
+            fontWeight:'bolder',
+            fontSize:'30px',
+            color:'#fff',
+            backgroundColor:'#000',
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center'
           }}
-        >
+        >AI MAGIC
+         <img src={buttonBg} alt="Small Image" style={{ marginLeft: '10px' , height:'50px'}} />
         </button>
+        <button onClick={handleBackToLocation} style={{ margin: '20px',position:'absolute', bottom:'0',left:'0', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer' }}>
+           BACK
+          </button>
+    </div>
+        
       )}
 
     </form>

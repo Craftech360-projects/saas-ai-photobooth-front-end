@@ -5,6 +5,7 @@ import Camer from './Camera';
 import Swap from './Swap';
 import Result from './Result';
 import LoadingPage from './components/LoadingPage';
+import './index.css';
 
 function App() {
   return (

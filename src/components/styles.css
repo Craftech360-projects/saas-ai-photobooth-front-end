@@ -1,0 +1,40 @@
+.comman-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .main-div{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (orientation: portrait) {
+    .comman-div {
+      width: 80vw; /* Portrait */
+    }
+    .comman-name{
+      top: 25%;
+    }
+    .main-div{
+      flex-direction: column;
+    }
+    
+  }
+  
+  @media (orientation: landscape) {
+    .comman-div {
+      width: 50vw; /* Landscape */
+    }
+    .comman-name{
+      top: 10%;
+    }
+    .main-div{
+      flex-direction: row;
+    }
+    
+  }
+  
