@@ -8,6 +8,7 @@ import imageData from '../imageData.json'
 import buttonBg from '/magic.png'
 import { useNavigate } from 'react-router-dom';
 import './styles.css'; 
+import logo from '/assets/previous.png'; // Import the PNG image
 function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) {
   const [universe, setUniverse] = useState('');
   const [character, setCharacter] = useState('');
@@ -17,9 +18,13 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
   const [activeIndex, setActiveIndex] = useState(null);
   const [imageClicked, setImageClicked] = useState(false);
   const navigate = useNavigate();
-
+  const [headName, setHeadName] = useState('Universeee');
+  const [isShowHead, setIsShowHead] = useState('');
+  const nav = 0;
   const goBack = () => {
-    navigate("/"); // Navigate to the previous route
+    if(nav == 0){
+      navigate("/");
+    } // Navigate to the previous route
   };
 
   const handleBackToUniverse = () => {
@@ -27,28 +32,33 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
     setCharacter('');
     setLocation('');
     setLocations({});
+    setHeadName('Universe')
   };
 
   const handleBackToCharacter = () => {
     setCharacter('');
     setLocation('');
     setLocations({});
+    setHeadName('Character')
   };
 
   const handleBackToLocation = () => {
     setMagic('');
     setImageClicked(false);
     setLocations(imageData[universe][character]);
+    setIsShowHead("");
   };
   const handleUniverseChange = (e, index) => {
     setActiveIndex(index);
+
     setTimeout(() => {
       console.log(index);
       setUniverse(e.target.value);
       setCharacter('');
       setLocation('');
       setLocations({});
-      setActiveIndex(null)
+      setActiveIndex(null);
+      setHeadName('Character');
     }, 600);
   };
 
@@ -59,7 +69,8 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
       const selectedCharacterLocations = imageData[universe][e.target.value];
       setLocations(selectedCharacterLocations);
       setLocation('');
-      setActiveIndex(null)
+      setActiveIndex(null);
+      setHeadName('Location');
     }, 600);
   };
 
@@ -74,7 +85,8 @@ function ImageSelectionForm({ handleSubmit, enhance, setEnhance, selectImage }) 
       setLocations({});
       setMagic(e.target.value);
       setLocations({});
-      setActiveIndex(null)
+      setActiveIndex(null);
+      setIsShowHead("hh");
     }, 600);
   };
 
@@ -163,10 +175,13 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
     width: '100vw',
     height:'100vh',}} >
     
+    {isShowHead === '' && <h1 className='head-name'>Select Your {headName}</h1>}
+
       {universe === '' && (
         <div className="comman-div">
-          <button onClick={goBack} style={{ margin: '20px', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer',position:'absolute', bottom:'0',left:'0' }}>BACK</button>
-          <h1 className='comman-name'  style={{ position: 'absolute',  fontSize: '45px', textTransform: 'uppercase', color:'#fff' }}>Select Your Universe</h1>
+          <button onClick={goBack} style={{ margin: '15px', backgroundColor: 'transparent', color: '#fff', border: 'none', cursor: 'pointer',position:'absolute', bottom:'0',left:'0'}}>
+            <img src={logo} style={{width:'50px'}}></img>
+          </button>
           {Object.keys(imageData).map((universeOption, index) => (
             <div key={universeOption} style={{ margin: '20px',textAlign:'center'}}>
               <UniverseContainer
@@ -174,7 +189,6 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
                 active={index === activeIndex}
                 imageName={universeOption}
                 onClick={() => handleUniverseChange({ target: { value: universeOption } }, index)}
-                // style={{ boxShadow: '#000 0px 0px 10px' }}
               />
               <p style={{ textTransform: 'uppercase', color:'#fff',marginTop:'15px'}}>{universeOption.replace(/_/g, ' ')}</p> {/* Remove underscores */}
             </div>
@@ -186,10 +200,10 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
       {universe !== '' && character === '' && (
           <div className="comman-div"
           >
-          <button onClick={handleBackToUniverse} style={{ margin: '20px',position:'absolute', bottom:'0',left:'0', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer' }}>
-            BACK
+
+          <button onClick={handleBackToUniverse} style={{ margin: '15px', backgroundColor: 'transparent', color: '#fff', border: 'none', cursor: 'pointer',position:'absolute', bottom:'0',left:'0'}}>
+            <img src={logo} style={{width:'50px'}}></img>
           </button>
-            <h1 className='comman-name'  style={{ position: 'absolute',  fontSize: '45px', textTransform: 'uppercase', color:'#fff' }}>Select Your Character</h1>
             {Object.keys(imageData[universe]).map((characterOption, index) => (
               <div key={characterOption} style={{ margin: '20px', textAlign: 'center' }}>
                 <CharacterContainer
@@ -197,7 +211,6 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
                   active={index === activeIndex}
                   imageName={characterOption}
                   onClick={() => handleCharacterChange({ target: { value: characterOption } }, index)}
-                  // style={{ boxShadow: '#000 0px 0px 10px' ,color:'#fff'}}
                 />
                 <p style={{ textTransform: 'uppercase',color:'#fff',marginTop:'15px' }}>{characterOption.replace(/_/g, ' ')}</p>
               </div>
@@ -207,11 +220,9 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
 
       {character !== '' && magic === '' &&(
           <div className="comman-div">
-          <button onClick={handleBackToCharacter} style={{ margin: '20px',position:'absolute', bottom:'0',left:'0', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer' }}>
-          BACK
+          <button onClick={handleBackToCharacter} style={{ margin: '15px', backgroundColor: 'transparent', color: '#fff', border: 'none', cursor: 'pointer',position:'absolute', bottom:'0',left:'0'}}>
+            <img src={logo} style={{width:'50px'}}></img>
           </button>
-          <h1  className='comman-name'  style={{ position: 'absolute',  fontSize: '45px', textTransform: 'uppercase', color:'#fff' }}>Select Your Location</h1>
-
             {Object.keys(locations).map((locationOption, index) => (
               <div key={locationOption} style={{ margin: '20px',textAlign:'center' }}>
                 <LocationContainer
@@ -220,7 +231,6 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
                   type="submit"
                   imageName={locationOption}
                   onClick={(e) => handleLocationChange(e, locationOption, index)}
-                  // style={{ boxShadow: '#000 0px 0px 10px', }}
                 />
                 <p style={{ textTransform: 'uppercase',color:'#fff',marginTop:'15px' }}>{locationOption.replace(/_/g, ' ')}</p>
               </div>
@@ -252,9 +262,10 @@ background-image: ${({ imageName }) => `url(${getImageUrl2(imageName)})`};
         >AI MAGIC
          <img src={buttonBg} alt="Small Image" style={{ marginLeft: '10px' , height:'50px'}} />
         </button>
-        <button onClick={handleBackToLocation} style={{ margin: '20px',position:'absolute', bottom:'0',left:'0', padding: '10px 20px', borderRadius: '5px', backgroundColor: '#000', color: '#fff', border: 'none', cursor: 'pointer' }}>
-           BACK
+          <button onClick={handleBackToLocation} style={{ margin: '15px', backgroundColor: 'transparent', color: '#fff', border: 'none', cursor: 'pointer',position:'absolute', bottom:'0',left:'0'}}>
+            <img src={logo} style={{width:'50px'}}></img>
           </button>
+
     </div>
         
       )}

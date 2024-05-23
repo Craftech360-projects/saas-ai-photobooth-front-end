@@ -5,6 +5,7 @@ import Camer from './Camera';
 import Swap from './Swap';
 import Result from './Result';
 import LoadingPage from './components/LoadingPage';
+import Error from './Error';
 import './index.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/swap" element={<Swap />} />
           <Route path="/result" element={<Result />} />
           <Route path="/loading" element={<LoadingPage />} />
+          <Route path="/error" element={<Error />} />
         </Routes>
       </div>
     </Router>

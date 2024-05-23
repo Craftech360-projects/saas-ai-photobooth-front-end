@@ -1,24 +1,38 @@
 .comman-div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  border: 1px solid rgb(222, 219, 245);
+  border-radius: 1rem;
+  box-shadow: inset 0 0 1.25rem #dedbf5, 0rem 0rem 2rem #ffffff4d;
+  backdrop-filter: blur(0.1rem);
+  background: hwb(247 86% 4% / 0.05);
+  padding: 5rem;
+}
+
   .main-div{
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+
+  }
+
+  .head-name{
+    position: absolute;
+    font-size: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
   }
   @media (orientation: portrait) {
     .comman-div {
       width: 80vw; /* Portrait */
     }
-    .comman-name{
-      top: 25%;
-    }
+   
     .main-div{
       flex-direction: column;
     }
@@ -29,7 +43,7 @@
     .comman-div {
       width: 50vw; /* Landscape */
     }
-    .comman-name{
+    .head-name{
       top: 10%;
     }
     .main-div{

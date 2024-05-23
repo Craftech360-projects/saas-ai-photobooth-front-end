@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import captureImageIcon from '/assets/cp.png'; // Import the PNG image
 import retakeImageIcon from '/assets/x.png'; // Import the PNG image
 import rightImageIcon from '/assets/right.png'; // Import the PNG image
+import logo from '/assets/cftt.png'; // Import the PNG image
 
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
@@ -148,7 +149,14 @@ function Camer() {
             objectFit: 'cover',
           }}></video>
         )}
+          <img src={logo}style={{ position: 'absolute',
+            top: 0,
+            left: 0,
+            margin:'20px',
+            width:'300px',
+            zIndex:999}} alt="" />
         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+      
         {capturedImage && (
           <img src={capturedImage} alt="Captured" style={{
             position: 'absolute',
