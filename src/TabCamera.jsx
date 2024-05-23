@@ -235,8 +235,8 @@ function TabCamer() {
         navigate("/error");
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert(' something else')
+      console.error("Error in handleSubmit catch block:", error);
+      alert('Error occurred: ' + error.message);
       navigate("/error");
     }
   };
