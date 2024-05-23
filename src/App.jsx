@@ -6,6 +6,7 @@ import Swap from './Swap';
 import Result from './Result';
 import LoadingPage from './components/LoadingPage';
 import Error from './Error';
+import TabCamer from './TabCamera';
 import './index.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Camer />} />
+          <Route path="/tabcamer" element={<TabCamer />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/result" element={<Result />} />
           <Route path="/loading" element={<LoadingPage />} />
