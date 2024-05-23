@@ -8,10 +8,10 @@ const spinAnimation = keyframes`
 `;
 
 const Spinner = styled.div`
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 90%;
-  border-top: 9px solid #000;
+  border-top: 9px solid #fff;
   animation: ${spinAnimation} .5s linear infinite;
 `;
 const LoadingText = styled.h2`
@@ -21,10 +21,10 @@ const LoadingText = styled.h2`
 function LoadingPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
-      {/* <Spinner />
-      <LoadingText>Processing... Please wait.</LoadingText> */}
+      <Spinner />
+       {/* <LoadingText>Processing... Please wait.</LoadingText> */}
       {/* <video style={{ height: '100vh', width: '100%' }} src="/public/loading.mp4" loop autoPlay></video> */}
-      <img src="/public/assets/Loading.gif" alt="" style={{ height: '100vh', width: '100vw' }} />
+      {/* <img src="/public/assets/Loading.gif" alt="" style={{ height: '100vh', width: '100vw' }} /> */}
     </div>
 
   );
