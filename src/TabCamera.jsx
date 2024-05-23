@@ -231,10 +231,12 @@ function TabCamer() {
         // navigate("/result", { state: { resultImageUrl: publicURL } });
       } else {
         console.error("Failed to get public URL");
+        alert('URL not found');
         navigate("/error");
       }
     } catch (error) {
       console.error("Error:", error);
+      alert(' something else')
       navigate("/error");
     }
   };
