@@ -60,7 +60,7 @@ function Swap() {
       }
 
       const swapResponse = await fetch(
-        "http://192.168.1.48:8000/api/swap-face/",
+        "http://192.168.105.205:8000/api/swap-face/",
         {
           method: "POST",
           body: formData,
