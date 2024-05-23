@@ -60,7 +60,7 @@ function Swap() {
       }
 
       const swapResponse = await fetch(
-        "http://192.168.105.205:8000/api/swap-face/",
+        " https://elf-positive-kangaroo.ngrok-free.app/api/swap-face/",
         {
           method: "POST",
           body: formData,
