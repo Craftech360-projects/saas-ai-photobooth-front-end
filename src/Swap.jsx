@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";// Ensure this path matches the location of your data.json file
+import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 import ImageSelectionForm from "./components/ImageSelectionForm";
 
@@ -16,6 +15,7 @@ function Swap() {
     if (!sourceImageBlob) {
       console.error("Source image is not provided.");
       navigate("/"); // Navigate back to capture if no source image is found
+      return;
     }
 
     // Create an object URL for the Blob and update state
@@ -26,21 +26,18 @@ function Swap() {
     return () => {
       URL.revokeObjectURL(objectURL);
     };
-
   }, [sourceImageBlob, navigate]);
 
   const selectImage = (imagesSrc) => {
-    console.log('imagesSrcccccccccccc', imagesSrc);
+    console.log('Selected target image source:', imagesSrc);
     setTargetImage(imagesSrc);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     navigate("/loading"); // Assume a loading route
 
-    // Assuming targetImage is the result from selecting a random image and not the original blob
     try {
       const formData = new FormData();
       formData.append(
@@ -49,7 +46,6 @@ function Swap() {
       );
       formData.append("enhance", JSON.stringify(enhance));
 
-      // Replace 'targetImage' with the actual image URL or path you intend to swap with
       if (targetImage) {
         const response = await fetch(targetImage);
         const targetImageBlob = await response.blob();
@@ -57,18 +53,21 @@ function Swap() {
           "sourceImage",
           new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
         );
+      } else {
+        console.error("Target image is not selected.");
+        navigate("/error");
+        return;
       }
 
-      const swapResponse = await fetch(
-        "http://192.168.1.47:8000/api/swap-face/",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      console.log('FormData before API call:', formData);
+
+      const swapResponse = await fetch("http://192.168.1.68:8000/api/swap-face/", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!swapResponse.ok) {
-        throw new Error("Something went wrong with the swap API call");
+        throw new Error(`API call failed with status: ${swapResponse.status}`);
       }
 
       const swappedImageBlob = await swapResponse.blob();
@@ -97,12 +96,11 @@ function Swap() {
         navigate("/error"); 
       }
     } catch (error) {
-      console.error("Error:", error);
-      navigate("/error"); 
+      console.error("Error during the swap process:", error);
+      navigate("/error");
     }
   };
 
-  // Function to convert an image blob to JPEG format
   function convertImageToJPEG(blob) {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
