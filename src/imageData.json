@@ -1,37 +1,7 @@
 {
-  "arya_stark": {
-    "burj_khalifa": "/burj_khalifa_arya_stark.jpeg",
-    "great_wall_of_china": "/great_wall_of_china_arya_stark.jpeg",
-    "times_square": "/times_square_arya_stark.jpeg",
-    "mount_everest": "/mount_everest_arya_stark.jpg",
-    "sahara_desert": "/sahara_desert_arya_stark.jpg"
-  },
-  "harry_potter": {
-    "burj_khalifa": "/burj_khalifa_harry_potter.jpg",
-    "great_wall_of_china": "/great_wall_of_china_harry_potter.jpg",
-    "times_square": "/times_square_harry_potter.jpg",
-    "mount_everest": "/mount_everest_harry_potter.jpg",
-    "sahara_desert": "/sahara_desert_harry_potter.jpg"
-  },
-  "iron_man": {
-    "burj_khalifa": "/burj_khalifa_iron_man.jpeg",
-    "great_wall_of_china": "/great_wall_of_china_iron_man.jpeg",
-    "times_square": "/times_square_iron_man.jpeg",
-    "mount_everest": "/mount_everest_iron_man.jpeg",
-    "sahara_desert": "/sahara_desert_iron_man.jpeg"
-  },
-  "zeus": {
-    "burj_khalifa": "/burj_khalifa_zeus.jpeg",
-    "great_wall_of_china": "/great_wall_of_china_zeus.jpg",
-    "times_square": "/times_square_zeus.jpg",
-    "mount_everest": "/mount_everest_zeus.jpg",
-    "sahara_desert": "/sahara_desert_zeus.jpg"
-  },
-  "aquaman": {
-    "burj_khalifa": "/burj_khalifa_aquaman.jpg",
-    "great_wall_of_china": "/great_wall_of_china_aquaman.jpg",
-    "times_square": "/times_square_aquaman.jpg",
-    "mount_everest": "/mount_everest_aquaman.jpg",
-    "sahara_desert": "/sahara_desert_aquaman.jpg"
-  }
+  "arya_stark": "arya_stark.jpg",
+  "harry_potter": "harry_potter.jpg",
+  "aquaman": "aquaman.jpg",
+  "zeus": "zeus.jpg",
+  "iron_man": "iron_man.jpg"
 }

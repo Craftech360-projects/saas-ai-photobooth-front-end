@@ -33,8 +33,8 @@ function Swap() {
     setTargetImage(imagesSrc);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (imageUrl) => {
+
 
     navigate("/loading"); // Assume a loading route
 
@@ -46,8 +46,8 @@ function Swap() {
       );
       formData.append("enhance", JSON.stringify(enhance));
 
-      if (targetImage) {
-        const response = await fetch(targetImage);
+      if (imageUrl) {
+        const response = await fetch(imageUrl);
         const targetImageBlob = await response.blob();
         formData.append(
           "sourceImage",
@@ -61,7 +61,7 @@ function Swap() {
 
       console.log('FormData before API call:', formData);
 
-      const swapResponse = await fetch("http://192.168.1.68:8000/api/swap-face/", {
+      const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
         method: "POST",
         body: formData,
       });

@@ -63,7 +63,7 @@ function Camer() {
         // Add animation before navigation
         const section = document.querySelector('section');
         if (section) {
-          section.classList.add('animate__animated', 'animate__bounceOut');
+          section.classList.add('animate__animated', 'animate__fadeOut', 'animate__slow');
           setTimeout(() => {
             navigate('/swap', { state: { sourceImage: blob } });
           }, 1000); // Adjust timing as needed
