@@ -20,11 +20,11 @@ const LoadingText = styled.h2`
 
 function LoadingPage() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw',backgroundColor:'black' }}>
       {/* <Spinner />
       <LoadingText>Processing... Please wait.</LoadingText> */}
       {/* <video style={{ height: '100vh', width: '100%' }} src="/public/loading.mp4" loop autoPlay></video> */}
-      <img src="/public/assets/Loading.gif" alt="" style={{ height: '100vh', width: '100vw' }} />
+      <img src="/public/assets/bb.gif" alt="" />
     </div>
 
   );

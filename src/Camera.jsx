@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import captureImageIcon from '/assets/button.png'; // Import the PNG image
+import captureImageIcon from '/assets/excp.png'; // Import the PNG image
 
 
 const CaptureButton = styled.button`
@@ -86,8 +86,6 @@ function Camer() {
           opacity: flash ? 1 : 0,
           pointerEvents: 'none',
           transition: 'opacity 0.2s ease',
-         
-          
         }}
       />
       {isCameraOn && <video ref={videoRef} autoPlay style={{
@@ -98,7 +96,7 @@ function Camer() {
         width: '800px',
         borderRadius:"50px",
         marginTop:"160px",
-        border:'20px solid #DADEFF'
+        border:'5px solid #62D84E'
         
       }}></video>}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
