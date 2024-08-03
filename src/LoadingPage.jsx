@@ -2,31 +2,68 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const spinAnimation = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+const rotation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 `;
 
-const Spinner = styled.div`
-  width: 80px;
-  height: 80px;
-  border-radius: 90%;
-  border-top: 9px solid #000;
-  animation: ${spinAnimation} .5s linear infinite;
+const rotationBack = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
 `;
+
+const LoaderWrapper = styled.div`
+  width: 200px; /* Increased size */
+  height: 200px; /* Increased size */
+  border: 16px dotted #FFF; /* Increased size */
+  border-style: solid solid dotted dotted;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: ${rotation} 2s linear infinite;
+`;
+
+const LoaderInner = styled.div`
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 16px dotted #da6425; /* Increased size */
+  border-style: solid solid dotted;
+  width: 100px; /* Increased size */
+  height: 100px; /* Increased size */
+  border-radius: 50%;
+  animation: ${rotationBack} .5s linear infinite;
+  transform-origin: center center;
+`;
+
 const LoadingText = styled.h2`
   margin-top: 100px;
 `;
 
 function LoadingPage() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw',backgroundColor:'black' }}>
-      {/* <Spinner />
-      <LoadingText>Processing... Please wait.</LoadingText> */}
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+      <LoaderWrapper>
+        <LoaderInner />
+      </LoaderWrapper>
+      {/* <LoadingText>Processing... Please wait.</LoadingText> */}
       {/* <video style={{ height: '100vh', width: '100%' }} src="/loading.mp4" loop autoPlay></video> */}
-      <img src="/assets/bb.gif" alt="" />
+      {/* <img src="/assets/bb.gif" alt="" /> */}
     </div>
-
   );
 }
 

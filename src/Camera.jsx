@@ -3,7 +3,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import captureImageIcon from "/assets/excp.png"; // Import the PNG image
+import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
+import one from "/assets/one.png";
+import two from "/assets/two.png";
+import male from "/assets/male.png";
+import female from "/assets/female.png";
+import buttonBg from "/assets/startbg.png";
 
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
@@ -28,10 +33,10 @@ function Camer() {
   const [isStarted, setIsStarted] = useState(true);
 
   const startProcess = (value) => {
-    setGender(value)
-    setIsStarted(false)
-    setIsCameraOn(true)
-  }
+    setGender(value);
+    setIsStarted(false);
+    setIsCameraOn(true);
+  };
 
   useEffect(() => {
     if (isCameraOn) {
@@ -73,7 +78,7 @@ function Camer() {
         if (section) {
           section.classList.add("animate__animated", "animate__bounceOut");
           setTimeout(() => {
-            navigate("/swap", { state: { sourceImage: blob , gender} });
+            navigate("/swap", { state: { sourceImage: blob, gender } });
           }, 1000); // Adjust timing as needed
         }
       }, "image/jpeg");
@@ -83,57 +88,131 @@ function Camer() {
   // 'animate__animated animate__bounceOut'
   return (
     <section
-      style={{
-        textAlign: "center",
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    style={{
+      textAlign: "center",
+      width: "100vw",
+      height: "100vh",
+    }}>
+      {isStarted && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundImage: `url(${one})`,
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <button
+            style={{
+              backgroundImage: `url(${buttonBg})`,
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              width: "129px", // Adjust width as needed
+              height: "407px", // Adjust height as needed
+              border: "none",
+              cursor: "pointer", // Show pointer cursor on hover
+              bottom: "10%",
+              backgroundColor: "transparent",
+              marginTop: "30px",
+              left: "20%",
+              position: "absolute",
+            }}
+            onClick={() => setIsStarted("")}
+          ></button>
+        </div>
+      )}
+
+      {isStarted === "" && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            backgroundImage: `url(${two})`,
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <div
+            style={{
+              width: "800px",
+              height: "680px",
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <button
+              style={{
+                backgroundImage: `url(${male})`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                width: "321px", // Adjust width as needed
+                height: "392px", // Adjust height as needed
+                border: "none",
+                cursor: "pointer", // Show pointer cursor on hover
+                backgroundColor: "transparent",
+              }}
+              onClick={() => startProcess("male")}
+            ></button>
+            <button
+              style={{
+                backgroundImage: `url(${female})`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                width: "321px", // Adjust width as needed
+                height: "392px", // Adjust height as needed
+                border: "none",
+                cursor: "pointer", // Show pointer cursor on hover
+                backgroundColor: "transparent",
+              }}
+              onClick={() => startProcess("female")}
+            ></button>
+          </div>
+        </div>
+      )}
+
       <div
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
+          textAlign: "center",
           width: "100vw",
           height: "100vh",
-          backgroundColor: "white",
-          opacity: flash ? 1 : 0,
-          pointerEvents: "none",
-          transition: "opacity 0.2s ease",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundRepeat: "no-repeat",
         }}
-      />
-
-      {isStarted && <button onClick={() => setIsStarted('')}>START</button>}
-      
-      {isStarted === '' && 
-      <div>
-        <button onClick={() => startProcess('male')}>MALE</button><br />
-        <button onClick={() => startProcess('female')}>FEMALE</button>
+      >
+        {isCameraOn && (
+          <video
+            ref={videoRef}
+            autoPlay
+            style={{
+              display: "block",
+              boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
+              aspectRatio: "1080 / 1920",
+              objectFit: "cover",
+              width: "600px",
+              borderRadius: "16px",
+              marginTop: "160px",
+              // border: "5px solid #62D84E",
+            }}
+          ></video>
+        )}
+        <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+        {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
       </div>
-      }
-
-      {isCameraOn && (
-        <video
-          ref={videoRef}
-          autoPlay
-          style={{
-            display: "block",
-            boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
-            aspectRatio: "1920 / 1080",
-            objectFit: "cover",
-            width: "800px",
-            borderRadius: "50px",
-            marginTop: "160px",
-            border: "5px solid #62D84E",
-          }}
-        ></video>
-      )}
-      <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-      {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
     </section>
   );
 }
