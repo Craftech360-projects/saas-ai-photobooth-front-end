@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import QRCode from "qrcode.react";
 import bg00 from "/assets/bg00.png";
-import buttonBg from "/reset_btn.png";
+import buttonBg from "/assets/reset_btn.png";
 function Result() {
   const location = useLocation();
   const { resultImageUrl } = location.state; // Retrieve the image URL passed from Page2

@@ -4,8 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Camer from './Camera';
 import Swap from './Swap';
 import Result from './Result';
-import LoadingPage from './components/LoadingPage';
+import LoadingPage from './LoadingPage';
 import Error from './Error';
+import Admin from './Admin';
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
           <Route path="/swap" element={<Swap />} />
           <Route path="/result" element={<Result />} />
           <Route path="/loading" element={<LoadingPage />} />
-          <Route path="/Error" element={<Error />} />
+          <Route path="/error" element={<Error />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </div>
     </Router>

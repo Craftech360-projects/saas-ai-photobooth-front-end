@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";// Ensure this path matches the location of your data.json file
+import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 import ImageSelectionForm from "./components/ImageSelectionForm";
 
@@ -29,18 +29,15 @@ function Swap() {
 
   }, [sourceImageBlob, navigate]);
 
-  const selectImage = (imagesSrc) => {
-    console.log('imagesSrcccccccccccc', imagesSrc);
-    setTargetImage(imagesSrc);
+  const selectImage = (imageSrc) => {
+    setTargetImage(imageSrc);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     navigate("/loading"); // Assume a loading route
 
-    // Assuming targetImage is the result from selecting a random image and not the original blob
     try {
       const formData = new FormData();
       formData.append(
@@ -49,7 +46,6 @@ function Swap() {
       );
       formData.append("enhance", JSON.stringify(enhance));
 
-      // Replace 'targetImage' with the actual image URL or path you intend to swap with
       if (targetImage) {
         const response = await fetch(targetImage);
         const targetImageBlob = await response.blob();
@@ -72,11 +68,8 @@ function Swap() {
       }
 
       const swappedImageBlob = await swapResponse.blob();
-
-      // Convert the swapped image to JPEG
       const convertedBlob = await convertImageToJPEG(swappedImageBlob);
 
-      // Upload the swapped and converted image to Supabase
       const fileName = `swapped-images/${Date.now()}-result.jpg`;
       const { error: uploadError } = await supabase.storage
         .from("images")
@@ -102,7 +95,6 @@ function Swap() {
     }
   };
 
-  // Function to convert an image blob to JPEG format
   function convertImageToJPEG(blob) {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
@@ -113,11 +105,11 @@ function Swap() {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
-        canvas.toBlob(resolve, "image/jpeg"); // Convert the canvas to a blob in JPEG format
+        canvas.toBlob(resolve, "image/jpeg");
       };
 
       img.onerror = reject;
-      img.src = URL.createObjectURL(blob); // Create a URL for the blob and set it as the image source
+      img.src = URL.createObjectURL(blob);
     });
   }
 
