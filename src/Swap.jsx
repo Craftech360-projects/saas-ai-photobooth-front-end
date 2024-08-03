@@ -11,13 +11,16 @@ function Swap() {
   const location = useLocation();
   const [sourceImageUrl, setSourceImageUrl] = useState('');
   const sourceImageBlob = location.state?.sourceImage;
+  const [isGender, setIsGender] = useState('');
+  const getGender = location.state?.gender;
 
   useEffect(() => {
+    // alert(getGender)
     if (!sourceImageBlob) {
       console.error("Source image is not provided.");
       navigate("/"); // Navigate back to capture if no source image is found
     }
-
+    setIsGender(getGender)
     // Create an object URL for the Blob and update state
     const objectURL = URL.createObjectURL(sourceImageBlob);
     setSourceImageUrl(objectURL);
@@ -120,6 +123,7 @@ function Swap() {
         enhance={enhance}
         setEnhance={setEnhance}
         selectImage={selectImage}
+        setIsGender={getGender}
       />
     </div>
   );
