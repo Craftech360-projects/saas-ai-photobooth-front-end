@@ -31,7 +31,6 @@ const ImageSelectionForm = ({ selectImage, handleSubmit, setIsGender }) => {
           backgroundColor: "transparent",
         }}
       >
-        AI MAGIC
       </button>
     </div>
   );

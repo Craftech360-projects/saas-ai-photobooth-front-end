@@ -39,9 +39,9 @@ function Result() {
         >
           <div
             style={{
-              width: "800px",
+              width: "600px",
               height: "460px",
-               marginBottom:'180px'
+               marginBottom:'20px'
             }}
           >
             <img
@@ -61,19 +61,19 @@ function Result() {
             <div
               style={{
                 width: "800px",
-                height: "560px",
+                height: "400px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-evenly",
                 alignItems: "center",
-                marginBottom:'200px'
+                marginBottom:'50px'
               }}
             >
               <QRCode
                 value={resultImageUrl}
-                size={200}
+                size={150}
                 style={{
-                  border: "25px solid #D9D9D9",
+                  border: "15px solid #D9D9D9",
                 }}
                 className="animate__animated animate__fadeIn"
               />
@@ -81,8 +81,8 @@ function Result() {
                 style={{ color: "#fff" }}
                 className="animate__animated animate__fadeIn"
               >
-                <h1> Scan and Download</h1>
-                <h2>your superhero alter ego.</h2>
+                <h2> Scan and Download</h2>
+                <h3>your superhero alter ego.</h3>
               </div>
               <button
                 type="submit"

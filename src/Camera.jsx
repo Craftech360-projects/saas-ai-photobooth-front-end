@@ -96,31 +96,28 @@ function Camer() {
       {isStarted && (
         <div
           style={{
-            textAlign: "center",
             width: "100vw",
             height: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundImage: `url(${one})`,
-            backgroundRepeat: "no-repeat",
+            // backgroundImage: `url(${one})`,
           }}
         >
+          <img src={one} alt="" style={{
+            width: "100%",
+          }}/>
           <button
             style={{
               backgroundImage: `url(${buttonBg})`,
               backgroundSize: "contain",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              width: "129px", // Adjust width as needed
+              width: "250px", // Adjust width as needed
               height: "407px", // Adjust height as needed
               border: "none",
               cursor: "pointer", // Show pointer cursor on hover
-              bottom: "10%",
+              bottom: "5%",
               backgroundColor: "transparent",
               marginTop: "30px",
-              left: "20%",
+              left: "11%",
               position: "absolute",
             }}
             onClick={() => setIsStarted("")}
@@ -138,14 +135,19 @@ function Camer() {
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems: "center",
-            backgroundImage: `url(${two})`,
+            // backgroundImage: `url(${two})`,
             backgroundRepeat: "no-repeat",
           }}
         >
+          <img src={two} alt="" style={{
+            width: "100%",
+            position:'absolute',
+            zIndex:'-100'
+          }}/>
           <div
             style={{
-              width: "800px",
-              height: "680px",
+              width: "600px",
+              height: "480px",
               display: "flex",
               justifyContent: "space-evenly",
             }}
@@ -156,8 +158,8 @@ function Camer() {
                 backgroundSize: "contain",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                width: "321px", // Adjust width as needed
-                height: "392px", // Adjust height as needed
+                width: "250px", // Adjust width as needed
+                height: "300px", // Adjust height as needed
                 border: "none",
                 cursor: "pointer", // Show pointer cursor on hover
                 backgroundColor: "transparent",
@@ -170,8 +172,8 @@ function Camer() {
                 backgroundSize: "contain",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                width: "321px", // Adjust width as needed
-                height: "392px", // Adjust height as needed
+                width: "250px", // Adjust width as needed
+                height: "300px", // Adjust height as needed
                 border: "none",
                 cursor: "pointer", // Show pointer cursor on hover
                 backgroundColor: "transparent",
@@ -203,7 +205,7 @@ function Camer() {
               boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
               aspectRatio: "1080 / 1920",
               objectFit: "cover",
-              width: "600px",
+              width: "400px",
               borderRadius: "16px",
               marginTop: "160px",
               // border: "5px solid #62D84E",
