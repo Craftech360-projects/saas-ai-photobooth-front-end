@@ -24,6 +24,8 @@ const CaptureButton = styled.button`
   margin-top: 90px;
 `;
 function Camer() {
+  const maleImages = ["male1", "male1"];
+  const femaleImages = ["female1", "female1"];
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
@@ -32,10 +34,18 @@ function Camer() {
   const [gender, setGender] = useState(null);
   const [isStarted, setIsStarted] = useState(true);
 
+  const getRandomImage = (images) => {
+    return images[Math.floor(Math.random() * images.length)];
+  };
+
   const startProcess = (value) => {
-    setGender(value);
     setIsStarted(false);
     setIsCameraOn(true);
+    // const selectedImg =
+    //   value === "male"
+    //     ? getRandomImage(maleImages)
+    //     : getRandomImage(femaleImages);
+    setGender(value);
   };
 
   useEffect(() => {
@@ -82,17 +92,18 @@ function Camer() {
           }, 1000); // Adjust timing as needed
         }
       }, "image/jpeg");
-    }, 200);
+    }, 500);
   };
 
   // 'animate__animated animate__bounceOut'
   return (
     <section
-    style={{
-      textAlign: "center",
-      width: "100vw",
-      height: "100vh",
-    }}>
+      style={{
+        textAlign: "center",
+        width: "100vw",
+        height: "100vh",
+      }}
+    >
       {isStarted && (
         <div
           style={{
@@ -101,27 +112,37 @@ function Camer() {
             // backgroundImage: `url(${one})`,
           }}
         >
-          <img src={one} alt="" style={{
-            width: "100%",
-          }}/>
+          <img
+            src={one}
+            alt=""
+            style={{
+              width: "100%",
+            }}
+          />
           <button
             style={{
-              backgroundImage: `url(${buttonBg})`,
-              backgroundSize: "contain",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              width: "250px", // Adjust width as needed
-              height: "407px", // Adjust height as needed
-              border: "none",
-              cursor: "pointer", // Show pointer cursor on hover
-              bottom: "5%",
-              backgroundColor: "transparent",
-              marginTop: "30px",
-              left: "11%",
+              width: "350px",
+              height: "120px",
+              cursor: "pointer",
+              bottom: "15%",
+              left: "15%",
               position: "absolute",
+              borderRadius: "10px",
+              border: "none",
+              fontSize: "48px",
+              fontWeight: "bold",
+              backgroundColor: "#ffffff", // Default color
+              color: "#000000", // Default text color
+              transition: "background-color 0.3s ease, color 0.3s ease",
             }}
-            onClick={() => setIsStarted("")}
-          ></button>
+            onClick={(e) => {
+              e.target.style.backgroundColor = "#30A6EC"; // Change background
+              e.target.style.color = "#ffffff"; // Change text color
+              setTimeout(() => setIsStarted(""), 500); // Wait 50ms then proceed
+            }}
+          >
+            Start
+          </button>
         </div>
       )}
 
@@ -139,46 +160,65 @@ function Camer() {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <img src={two} alt="" style={{
-            width: "100%",
-            position:'absolute',
-            zIndex:'-100'
-          }}/>
+          <img
+            src={two}
+            alt=""
+            style={{
+              width: "100%",
+              position: "absolute",
+              zIndex: "-100",
+            }}
+          />
           <div
             style={{
-              width: "600px",
-              height: "480px",
+              width: "100%",
+              height: "720px",
               display: "flex",
-              justifyContent: "space-evenly",
+              justifyContent: "flex-start",
             }}
           >
             <button
               style={{
+                borderRadius: "10px",
                 backgroundImage: `url(${male})`,
-                backgroundSize: "contain",
+                backgroundSize: "cover", // Ensure the image covers the button entirely
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                width: "250px", // Adjust width as needed
-                height: "300px", // Adjust height as needed
-                border: "none",
-                cursor: "pointer", // Show pointer cursor on hover
-                backgroundColor: "transparent",
+                width: "293px",
+                height: "358px",
+                border: "none", // Start with no border
+                cursor: "pointer",
+                backgroundColor: "transparent", // Transparent to show background image
+                transition: "border 0.3s ease", // Smooth border transition
+                boxSizing: "border-box",
+                marginRight: "80px", // Ensures the border is included in the button's size
+                marginLeft: "165px", // Ensures the border is included in the button's size
               }}
-              onClick={() => startProcess("male")}
+              onClick={(e) => {
+                e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
+                setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
+              }}
             ></button>
+
             <button
               style={{
+                borderRadius: "10px",
                 backgroundImage: `url(${female})`,
-                backgroundSize: "contain",
+                backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                width: "250px", // Adjust width as needed
-                height: "300px", // Adjust height as needed
+                width: "293px", // Adjust width as needed
+                height: "358px", // Adjust height as needed
                 border: "none",
                 cursor: "pointer", // Show pointer cursor on hover
                 backgroundColor: "transparent",
+                transition: "border 0.3s ease", // Smooth border transition
+                boxSizing: "border-box", // Ensures the border is included in the button's size
               }}
-              onClick={() => startProcess("female")}
+              onClick={(e) => {
+                e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
+                setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
+              }}
             ></button>
           </div>
         </div>
@@ -205,15 +245,38 @@ function Camer() {
               boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
               aspectRatio: "1080 / 1920",
               objectFit: "cover",
-              width: "400px",
-              borderRadius: "16px",
+              width: "600px",
+              height: "704px",
+              borderRadius: "15px",
               marginTop: "160px",
-              // border: "5px solid #62D84E",
+              border: "10px solid #30A6EC",
             }}
           ></video>
         )}
         <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-        {isCameraOn && <CaptureButton onClick={captureImage}></CaptureButton>}
+        {isCameraOn && (
+          <button
+            style={{
+              marginTop: "100px",
+              width: "350px",
+              height: "120px",
+              cursor: "pointer",
+              borderRadius: "10px",
+              border: "none",
+              fontSize: "48px",
+              fontWeight: "bold",
+              backgroundColor: "#ffffff", // Default color
+              color: "#000000", // Default text color
+              transition: "background-color 0.3s ease, color 0.3s ease",
+            }}
+            onClick={(e) => {
+              e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
+              setTimeout(captureImage, 500); // Correctly invoke captureImage after 500ms
+            }}
+          >
+            Capture
+          </button>
+        )}
       </div>
     </section>
   );

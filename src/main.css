@@ -12,11 +12,11 @@ body {
   display: flex;
   place-items: center;
   /* background-color: #eeeee4; */
-  background-image: url("/assets/palo.png");
+  background-image: url("/assets/dell.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size:cover;
-  font-family:'Inter';
+  font-family:Roboto, sans-serif;
 }
 
 p {

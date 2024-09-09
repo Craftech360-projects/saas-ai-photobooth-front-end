@@ -75,7 +75,7 @@ function Swap() {
 
       const fileName = `swapped-images/${Date.now()}-result.jpg`;
       const { error: uploadError } = await supabase.storage
-        .from("images")
+        .from("test-bucket")
         .upload(fileName, convertedBlob, {
           contentType: "image/jpeg",
         });
@@ -83,9 +83,10 @@ function Swap() {
       if (uploadError) {
         throw uploadError;
       }
-
-      const publicURL = `https://mxyippuwkpysdexmxrbm.supabase.co/storage/v1/object/public/images/${fileName}`;
-
+                      // https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/swapped-images/1725878255868-result.jpg
+      const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
+      console.log(fileName,publicURL);
+      
       if (publicURL) {
         navigate("/result", { state: { resultImageUrl: publicURL } });
       } else {

@@ -41,7 +41,7 @@ const LoaderInner = styled.div`
   top: 0;
   bottom: 0;
   margin: auto;
-  border: 16px dotted #da6425; /* Increased size */
+  border: 16px dotted #30A6EC; /* Increased size */
   border-style: solid solid dotted;
   width: 100px; /* Increased size */
   height: 100px; /* Increased size */
