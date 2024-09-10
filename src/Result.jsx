@@ -52,91 +52,137 @@ function Result() {
             alignItems: "center",
           }}
         >
-          <div
+          <img
+            className="animate__animated animate__fadeIn animate__slower"
+            src={resultImageUrl}
+            alt="Swapped Result"
             style={{
-              width: "600px",
-              height: "460px",
-              marginBottom: "280px",
+              width: "788px",
+              height: "1042px",
+              objectFit: "cover",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "16px",
+              border: "16px solid #30A6EC",
             }}
-          >
-            <img
-              className="animate__animated animate__fadeIn animate__slower"
-              src={resultImageUrl}
-              alt="Swapped Result"
-              style={{
-                width: "100%",
-                objectFit: "cover",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "16px",
-              }}
-            />
-          </div>
+          />
           {imageLoaded && (
             <div
               style={{
-                width: "800px",
-                height: "600px",
+                width: "70%",
+                height: "25%",
                 display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-evenly",
                 alignItems: "center",
-                marginBottom: "150px",
               }}
             >
-              <QRCode
-                value={resultImageUrl}
-                size={200}
+              <div
                 style={{
-                  border: "15px solid #D9D9D9",
+                  width: "50%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
                 }}
-              />
-              <div style={{ color: "#fff" }}>
-                <h2> Scan and Download</h2>
-                <h3>your superhero alter ego.</h3>
+              >
+                <QRCode
+                  value={resultImageUrl}
+                  size={300}
+                  style={{
+                    border: "20px solid #30A6EC",
+                    borderRadius: "16px",
+                    padding: "15px",
+                    backgroundColor: "#fff",
+                  }}
+                />
               </div>
-              
-              {/* ReactToPrint with a reference to the rendered PrintableImage */}
-              <ReactToPrint
-                trigger={() => (
-                  <button
-                    type="button"
+
+              <div
+                style={{
+                  width: "35%",
+                  marginLeft: "100px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <div
+                  style={{
+                    color: "#fff",
+                    textAlign: "left",
+                    backgroundColor: "rgb(0 29 131)",
+                  }}
+                >
+                  <h1 style={{ fontSize: "42px", lineHeight: "40px" }}>
+                    {" "}
+                    Scan and Download
+                  </h1>
+                  <h1
                     style={{
-                      background: "#ffcc00",
-                      padding: "10px 20px",
-                      fontSize: "16px",
-                      borderRadius: "8px",
-                      cursor: "pointer",
-                      marginBottom: "20px",
+                      fontSize: "20px",
+                      lineHeight: "25px",
+                      marginTop: "-16px",
                     }}
                   >
-                    Print Image
-                  </button>
-                )}
-                content={() => printRef.current} // Correct reference to PrintableImage
-              />
+                    your warrior alter ego.
+                  </h1>
+                </div>
+                {/* ReactToPrint with a reference to the rendered PrintableImage */}
+                <ReactToPrint
+                  trigger={() => (
+                    <button
+                      type="button"
+                      style={{
+                        width: "250px",
+                        height: "80px",
+                        cursor: "pointer",
+                        borderRadius: "10px",
+                        border: "none",
+                        fontSize: "40px",
+                        fontWeight: "bold",
+                        backgroundColor: "#ffffff", // Default color
+                        color: "#000000", // Default text color
+                        transition:"background-color 0.3s ease, color 0.3s ease",
+                        marginBottom: "16px",
+                        marginTop: "16px",
+                      }}
+                    >
+                      Print
+                    </button>
+                  )}
+                  content={() => printRef.current} // Correct reference to PrintableImage
+                />
 
-              {/* The PrintableImage component */}
-              <div style={{ display: "none" }}>
-                <PrintableImage ref={printRef} resultImageUrl={resultImageUrl} />
+                {/* The PrintableImage component */}
+                <div style={{ display: "none" }}>
+                  <PrintableImage
+                    ref={printRef}
+                    resultImageUrl={resultImageUrl}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    width: "250px",
+                    height: "80px",
+                    cursor: "pointer",
+                    borderRadius: "10px",
+                    border: "none",
+                    fontSize: "40px",
+                    fontWeight: "bold",
+                    backgroundColor: "#ffffff", // Default color
+                    color: "#000000", // Default text color
+                    transition: "background-color 0.3s ease, color 0.3s ease",
+                  }}
+                  onClick={(e) => {
+                    e.target.style.backgroundColor = "#30A6EC"; // Change background
+                    e.target.style.color = "#ffffff"; // Change text color
+                    setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
+                  }}
+                >
+                  Restart
+                </button>
               </div>
-
-              <button
-                type="submit"
-                onClick={goHome}
-                style={{
-                  backgroundImage: `url(${buttonBg})`,
-                  backgroundSize: "contain",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  width: "180px",
-                  height: "120px",
-                  border: "none",
-                  cursor: "pointer",
-                  backgroundColor: "transparent",
-                }}
-              ></button>
             </div>
           )}
         </div>
