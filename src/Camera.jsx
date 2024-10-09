@@ -33,6 +33,8 @@ function Camer() {
   const [flash, setFlash] = useState(false);
   const [gender, setGender] = useState(null);
   const [isStarted, setIsStarted] = useState(true);
+  const [isGenderShow, setIsGenderShow] = useState(false);
+  const [isOptions, setIsOptions] = useState(false);
 
   const getRandomImage = (images) => {
     return images[Math.floor(Math.random() * images.length)];
@@ -40,6 +42,7 @@ function Camer() {
 
   const startProcess = (value) => {
     setIsStarted(false);
+    setIsGenderShow(false);
     setIsCameraOn(true);
     // const selectedImg =
     //   value === "male"
@@ -104,6 +107,7 @@ function Camer() {
         height: "100vh",
       }}
     >
+      {/* Start button code  */}
       {isStarted && (
         <div
           style={{
@@ -138,7 +142,10 @@ function Camer() {
             onClick={(e) => {
               e.target.style.backgroundColor = "#30A6EC"; // Change background
               e.target.style.color = "#ffffff"; // Change text color
-              setTimeout(() => setIsStarted(""), 500); // Wait 50ms then proceed
+              setTimeout(() => {
+                setIsGenderShow(true);
+                setIsStarted(false);
+              }, 500); // Wait 500ms then proceed
             }}
           >
             Start
@@ -146,7 +153,88 @@ function Camer() {
         </div>
       )}
 
-      {isStarted === "" && (
+      {/* Gender Selcet Code  */}
+      {isGenderShow && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            // backgroundImage: `url(${two})`,
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <img
+            src={two}
+            alt=""
+            style={{
+              width: "100%",
+              position: "absolute",
+              zIndex: "-100",
+            }}
+          />
+          <div
+            style={{
+              width: "100%",
+              height: "720px",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <button
+              style={{
+                borderRadius: "10px",
+                backgroundImage: `url(${male})`,
+                backgroundSize: "cover", // Ensure the image covers the button entirely
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                width: "293px",
+                height: "358px",
+                border: "none", // Start with no border
+                cursor: "pointer",
+                backgroundColor: "transparent", // Transparent to show background image
+                transition: "border 0.3s ease", // Smooth border transition
+                boxSizing: "border-box",
+                marginRight: "80px", // Ensures the border is included in the button's size
+                marginLeft: "165px", // Ensures the border is included in the button's size
+              }}
+              onClick={(e) => {
+                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click 
+                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
+              }}
+            ></button>
+
+            <button
+              style={{
+                borderRadius: "10px",
+                backgroundImage: `url(${female})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                width: "293px", // Adjust width as needed
+                height: "358px", // Adjust height as needed
+                border: "none",
+                cursor: "pointer", // Show pointer cursor on hover
+                backgroundColor: "transparent",
+                transition: "border 0.3s ease", // Smooth border transition
+                boxSizing: "border-box", // Ensures the border is included in the button's size
+              }}
+              onClick={(e) => {
+                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
+                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
+              }}
+            ></button>
+          </div>
+        </div>
+      )}
+      {/* Options Selcet Code  */}
+      {isOptions && (
         <div
           style={{
             textAlign: "center",
@@ -236,6 +324,7 @@ function Camer() {
           backgroundRepeat: "no-repeat",
         }}
       >
+        {/* Camera Capture Code  */}
         {isCameraOn && (
           <video
             ref={videoRef}

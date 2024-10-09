@@ -50,9 +50,7 @@ const LoaderInner = styled.div`
   transform-origin: center center;
 `;
 
-const LoadingText = styled.h2`
-  margin-top: 100px;
-`;
+
 
 function LoadingPage() {
   return (
@@ -60,9 +58,6 @@ function LoadingPage() {
       <LoaderWrapper>
         <LoaderInner />
       </LoaderWrapper>
-      {/* <LoadingText>Processing... Please wait.</LoadingText> */}
-      {/* <video style={{ height: '100vh', width: '100%' }} src="/loading.mp4" loop autoPlay></video> */}
-      {/* <img src="/assets/bb.gif" alt="" /> */}
     </div>
   );
 }
