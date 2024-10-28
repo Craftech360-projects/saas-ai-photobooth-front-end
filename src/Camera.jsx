@@ -9,7 +9,7 @@ import two from "/assets/two.png";
 import male from "/assets/male.png";
 import female from "/assets/female.png";
 import buttonBg from "/assets/startbg.png";
-
+import QRCode from "qrcode.react";
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
   background-repeat: no-repeat;
@@ -35,7 +35,7 @@ function Camer() {
   const [isStarted, setIsStarted] = useState(true);
   const [isGenderShow, setIsGenderShow] = useState(false);
   const [isOptions, setIsOptions] = useState(false);
-
+  const [videoURL, setVideoURL] = useState(false);
   const getRandomImage = (images) => {
     return images[Math.floor(Math.random() * images.length)];
   };
@@ -82,17 +82,56 @@ function Camer() {
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
       const video = videoRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+      // Set the canvas to the target portrait dimensions
+      const portraitWidth = 1080;
+      const portraitHeight = 1920;
+
+      canvas.width = portraitWidth;
+      canvas.height = portraitHeight;
+
+      // Calculate the scaling factor to fill the canvas without distortion
+      const scale = Math.max(
+        portraitWidth / video.videoWidth,
+        portraitHeight / video.videoHeight
+      );
+
+      // Calculate the cropped width and height for the video
+      const scaledWidth = video.videoWidth * scale;
+      const scaledHeight = video.videoHeight * scale;
+
+      // Center the video in the canvas
+      const x = (portraitWidth - scaledWidth) / 2;
+      const y = (portraitHeight - scaledHeight) / 2;
+
+      // Draw the video frame to the canvas with scaling and centering
+      context.drawImage(video, x, y, scaledWidth, scaledHeight);
+
       canvas.toBlob((blob) => {
-        // Add animation before navigation
         const section = document.querySelector("section");
         if (section) {
           section.classList.add("animate__animated", "animate__bounceOut");
-          setTimeout(() => {
-            navigate("/swap", { state: { sourceImage: blob, gender } });
-          }, 1000); // Adjust timing as needed
+          setTimeout(async () => {
+            const formData = new FormData();
+            formData.append("image", blob, "captured-image.jpg");
+            formData.append("gender", gender);
+
+            // Send the image and gender to the backend
+            try {
+              const response = await fetch("http://127.0.0.1:5000/api/upload", {
+                method: "POST",
+                body: formData,
+              });
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              const data = await response.json();
+              console.log("Success:", data.video_url);
+              setVideoURL(true);
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          }, 1000);
         }
       }, "image/jpeg");
     }, 500);
@@ -203,8 +242,9 @@ function Camer() {
                 marginLeft: "165px", // Ensures the border is included in the button's size
               }}
               onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click 
-                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
+                e.target.style.boxShadow =
+                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
                 setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
               }}
             ></button>
@@ -226,13 +266,17 @@ function Camer() {
               }}
               onClick={(e) => {
                 // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                e.target.style.boxShadow =
+                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
                 setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
               }}
             ></button>
           </div>
         </div>
       )}
+
+      
+
       {/* Options Selcet Code  */}
       {isOptions && (
         <div
@@ -324,6 +368,10 @@ function Camer() {
           backgroundRepeat: "no-repeat",
         }}
       >
+        {/* Display the processed video */}
+      {videoURL && (
+        <h1>Final result</h1>
+      )}
         {/* Camera Capture Code  */}
         {isCameraOn && (
           <video
@@ -334,8 +382,8 @@ function Camer() {
               boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
               aspectRatio: "1080 / 1920",
               objectFit: "cover",
-              width: "600px",
-              height: "704px",
+              width: "540px",
+              height: "960px",
               borderRadius: "15px",
               marginTop: "160px",
               border: "10px solid #30A6EC",
