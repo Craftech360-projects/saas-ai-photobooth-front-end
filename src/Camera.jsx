@@ -1,27 +1,15 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-dupe-keys */
 // eslint-disable-next-line no-unused-vars
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
 import one from "/assets/one.png";
 import two from "/assets/two.png";
 import male from "/assets/male.png";
 import female from "/assets/female.png";
 import QRCode from "qrcode.react";
-const CaptureButton = styled.button`
-  background-image: url(${captureImageIcon});
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-color: transparent;
-  border: none;
-  width: 270px; /* Adjust width and height according to your image dimensions */
-  height: 100px;
-  cursor: pointer;
-  text-indent: -9999px; /* Hide text visually but keep it for accessibility */
-  position: relative;
-  margin-top: 90px;
-`;
+
 const rotation = keyframes`
   0% {
     transform: rotate(0deg);
@@ -69,20 +57,33 @@ const LoaderInner = styled.div`
   animation: ${rotationBack} 0.5s linear infinite;
   transform-origin: center center;
 `;
+const buttonStyle = {
+  marginTop: "20px",
+  width: "350px",
+  height: "120px",
+  cursor: "pointer",
+  borderRadius: "10px",
+  border: "none",
+  fontSize: "48px",
+  fontWeight: "bold",
+  backgroundColor: "#ffffff",
+  color: "#000000",
+  transition: "background-color 0.3s ease, color 0.3s ease",
+};
 function Camer() {
-  const maleImages = ["male1", "male1"];
-  const femaleImages = ["female1", "female1"];
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
   const navigate = useNavigate();
   const [flash, setFlash] = useState(false);
-  const [gender, setGender] = useState(null);
+  const [template, setTemplate] = useState(null);
   const [isStarted, setIsStarted] = useState(true);
   const [isGenderShow, setIsGenderShow] = useState(false);
   const [isOptions, setIsOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [videoURL, setVideoURL] = useState("");
+  const [isPreview, setIsPreview] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
   const getRandomImage = (images) => {
     return images[Math.floor(Math.random() * images.length)];
   };
@@ -91,7 +92,7 @@ function Camer() {
     setIsStarted(false);
     setIsGenderShow(false);
     setIsCameraOn(true);
-    setGender(value);
+    setTemplate(value);
   };
 
   useEffect(() => {
@@ -132,55 +133,58 @@ function Camer() {
       const context = canvas.getContext("2d");
       const video = videoRef.current;
 
-      // Set the canvas dimensions to match the video’s native resolution for best quality
       const portraitWidth = video.videoWidth;
       const portraitHeight = video.videoHeight;
 
       canvas.width = portraitWidth;
       canvas.height = portraitHeight;
 
-      // Center and draw the video frame in the canvas with scaling
       context.drawImage(video, 0, 0, portraitWidth, portraitHeight);
 
       // Capture high-quality image in JPEG format
       canvas.toBlob(
         (blob) => {
-          const section = document.querySelector("section");
-          if (section) {
-            // section.classList.add("animate__animated", "animate__bounceOut");
-            setIsCameraOn(false);
-            setIsLoading(true);
-            setTimeout(async () => {
-              const formData = new FormData();
-              formData.append("image", blob, "captured-image.jpg");
-              formData.append("gender", gender);
-
-              // Send the image and gender to the backend
-              try {
-                const response = await fetch(
-                  "http://127.0.0.1:5000/api/upload",
-                  {
-                    method: "POST",
-                    body: formData,
-                  }
-                );
-                if (!response.ok) {
-                  throw new Error("Network response was not ok");
-                }
-                const data = await response.json();
-                console.log("Success:", data.video_url);
-                setIsLoading(false);
-                setVideoURL(data.video_url);
-              } catch (error) {
-                console.error("Error:", error);
-              }
-            }, 1000);
-          }
+          setCapturedImage(URL.createObjectURL(blob)); // Store the captured image as a preview URL
+          setIsCameraOn(false);
+          setIsPreview(true); // Show the preview
         },
         "image/jpeg",
-        0.9 // High-quality JPEG compression
+        0.9
       );
     }, 500);
+  };
+
+  const retakeImage = () => {
+    setIsCameraOn(true); // Restart the camera
+    setIsPreview(false); // Hide the preview
+    setCapturedImage(null); // Clear the preview image
+  };
+
+  const submitImage = async () => {
+    const formData = new FormData();
+    const response = await fetch(capturedImage);
+    const blob = await response.blob();
+
+    formData.append("image", blob, "captured-image.jpg");
+    formData.append("template", template);
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log("Success:", data.video_url);
+      setIsLoading(false);
+      setVideoURL(data.video_url);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -285,7 +289,7 @@ function Camer() {
               onClick={(e) => {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("male"), 500);
+                setTimeout(() => startProcess("1.mp4"), 500);
               }}
             ></button>
 
@@ -307,7 +311,7 @@ function Camer() {
               onClick={(e) => {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("female"), 500);
+                setTimeout(() => startProcess("2.mp4"), 500);
               }}
             ></button>
           </div>
@@ -332,20 +336,16 @@ function Camer() {
             autoPlay
             style={{
               display: "block",
-              boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
               aspectRatio: "1080 / 1920",
               objectFit: "cover",
               width: "960px",
               height: "540px",
               borderRadius: "15px",
               marginTop: "160px",
-              border: "10px solid #30A6EC",
-              transform: "rotate(-90deg)", // Rotate the video to portrait
-              transformOrigin: "center", // Keep rotation centered
+              transform: "rotate(-90deg)",
+              transformOrigin: "center",
             }}
           ></video>
-
-          <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           <button
             style={{
               marginTop: "250px",
@@ -368,6 +368,83 @@ function Camer() {
           >
             Capture
           </button>
+        </div>
+      )}
+
+      <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+
+      {isPreview && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <img
+            src={capturedImage}
+            alt="Captured Preview"
+            style={{
+              width: "1200px", // Adjusted width for larger display
+              height: "675px", // Adjusted height to maintain 16:9 aspect ratio
+              borderRadius: "15px",
+              marginTop: "160px",
+              transform: "rotate(-90deg)",
+              boxShadow: "0px 0px 10px 10px rgba(255, 255, 255, 0.7)", // Stronger shadow effect
+            }}
+          />
+
+          <div
+            style={{
+              marginTop: "250px",
+              width: "100%",
+              height: "120px",
+              borderRadius: "10px",
+              border: "none",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <button
+              onClick={retakeImage}
+              style={{
+                width: "100px",
+                height: "50px",
+                cursor: "pointer",
+                borderRadius: "10px",
+                border: "none",
+                fontSize: "48px",
+                fontWeight: "bold",
+                backgroundColor: "#ffffff",
+                color: "#000000",
+                transition: "background-color 0.3s ease, color 0.3s ease",
+              }}
+            >
+              Retake
+            </button>
+            <button
+              onClick={submitImage}
+              style={{
+                width: "100px",
+                height: "50px",
+                cursor: "pointer",
+                borderRadius: "10px",
+                border: "none",
+                fontSize: "48px",
+                fontWeight: "bold",
+                backgroundColor: "#ffffff",
+                color: "#000000",
+                transition: "background-color 0.3s ease, color 0.3s ease",
+              }}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       )}
 
