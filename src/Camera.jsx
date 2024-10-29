@@ -2,13 +2,12 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
 import one from "/assets/one.png";
 import two from "/assets/two.png";
 import male from "/assets/male.png";
 import female from "/assets/female.png";
-import buttonBg from "/assets/startbg.png";
 import QRCode from "qrcode.react";
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
@@ -23,6 +22,53 @@ const CaptureButton = styled.button`
   position: relative;
   margin-top: 90px;
 `;
+const rotation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const rotationBack = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+`;
+
+const LoaderWrapper = styled.div`
+  width: 200px; /* Increased size */
+  height: 200px; /* Increased size */
+  border: 16px dotted #fff; /* Increased size */
+  border-style: solid solid dotted dotted;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: ${rotation} 2s linear infinite;
+`;
+
+const LoaderInner = styled.div`
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 16px dotted #30a6ec; /* Increased size */
+  border-style: solid solid dotted;
+  width: 100px; /* Increased size */
+  height: 100px; /* Increased size */
+  border-radius: 50%;
+  animation: ${rotationBack} 0.5s linear infinite;
+  transform-origin: center center;
+`;
 function Camer() {
   const maleImages = ["male1", "male1"];
   const femaleImages = ["female1", "female1"];
@@ -35,7 +81,8 @@ function Camer() {
   const [isStarted, setIsStarted] = useState(true);
   const [isGenderShow, setIsGenderShow] = useState(false);
   const [isOptions, setIsOptions] = useState(false);
-  const [videoURL, setVideoURL] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [videoURL, setVideoURL] = useState("");
   const getRandomImage = (images) => {
     return images[Math.floor(Math.random() * images.length)];
   };
@@ -44,17 +91,19 @@ function Camer() {
     setIsStarted(false);
     setIsGenderShow(false);
     setIsCameraOn(true);
-    // const selectedImg =
-    //   value === "male"
-    //     ? getRandomImage(maleImages)
-    //     : getRandomImage(femaleImages);
     setGender(value);
   };
 
   useEffect(() => {
     if (isCameraOn) {
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({
+          video: {
+            width: { ideal: 1920 }, // Set high resolution for better quality
+            height: { ideal: 1080 },
+            frameRate: { ideal: 30 },
+          },
+        })
         .then((stream) => {
           videoRef.current.srcObject = stream;
         })
@@ -83,61 +132,57 @@ function Camer() {
       const context = canvas.getContext("2d");
       const video = videoRef.current;
 
-      // Set the canvas to the target portrait dimensions
-      const portraitWidth = 1080;
-      const portraitHeight = 1920;
+      // Set the canvas dimensions to match the video’s native resolution for best quality
+      const portraitWidth = video.videoWidth;
+      const portraitHeight = video.videoHeight;
 
       canvas.width = portraitWidth;
       canvas.height = portraitHeight;
 
-      // Calculate the scaling factor to fill the canvas without distortion
-      const scale = Math.max(
-        portraitWidth / video.videoWidth,
-        portraitHeight / video.videoHeight
-      );
+      // Center and draw the video frame in the canvas with scaling
+      context.drawImage(video, 0, 0, portraitWidth, portraitHeight);
 
-      // Calculate the cropped width and height for the video
-      const scaledWidth = video.videoWidth * scale;
-      const scaledHeight = video.videoHeight * scale;
+      // Capture high-quality image in JPEG format
+      canvas.toBlob(
+        (blob) => {
+          const section = document.querySelector("section");
+          if (section) {
+            // section.classList.add("animate__animated", "animate__bounceOut");
+            setIsCameraOn(false);
+            setIsLoading(true);
+            setTimeout(async () => {
+              const formData = new FormData();
+              formData.append("image", blob, "captured-image.jpg");
+              formData.append("gender", gender);
 
-      // Center the video in the canvas
-      const x = (portraitWidth - scaledWidth) / 2;
-      const y = (portraitHeight - scaledHeight) / 2;
-
-      // Draw the video frame to the canvas with scaling and centering
-      context.drawImage(video, x, y, scaledWidth, scaledHeight);
-
-      canvas.toBlob((blob) => {
-        const section = document.querySelector("section");
-        if (section) {
-          section.classList.add("animate__animated", "animate__bounceOut");
-          setTimeout(async () => {
-            const formData = new FormData();
-            formData.append("image", blob, "captured-image.jpg");
-            formData.append("gender", gender);
-
-            // Send the image and gender to the backend
-            try {
-              const response = await fetch("http://127.0.0.1:5000/api/upload", {
-                method: "POST",
-                body: formData,
-              });
-              if (!response.ok) {
-                throw new Error("Network response was not ok");
+              // Send the image and gender to the backend
+              try {
+                const response = await fetch(
+                  "http://127.0.0.1:5000/api/upload",
+                  {
+                    method: "POST",
+                    body: formData,
+                  }
+                );
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
+                console.log("Success:", data.video_url);
+                setIsLoading(false);
+                setVideoURL(data.video_url);
+              } catch (error) {
+                console.error("Error:", error);
               }
-              const data = await response.json();
-              console.log("Success:", data.video_url);
-              setVideoURL(true);
-            } catch (error) {
-              console.error("Error:", error);
-            }
-          }, 1000);
-        }
-      }, "image/jpeg");
+            }, 1000);
+          }
+        },
+        "image/jpeg",
+        0.9 // High-quality JPEG compression
+      );
     }, 500);
   };
 
-  // 'animate__animated animate__bounceOut'
   return (
     <section
       style={{
@@ -146,22 +191,20 @@ function Camer() {
         height: "100vh",
       }}
     >
-      {/* Start button code  */}
       {isStarted && (
         <div
           style={{
             width: "100vw",
             height: "100vh",
-            // backgroundImage: `url(${one})`,
           }}
         >
-          <img
+          {/* <img
             src={one}
             alt=""
             style={{
               width: "100%",
             }}
-          />
+          /> */}
           <button
             style={{
               width: "350px",
@@ -174,17 +217,17 @@ function Camer() {
               border: "none",
               fontSize: "48px",
               fontWeight: "bold",
-              backgroundColor: "#ffffff", // Default color
-              color: "#000000", // Default text color
+              backgroundColor: "#ffffff",
+              color: "#000000",
               transition: "background-color 0.3s ease, color 0.3s ease",
             }}
             onClick={(e) => {
-              e.target.style.backgroundColor = "#30A6EC"; // Change background
-              e.target.style.color = "#ffffff"; // Change text color
+              e.target.style.backgroundColor = "#30A6EC";
+              e.target.style.color = "#ffffff";
               setTimeout(() => {
                 setIsGenderShow(true);
                 setIsStarted(false);
-              }, 500); // Wait 500ms then proceed
+              }, 500);
             }}
           >
             Start
@@ -192,7 +235,6 @@ function Camer() {
         </div>
       )}
 
-      {/* Gender Selcet Code  */}
       {isGenderShow && (
         <div
           style={{
@@ -203,11 +245,10 @@ function Camer() {
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems: "center",
-            // backgroundImage: `url(${two})`,
             backgroundRepeat: "no-repeat",
           }}
         >
-          <img
+          {/* <img
             src={two}
             alt=""
             style={{
@@ -215,7 +256,7 @@ function Camer() {
               position: "absolute",
               zIndex: "-100",
             }}
-          />
+          /> */}
           <div
             style={{
               width: "100%",
@@ -228,24 +269,23 @@ function Camer() {
               style={{
                 borderRadius: "10px",
                 backgroundImage: `url(${male})`,
-                backgroundSize: "cover", // Ensure the image covers the button entirely
+                backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 width: "293px",
                 height: "358px",
-                border: "none", // Start with no border
+                border: "none",
                 cursor: "pointer",
-                backgroundColor: "transparent", // Transparent to show background image
-                transition: "border 0.3s ease", // Smooth border transition
+                backgroundColor: "transparent",
+                transition: "border 0.3s ease",
                 boxSizing: "border-box",
-                marginRight: "80px", // Ensures the border is included in the button's size
-                marginLeft: "165px", // Ensures the border is included in the button's size
+                marginRight: "80px",
+                marginLeft: "165px",
               }}
               onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
+                setTimeout(() => startProcess("male"), 500);
               }}
             ></button>
 
@@ -256,29 +296,25 @@ function Camer() {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                width: "293px", // Adjust width as needed
-                height: "358px", // Adjust height as needed
+                width: "293px",
+                height: "358px",
                 border: "none",
-                cursor: "pointer", // Show pointer cursor on hover
+                cursor: "pointer",
                 backgroundColor: "transparent",
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box", // Ensures the border is included in the button's size
+                transition: "border 0.3s ease",
+                boxSizing: "border-box",
               }}
               onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
+                setTimeout(() => startProcess("female"), 500);
               }}
             ></button>
           </div>
         </div>
       )}
 
-      
-
-      {/* Options Selcet Code  */}
-      {isOptions && (
+      {isCameraOn && (
         <div
           style={{
             textAlign: "center",
@@ -286,94 +322,11 @@ function Camer() {
             height: "100vh",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
+            justifyContent: "center",
             alignItems: "center",
-            // backgroundImage: `url(${two})`,
             backgroundRepeat: "no-repeat",
           }}
         >
-          <img
-            src={two}
-            alt=""
-            style={{
-              width: "100%",
-              position: "absolute",
-              zIndex: "-100",
-            }}
-          />
-          <div
-            style={{
-              width: "100%",
-              height: "720px",
-              display: "flex",
-              justifyContent: "flex-start",
-            }}
-          >
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${male})`,
-                backgroundSize: "cover", // Ensure the image covers the button entirely
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "293px",
-                height: "358px",
-                border: "none", // Start with no border
-                cursor: "pointer",
-                backgroundColor: "transparent", // Transparent to show background image
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box",
-                marginRight: "80px", // Ensures the border is included in the button's size
-                marginLeft: "165px", // Ensures the border is included in the button's size
-              }}
-              onClick={(e) => {
-                e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
-              }}
-            ></button>
-
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${female})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "293px", // Adjust width as needed
-                height: "358px", // Adjust height as needed
-                border: "none",
-                cursor: "pointer", // Show pointer cursor on hover
-                backgroundColor: "transparent",
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box", // Ensures the border is included in the button's size
-              }}
-              onClick={(e) => {
-                e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
-              }}
-            ></button>
-          </div>
-        </div>
-      )}
-
-      <div
-        style={{
-          textAlign: "center",
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        {/* Display the processed video */}
-      {videoURL && (
-        <h1>Final result</h1>
-      )}
-        {/* Camera Capture Code  */}
-        {isCameraOn && (
           <video
             ref={videoRef}
             autoPlay
@@ -382,19 +335,20 @@ function Camer() {
               boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
               aspectRatio: "1080 / 1920",
               objectFit: "cover",
-              width: "540px",
-              height: "960px",
+              width: "960px",
+              height: "540px",
               borderRadius: "15px",
               marginTop: "160px",
               border: "10px solid #30A6EC",
+              transform: "rotate(-90deg)", // Rotate the video to portrait
+              transformOrigin: "center", // Keep rotation centered
             }}
           ></video>
-        )}
-        <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-        {isCameraOn && (
+
+          <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           <button
             style={{
-              marginTop: "100px",
+              marginTop: "250px",
               width: "350px",
               height: "120px",
               cursor: "pointer",
@@ -402,20 +356,67 @@ function Camer() {
               border: "none",
               fontSize: "48px",
               fontWeight: "bold",
-              backgroundColor: "#ffffff", // Default color
-              color: "#000000", // Default text color
+              backgroundColor: "#ffffff",
+              color: "#000000",
               transition: "background-color 0.3s ease, color 0.3s ease",
             }}
             onClick={(e) => {
-              e.target.style.backgroundColor = "#30A6EC"; // Change background
-              e.target.style.color = "#ffffff"; // Change text color
-              setTimeout(captureImage, 500); // Correctly invoke captureImage after 500ms
+              e.target.style.backgroundColor = "#30A6EC";
+              e.target.style.color = "#ffffff";
+              setTimeout(captureImage, 500);
             }}
           >
             Capture
           </button>
-        )}
-      </div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          <LoaderWrapper>
+            <LoaderInner />
+          </LoaderWrapper>
+        </div>
+      )}
+
+      {videoURL && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            alignItems: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <video
+            autoPlay
+            muted
+            loop
+            src={videoURL}
+            style={{
+              width: "100%",
+              maxWidth: "540px",
+              marginTop: "20px",
+            }}
+          ></video>
+          <div style={{ marginTop: "20px" }}>
+            <QRCode value={videoURL} size={200} />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
