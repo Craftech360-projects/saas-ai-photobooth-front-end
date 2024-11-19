@@ -36,16 +36,24 @@ function Swap() {
     try {
       const formData = new FormData();
       formData.append(
-        "targetImage",
+        "prompt",
+        "superman"
+      );
+      formData.append(
+        "sourceImage",
         new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
       );
 
       const response = await fetch(selectedImage);
       const targetImageBlob = await response.blob();
       formData.append(
-        "sourceImage",
+        "targetImage",
         new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
       );
+      // Log FormData for debugging
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
 
       const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
         method: "POST",

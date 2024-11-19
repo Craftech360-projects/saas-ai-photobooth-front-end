@@ -42,7 +42,7 @@ function Camer() {
 
   const startProcess = (value) => {
     setIsStarted(false);
-    setIsGenderShow(false);
+    // setIsGenderShow(false);
     setIsCameraOn(true);
     // const selectedImg =
     //   value === "male"
@@ -91,7 +91,7 @@ function Camer() {
         if (section) {
           section.classList.add("animate__animated", "animate__bounceOut");
           setTimeout(() => {
-            navigate("/swap", { state: { sourceImage: blob, gender } });
+            navigate("/prompt", { state: { sourceImage: blob } });
           }, 1000); // Adjust timing as needed
         }
       }, "image/jpeg");
@@ -116,34 +116,35 @@ function Camer() {
             // backgroundImage: `url(${one})`,
           }}
         >
-          <img
+          {/* <img
             src={one}
             alt=""
             style={{
               width: "100%",
             }}
-          />
+          /> */}
           <button
             style={{
               width: "350px",
               height: "120px",
               cursor: "pointer",
-              bottom: "15%",
-              left: "15%",
+              bottom: "45%",
+              left: "35%",
               position: "absolute",
               borderRadius: "10px",
               border: "none",
               fontSize: "48px",
               fontWeight: "bold",
-              backgroundColor: "#ffffff", // Default color
-              color: "#000000", // Default text color
+              backgroundColor: "rgb(186 193 208)", // Default color
+              color: "#000", // Default text color
               transition: "background-color 0.3s ease, color 0.3s ease",
             }}
             onClick={(e) => {
-              e.target.style.backgroundColor = "#30A6EC"; // Change background
-              e.target.style.color = "#ffffff"; // Change text color
+              e.target.style.backgroundColor = "rgb(20 119 222)"; // Change background
+              e.target.style.color = "rgb(189 215 12)"; // Change text color
               setTimeout(() => {
-                setIsGenderShow(true);
+                // setIsGenderShow(true);
+                setIsCameraOn(true);
                 setIsStarted(false);
               }, 500); // Wait 500ms then proceed
             }}
@@ -168,7 +169,7 @@ function Camer() {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <img
+          {/* <img
             src={two}
             alt=""
             style={{
@@ -176,7 +177,7 @@ function Camer() {
               position: "absolute",
               zIndex: "-100",
             }}
-          />
+          /> */}
           <div
             style={{
               width: "100%",
@@ -203,8 +204,9 @@ function Camer() {
                 marginLeft: "165px", // Ensures the border is included in the button's size
               }}
               onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click 
-                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
+                e.target.style.boxShadow =
+                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
                 setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
               }}
             ></button>
@@ -226,7 +228,8 @@ function Camer() {
               }}
               onClick={(e) => {
                 // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                e.target.style.boxShadow =
+                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
                 setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
               }}
             ></button>
@@ -248,7 +251,7 @@ function Camer() {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <img
+          {/* <img
             src={two}
             alt=""
             style={{
@@ -256,7 +259,7 @@ function Camer() {
               position: "absolute",
               zIndex: "-100",
             }}
-          />
+          /> */}
           <div
             style={{
               width: "100%",
@@ -338,7 +341,8 @@ function Camer() {
               height: "704px",
               borderRadius: "15px",
               marginTop: "160px",
-              border: "10px solid #30A6EC",
+              // border: "5px solid rgb(5 82 126)",
+              boxShadow:"0px 0px 10px 4px rgb(189 215 12)"
             }}
           ></video>
         )}
@@ -354,13 +358,13 @@ function Camer() {
               border: "none",
               fontSize: "48px",
               fontWeight: "bold",
-              backgroundColor: "#ffffff", // Default color
-              color: "#000000", // Default text color
+              backgroundColor: "rgb(186 193 208)", // Default color
+              color: "#000", // Default text color
               transition: "background-color 0.3s ease, color 0.3s ease",
             }}
             onClick={(e) => {
-              e.target.style.backgroundColor = "#30A6EC"; // Change background
-              e.target.style.color = "#ffffff"; // Change text color
+              e.target.style.backgroundColor = "rgb(20 119 222)"; // Change background
+              e.target.style.color = "rgb(189 215 12)"; // Change text color
               setTimeout(captureImage, 500); // Correctly invoke captureImage after 500ms
             }}
           >
