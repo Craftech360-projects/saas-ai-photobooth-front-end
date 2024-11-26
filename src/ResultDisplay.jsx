@@ -53,7 +53,7 @@ const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
           position: "absolute", // Position the image on top of the result image
           top: "10px", // Position near the top
           right: "20px", // Position near the right
-          width: "50px", // Set the size of the overlay image
+          width: "100px", // Set the size of the overlay image
           height: "50px", // Set the size of the overlay image
           zIndex: 1, // Ensure the overlay image appears above the main image
         }}
@@ -82,10 +82,9 @@ const ResultDisplay = () => {
         width: "100vw",
         height: "100vh",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
+        flexDirection: "row",
+        justifyContent: "center",
         alignItems: "center",
-        paddingTop:'250px'
       }}
     >
       {/* Display the image */}
@@ -100,20 +99,44 @@ const ResultDisplay = () => {
           justifyContent: "center",
           alignItems: "center",
           borderRadius: "16px",
-          marginTop: "220px",
         }}
         onLoad={() => setImageLoaded(true)}
       />
 
-      {imageLoaded && (
+     
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "30%",
+          marginTop: "32px",
+          paddingLeft: "40px",
+        }}
+      >
+        <QRCode
+          value={resultImageUrl}
+          size={200}
+          style={{
+            padding: "15px",
+            backgroundColor: "#fff",
+          }}
+        />
+
+        <h1 style={{ textAlign: "center", color: "#fff" , marginBottom:'50px'}}>
+          Scan the QR Code
+          <br /> to Download Image
+        </h1>
+
+        {imageLoaded && (
         <div
           style={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "space-around",
-            width: "64%",
-            marginTop: "16px",
+            width: "100%",
           }}
         >
           <ReactToPrint
@@ -121,18 +144,16 @@ const ResultDisplay = () => {
               <button
                 type="button"
                 style={{
-                  width: "300px",
-                  height: "80px",
+                  width: "200px",
+                  height: "40px",
                   cursor: "pointer",
                   borderRadius: "16px",
                   border: "none",
-                  fontSize: "40px",
+                  fontSize: "25px",
                   fontWeight: "bold",
                   backgroundColor: "#ffffff",
                   color: "#000000",
                   transition: "background-color 0.3s ease, color 0.3s ease",
-                  marginBottom: "16px",
-                  marginTop: "16px",
                 }}
               >
                 Print
@@ -143,12 +164,12 @@ const ResultDisplay = () => {
           <button
             onClick={() => navigate("/")}
             style={{
-              width: "300px",
-              height: "80px",
+              width: "200px",
+              height: "40px",
               cursor: "pointer",
               borderRadius: "16px",
               border: "none",
-              fontSize: "40px",
+              fontSize: "25px",
               fontWeight: "bold",
               backgroundColor: "#ffffff",
               color: "#000000",
@@ -161,31 +182,6 @@ const ResultDisplay = () => {
           </button>
         </div>
       )}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          width: "60%",
-          marginTop: "32px",
-          paddingLeft: "40px",
-        }}
-      >
-        <QRCode
-          value={resultImageUrl}
-          size={200}
-          style={{
-            padding: "15px",
-            backgroundColor: "#fff",
-            marginRight: "30px",
-          }}
-        />
-
-        <h1 style={{ textAlign: "left", color: "#fff" }}>
-          Scan the QR Code
-          <br /> to Download Image
-        </h1>
       </div>
 
       {/* Hidden Printable Image Component */}

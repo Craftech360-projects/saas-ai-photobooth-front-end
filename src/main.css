@@ -12,11 +12,12 @@ body {
   display: flex;
   place-items: center;
   /* background-color: #eeeee4; */
-  background-image: url("/assets/hindubg.png");
+  /* background-image: url("/assets/thld.png"); */
   background-position: center;
   background-repeat: no-repeat;
   background-size:cover;
   font-family:Roboto, sans-serif;
+  background-color: #000;
 }
 
 p {

@@ -42,15 +42,24 @@ function Prompt() {
       const convertedBlob = await convertImageToJPEG(swappedImageBlob);
 
       const fileName = `swapped-images/${Date.now()}-result.jpg`;
-      const { error: uploadError } = await supabase.storage
+      const { data, error } = await supabase.storage
         .from("test-bucket")
-        .upload(fileName, convertedBlob, {
-          contentType: "image/jpeg",
-        });
+        .upload(fileName, convertedBlob, { contentType: "image/jpeg" });
 
-      if (uploadError) {
-        throw uploadError;
+      if (error) {
+        console.error("Supabase Upload Error:", error.message);
+        throw error;
       }
+
+      // const { error: uploadError } = await supabase.storage
+      //   .from("test-bucket")
+      //   .upload(fileName, convertedBlob, {
+      //     contentType: "image/jpeg",
+      //   });
+
+      // if (uploadError) {
+      //   throw uploadError;
+      // }
 
       const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
       console.log(publicURL);
@@ -80,13 +89,58 @@ function Prompt() {
     });
   }
 
-  const LoaderWrapper = styled.div`
-    width: 200px;
-    height: 200px;
-    border: 16px dotted #fff;
-    border-radius: 50%;
-    animation: ${keyframes`0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }`}
-      2s linear infinite;
+  const rotation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+  const rotationBack = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+`;
+
+  // Styled component for loader
+  const Loader = styled.div`
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    position: relative;
+    border: 3px solid #fff;
+    box-sizing: border-box;
+    animation: ${rotation} 1.5s linear infinite;
+
+    &::after,
+    &::before {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      border: 2px solid rgb(186 193 208);
+      width: 100px;
+      height: 100px;
+      animation: ${rotationBack} 1s linear infinite;
+      transform-origin: center center;
+    }
+
+    &::before {
+      width: 150px;
+      height: 150px;
+      border-color: 3px #0fb7e1;
+      box-sizing: border-box;
+      animation: ${rotation} 0.5s linear infinite;
+    }
   `;
 
   return (
@@ -161,7 +215,7 @@ function Prompt() {
           </button>
         </form>
       ) : (
-        <LoaderWrapper />
+        <Loader />
       )}
     </div>
   );

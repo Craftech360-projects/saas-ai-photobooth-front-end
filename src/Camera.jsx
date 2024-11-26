@@ -113,6 +113,9 @@ function Camer() {
           style={{
             width: "100vw",
             height: "100vh",
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center'
             // backgroundImage: `url(${one})`,
           }}
         >
@@ -125,15 +128,12 @@ function Camer() {
           /> */}
           <button
             style={{
-              width: "350px",
-              height: "120px",
+              width: "250px",
+              height: "80px",
               cursor: "pointer",
-              bottom: "45%",
-              left: "35%",
-              position: "absolute",
               borderRadius: "10px",
               border: "none",
-              fontSize: "48px",
+              fontSize: "40px",
               fontWeight: "bold",
               backgroundColor: "rgb(186 193 208)", // Default color
               color: "#000", // Default text color
@@ -350,9 +350,9 @@ function Camer() {
         {isCameraOn && (
           <button
             style={{
-              marginTop: "100px",
-              width: "350px",
-              height: "120px",
+              marginTop: "40px",
+              width: "250px",
+              height: "80px",
               cursor: "pointer",
               borderRadius: "10px",
               border: "none",
