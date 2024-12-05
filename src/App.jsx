@@ -9,13 +9,16 @@ import Error from './Error';
 import Admin from './Admin';
 import Prompt from './Prompt';
 import ResultDisplay from './ResultDisplay';
+import UserFormPage from './UserFormPage';
+
 
 function App() {
   return (
     <Router>
       <div>
-        <Routes>
-          <Route path="/" element={<Camer />} />
+        <Routes> 
+           <Route path="/" element={<UserFormPage />} />
+          <Route path="/Camera" element={<Camer />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/prompt" element={<Prompt />} />
           <Route path="/result" element={<Result />} />

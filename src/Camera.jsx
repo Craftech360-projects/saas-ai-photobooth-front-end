@@ -28,11 +28,11 @@ function Camer() {
   const femaleImages = ["female1", "female1"];
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [isCameraOn, setIsCameraOn] = useState(false);
+  const [isCameraOn, setIsCameraOn] = useState(true);
   const navigate = useNavigate();
   const [flash, setFlash] = useState(false);
   const [gender, setGender] = useState(null);
-  const [isStarted, setIsStarted] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
   const [isGenderShow, setIsGenderShow] = useState(false);
   const [isOptions, setIsOptions] = useState(false);
 
@@ -135,11 +135,14 @@ function Camer() {
               border: "none",
               fontSize: "48px",
               fontWeight: "bold",
-              backgroundColor: "rgb(186 193 208)", // Default color
-              color: "#000", // Default text color
+              backgroundColor: "rgb(20 119 222)", // Default color
+              color: "rgb(189 215 12)#000", // Default text color
+              // backgroundColor: "rgb(186 193 208)", // Default color
+              // color: "#000", // Default text color
               transition: "background-color 0.3s ease, color 0.3s ease",
             }}
             onClick={(e) => {
+              console.log("clicked");
               e.target.style.backgroundColor = "rgb(20 119 222)"; // Change background
               e.target.style.color = "rgb(189 215 12)"; // Change text color
               setTimeout(() => {
