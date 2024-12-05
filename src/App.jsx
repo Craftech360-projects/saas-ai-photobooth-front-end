@@ -17,8 +17,9 @@ function App() {
     <Router>
       <div>
         <Routes> 
-           <Route path="/" element={<UserFormPage />} />
-          <Route path="/Camera" element={<Camer />} />
+           {/* <Route path="/" element={<UserFormPage />} />
+          <Route path="/Camera" element={<Camer />} /> */}
+          <Route path="/" element={<Camer />} /> 
           <Route path="/swap" element={<Swap />} />
           <Route path="/prompt" element={<Prompt />} />
           <Route path="/result" element={<Result />} />
