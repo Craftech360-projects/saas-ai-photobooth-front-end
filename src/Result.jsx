@@ -127,38 +127,7 @@ function Result() {
                   </h1>
                 </div>
                 {/* ReactToPrint with a reference to the rendered PrintableImage */}
-                <ReactToPrint
-                  trigger={() => (
-                    <button
-                      type="button"
-                      style={{
-                        width: "250px",
-                        height: "80px",
-                        cursor: "pointer",
-                        borderRadius: "10px",
-                        border: "none",
-                        fontSize: "40px",
-                        fontWeight: "bold",
-                        backgroundColor: "#ffffff", // Default color
-                        color: "#000000", // Default text color
-                        transition:"background-color 0.3s ease, color 0.3s ease",
-                        marginBottom: "16px",
-                        marginTop: "16px",
-                      }}
-                    >
-                      Print
-                    </button>
-                  )}
-                  content={() => printRef.current} // Correct reference to PrintableImage
-                />
-
-                {/* The PrintableImage component */}
-                <div style={{ display: "none" }}>
-                  <PrintableImage
-                    ref={printRef}
-                    resultImageUrl={resultImageUrl}
-                  />
-                </div>
+               
 
                 <button
                   type="submit"

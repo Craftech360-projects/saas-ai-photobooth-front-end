@@ -113,7 +113,7 @@ function Prompt() {
           }}
         >
           <textarea
-            placeholder="Describe your fantasy character and watch the magic come to life."
+            placeholder="Write the prompt here."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             style={{
@@ -121,8 +121,10 @@ function Prompt() {
               height: "200px", // Height adjusted to allow for multiple lines
               padding: "20px", // Add padding inside the textarea
               fontSize: "26px", // Increase font size for better visibility
-              borderRadius: "15px", // Rounded corners
-              border: "2px solid #30A6EC", // Border color
+           
+              borderTopRightRadius: "30px",  // Top-right corner radius
+              borderBottomLeftRadius: "30px",  // Bottom-left corner radius
+              // Border color
               marginBottom: "30px", // Space between textarea and button
               outline: "none", // Remove outline
               boxSizing: "border-box", // Ensure padding doesn't affect width/height
@@ -145,19 +147,19 @@ function Prompt() {
           <button
             type="submit"
             style={{
-              width: "670px",
+              width: "348px",
               height: "80px",
               cursor: "pointer",
               borderRadius: "10px",
               border: "none",
               fontSize: "48px",
               fontWeight: "bold",
-              backgroundColor: "rgb(186 193 208)", // Default color
+              backgroundColor: "transparant", // Default color
               color: "#000", // Default text color
               transition: "background-color 0.3s ease, color 0.3s ease",
             }}
           >
-            AI MAGIC
+            SUBMIT
           </button>
         </form>
       ) : (

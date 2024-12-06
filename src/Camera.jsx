@@ -342,37 +342,71 @@ function Camer() {
               objectFit: "cover",
               width: "600px",
               height: "704px",
-              borderRadius: "15px",
+            //  borderRadius: "15px",
               marginTop: "160px",
-              // border: "5px solid rgb(5 82 126)",
-              boxShadow:"0px 0px 10px 4px rgb(189 215 12)"
+               // Apply radius only to the top-right and bottom-left corners
+    borderTopRightRadius: "50px",  // Top-right corner radius
+    borderBottomLeftRadius: "50px",  // Bottom-left corner radius
+              border: "3px solid rgb(220 220 220)",
+              boxShadow:"0px 0px 10px 4px rgb(220 220 220)"
             }}
           ></video>
+//           <div
+//   style={{
+//     display: "inline-block",  // Ensure the container respects the video aspect ratio
+//     borderRadius: "15px",
+//     boxShadow: "0px 0px 10px 4px rgb(220 220 220)",  // Apply the box shadow here
+//     overflow: "hidden",  // Hide overflow to keep the video inside the container
+//   }}
+// >
+//   <video
+//     ref={videoRef}
+//     autoPlay
+//     style={{
+//       display: "block",
+//       aspectRatio: "1080 / 1920",
+//       objectFit: "cover",
+//       width: "600px",
+//       height: "704px",
+//       clipPath: "polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))",  // Apply clip-path here
+//     }}
+//   ></video>
+// </div>
         )}
         <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
         {isCameraOn && (
           <button
-            style={{
-              marginTop: "100px",
-              width: "350px",
-              height: "120px",
-              cursor: "pointer",
-              borderRadius: "10px",
-              border: "none",
-              fontSize: "48px",
-              fontWeight: "bold",
-              backgroundColor: "rgb(186 193 208)", // Default color
-              color: "#000", // Default text color
-              transition: "background-color 0.3s ease, color 0.3s ease",
-            }}
-            onClick={(e) => {
-              e.target.style.backgroundColor = "rgb(20 119 222)"; // Change background
-              e.target.style.color = "rgb(189 215 12)"; // Change text color
-              setTimeout(captureImage, 500); // Correctly invoke captureImage after 500ms
-            }}
-          >
-            Capture
-          </button>
+          style={{
+            marginTop: "80px",
+            width: "450px",
+            height: "80px",
+            cursor: "pointer",
+            border: "2px solid #fff", // Add white border with 2px thickness
+            fontSize: "48px",
+            fontWeight: "bold",
+            backgroundColor: "transparent", // Make background transparent
+            color: "#fff", // White text color
+            transition: "background-color 0.3s ease, color 0.3s ease",
+            display: "flex", // Use flexbox for alignment
+            alignItems: "center", // Center content vertically
+            justifyContent: "center", // Center content horizontally
+            gap: "10px", // Space between icon and text
+          }}
+          onClick={(e) => {
+            e.target.style. backgroundColor="transparent"; // Change background
+            e.target.style.color="#fff", // Change text color
+            setTimeout(captureImage, 500); // Correctly invoke captureImage after 500ms
+          }}
+        >
+          {/* Image Icon */}
+          <img
+            src="/assets/camera.png" // Replace with your icon URL
+            alt="Capture Icon"
+            style={{ width: "40px", height: "40px" }} // Adjust size of the icon
+          />
+          CAPTURE
+        </button>
+        
         )}
       </div>
     </section>
