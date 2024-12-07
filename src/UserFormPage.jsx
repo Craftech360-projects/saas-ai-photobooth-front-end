@@ -144,7 +144,7 @@ const Input = styled.input`
   &::placeholder {
     color: rgba(213, 239, 247, 0.8);  /* Set placeholder color to dark gray with transparency */
   }
-
+  color: rgba(213, 239, 247);
   border-top-right-radius: 20px;  /* Top-right corner radius */
   border-bottom-left-radius: 20px;  /* Bottom-left corner radius */
 
@@ -188,14 +188,13 @@ const SubmitButton = styled.button`
 
 // Styled Loader
 const Loader = styled.div`
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;  /* Set the loader size */
+  height: 2rem;
   border: 3px solid #fff;
   border-top: 3px solid transparent;
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
 `;
-
 function UserFormPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");

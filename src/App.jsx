@@ -20,8 +20,8 @@ function App() {
         <Routes> 
         <Route path="/" element={<Start />} />
            <Route path="/form" element={<UserFormPage />} />
-          <Route path="/Camera" element={<Camer />} />
-          {/* <Route path="/" element={<Camer />} />  */}
+         <Route path="/Camera" element={<Camer />} />
+         {/* <Route path="/" element={<Camer />} />  */}
           <Route path="/swap" element={<Swap />} />
           <Route path="/prompt" element={<Prompt />} />
           <Route path="/result" element={<Result />} />

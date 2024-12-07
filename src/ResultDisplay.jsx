@@ -120,7 +120,7 @@ const ResultDisplay = () => {
       >
         <QRCode
           value={resultImageUrl}
-          size={200}
+          size={180}
           style={{
             padding: "15px",
             backgroundColor: "#fff",
