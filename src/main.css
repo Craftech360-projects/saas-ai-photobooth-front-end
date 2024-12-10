@@ -1,6 +1,8 @@
 @font-face {
-  font-family: "Inter"; /* Provide a name for your font */
-  src: url("/hoves.otf") format("truetype"); /* Replace '/path/to/font.ttf' with the actual path to your .ttf file */
+  font-family: "Inter";
+  /* Provide a name for your font */
+  src: url("/hoves.otf") format("truetype");
+  /* Replace '/path/to/font.ttf' with the actual path to your .ttf file */
 }
 
 body {
@@ -12,11 +14,11 @@ body {
   display: flex;
   place-items: center;
   /* background-color: #eeeee4; */
-  background-image: url("/assets/dell.png");
+  background-image: url("/Login.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size:cover;
-  font-family:Roboto, sans-serif;
+  background-size: cover;
+  font-family: Roboto, sans-serif;
 }
 
 p {

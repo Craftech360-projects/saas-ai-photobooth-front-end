@@ -14,19 +14,84 @@ function Swap() {
   const navigate = useNavigate();
   const location = useLocation();
   const sourceImageBlob = location.state?.sourceImage;
-  const getGender = location.state?.gender;
-  const isGender = getGender; // Static gender value from location state
+  const selectedImage = location.state?.isImg;
+  const userDetails = location.state?.userDetails;
+  const isGender = ''; // Static gender value from location state
   const [loading, setLoading] = useState(false); // State to manage loading animation
   const [resultImageUrl, setResultImageUrl] = useState(null); // Store the result image URL
   const [imageLoaded, setImageLoaded] = useState(false); // State to check if image has been loaded
   const printRef = useRef(); // Ref for printable image
 
+  const [hasFetched, setHasFetched] = useState(false);
+
   useEffect(() => {
-    if (!sourceImageBlob) {
-      console.error("Source image is not provided.");
-      navigate("/"); // Navigate back to capture if no source image is found
-    }
-  }, [sourceImageBlob, navigate]);
+    if (hasFetched) return; // Prevent re-execution
+
+    const fetchData = async () => {
+      setHasFetched(true); // Mark as executed
+      if (!sourceImageBlob) {
+        console.error("Source image is not provided.");
+        navigate("/");
+      }
+      setLoading(true);
+
+      try {
+        const formData = new FormData();
+        formData.append(
+          "targetImage",
+          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
+        );
+
+        const response = await fetch(selectedImage);
+        const targetImageBlob = await response.blob();
+        formData.append(
+          "sourceImage",
+          new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
+        );
+        formData.append("name", userDetails.name);
+        formData.append("email", userDetails.email);
+
+        const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!swapResponse.ok) {
+          throw new Error("Something went wrong with the swap API call");
+        }
+
+        const swappedImageBlob = await swapResponse.blob();
+        const convertedBlob = await convertImageToJPEG(swappedImageBlob);
+
+        const fileName = `swapped-images/${Date.now()}-result.jpg`;
+        const { error: uploadError } = await supabase.storage
+          .from("test-bucket")
+          .upload(fileName, convertedBlob, {
+            contentType: "image/jpeg",
+          });
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
+        if (publicURL) {
+          setResultImageUrl(publicURL); // Set the result image URL
+          setLoading(false); // Hide loading animation
+        } else {
+          console.error("Failed to get public URL");
+          navigate("/error");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        navigate("/error");
+      }
+    };
+
+    fetchData(); // Call the async function
+  }, [sourceImageBlob]); // Dependency array
+
+
 
   // Function to handle image submission and swapping
   const handleSubmit = async (e, selectedImage) => {
@@ -314,77 +379,75 @@ function Swap() {
 
     return (
       <div
-        style={{
-          textAlign: "center",
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "55%",
-          }}
-        >
-          <img
-            className="animate__animated animate__zoomIn animate__delay-2s"
-            src={resultImageUrl}
-            alt="Swapped Result"
-            style={{
-              width: "80%", // Set to 100% to fill the container
-              height: "auto", // Use auto for height to maintain aspect ratio
-              objectFit: "cover", // Ensure the image covers the container
-              borderRadius: "16px",
-              border: "16px solid #30A6EC",
-            }}
-          />
-        </div>
+
 
         {imageLoaded && (
           <div
             style={{
-              width: "70%",
-              height: "40%",
+              width: "100%",
+              height: "100%",
               display: "flex",
               alignItems: "center",
+              paddingTop: '200px'
             }}
           >
             <div
               style={{
-                width: "50%",
+                width: "25%",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start",
+                alignItems: "center",
               }}
             >
               <QRCode
                 value={resultImageUrl}
-                size={300}
+                size={200}
                 style={{
-                  border: "20px solid #30A6EC",
-                  borderRadius: "16px",
+                  // border: "20px solid #30A6EC",
+                  // borderRadius: "16px",
                   padding: "15px",
                   backgroundColor: "#fff",
+                  marginBottom: '25px'
                 }}
               />
-            </div>
+              <h1 style={{ fontSize: "30px", lineHeight: "40px", fontWeight: 'bold', color: '#fff' }}>
+                {" "}
+                Scan QR code
+              </h1>
+              <h1
+                style={{
+                  fontSize: "20px",
+                  lineHeight: "25px",
+                  marginTop: "-16px",
+                  color: '#fff'
+                }}
+              >
+                to download image
+              </h1>
 
+            </div>
+            <img
+              className="animate__animated animate__zoomIn animate__delay-2s"
+              src={resultImageUrl}
+              alt="Swapped Result"
+              style={{
+                width: "50%", // Set to 100% to fill the container
+                height: "auto", // Use auto for height to maintain aspect ratio
+                objectFit: "cover", // Ensure the image covers the container
+                // borderRadius: "16px",
+                // border: "16px solid #30A6EC",
+              }}
+            />
             <div
               style={{
-                width: "35%",
-                marginLeft: "100px",
+                width: "25%",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start",
+                alignItems: "center",
               }}
             >
-              <div
+              {/* <div
                 style={{
                   color: "#fff",
                   textAlign: "left",
@@ -404,7 +467,7 @@ function Swap() {
                 >
                   your warrior alter ego.
                 </h1>
-              </div>
+              </div> */}
               {/* ReactToPrint with a reference to the rendered PrintableImage */}
               <ReactToPrint
                 trigger={() => (
@@ -414,12 +477,12 @@ function Swap() {
                       width: "250px",
                       height: "80px",
                       cursor: "pointer",
-                      borderRadius: "10px",
+                      // borderRadius: "10px",
                       border: "none",
                       fontSize: "40px",
                       fontWeight: "bold",
-                      backgroundColor: "#ffffff", // Default color
-                      color: "#000000", // Default text color
+                      backgroundColor: "#3A49D4", // Default color
+                      color: "#fff", // Default text color
                       transition: "background-color 0.3s ease, color 0.3s ease",
                       marginBottom: "16px",
                       marginTop: "16px",
@@ -445,12 +508,11 @@ function Swap() {
                   width: "250px",
                   height: "80px",
                   cursor: "pointer",
-                  borderRadius: "10px",
                   border: "none",
                   fontSize: "40px",
                   fontWeight: "bold",
-                  backgroundColor: "#ffffff", // Default color
-                  color: "#000000", // Default text color
+                  backgroundColor: "#3A49D4", // Default color
+                  color: "#fff", // Default text color
                   transition: "background-color 0.3s ease, color 0.3s ease",
                 }}
                 onClick={(e) => {
@@ -459,9 +521,9 @@ function Swap() {
                   setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
                 }}
               >
-                Restart
+                Home
               </button>
-              <button
+              {/* <button
                 type="submit"
                 style={{
                   width: "250px",
@@ -482,7 +544,7 @@ function Swap() {
                 }}
               >
                 Try Again
-              </button>
+              </button> */}
             </div>
           </div>
         )}

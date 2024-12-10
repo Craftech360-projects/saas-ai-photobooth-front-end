@@ -9,7 +9,28 @@ import two from "/assets/two.png";
 import male from "/assets/male.png";
 import female from "/assets/female.png";
 import buttonBg from "/assets/startbg.png";
+import m1 from "/london.png"; // Import the PNG image
+import m2 from "/nyc.png"; // Import the PNG image 
+import m3 from "/paris.png"; // Import the PNG image 
+import m4 from "/swi.png"; // Import the PNG image 
+import m5 from "/tok.png"; // Import the PNG image
 
+import f1 from "/london.png"; // Import the PNG image
+import f2 from "/nyc.png"; // Import the PNG image 
+import f3 from "/paris.png"; // Import the PNG image 
+import f4 from "/swi.png"; // Import the PNG image 
+import f5 from "/tok.png"; // Import the PNG image 
+
+
+const imgStyle = {
+  width: "312px",
+  height: '226px',
+  objectFit: "contain",
+  justifyContent: "center",
+  alignItems: "center",
+  // border: '5px solid #fff',
+  cursor: "pointer",
+}
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
   background-repeat: no-repeat;
@@ -32,10 +53,12 @@ function Camer() {
   const navigate = useNavigate();
   const [flash, setFlash] = useState(false);
   const [gender, setGender] = useState(null);
+  const [isGender, setIsGender] = useState('');
   const [isStarted, setIsStarted] = useState(true);
   const [isGenderShow, setIsGenderShow] = useState(false);
   const [isOptions, setIsOptions] = useState(false);
-
+  const [isImg, setIsImg] = useState(false);
+  const [userDetails, setUserDetails] = useState({ name: "", email: "" });
   const getRandomImage = (images) => {
     return images[Math.floor(Math.random() * images.length)];
   };
@@ -43,7 +66,8 @@ function Camer() {
   const startProcess = (value) => {
     setIsStarted(false);
     setIsGenderShow(false);
-    setIsCameraOn(true);
+    setIsGender(value);
+    // setIsCameraOn(true);
     // const selectedImg =
     //   value === "male"
     //     ? getRandomImage(maleImages)
@@ -91,13 +115,30 @@ function Camer() {
         if (section) {
           section.classList.add("animate__animated", "animate__bounceOut");
           setTimeout(() => {
-            navigate("/swap", { state: { sourceImage: blob, gender } });
+            navigate("/swap", { state: { sourceImage: blob, isImg, userDetails } });
           }, 1000); // Adjust timing as needed
         }
       }, "image/jpeg");
     }, 500);
   };
 
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+
+
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsGenderShow(true);
+    setIsStarted(false);
+    console.log(userDetails, 'userDetails');
+  };
   // 'animate__animated animate__bounceOut'
   return (
     <section
@@ -116,14 +157,8 @@ function Camer() {
             // backgroundImage: `url(${one})`,
           }}
         >
-          <img
-            src={one}
-            alt=""
-            style={{
-              width: "100%",
-            }}
-          />
-          <button
+
+          {/* <button
             style={{
               width: "350px",
               height: "120px",
@@ -143,13 +178,81 @@ function Camer() {
               e.target.style.backgroundColor = "#30A6EC"; // Change background
               e.target.style.color = "#ffffff"; // Change text color
               setTimeout(() => {
-                setIsGenderShow(true);
-                setIsStarted(false);
+              4
               }, 500); // Wait 500ms then proceed
             }}
           >
             Start
-          </button>
+          </button> */}
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              width: "100%",
+              height: '100%',
+              // backgroundColor: "#ffffff",
+              borderRadius: "10px",
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              value={userDetails.name}
+              onChange={handleChange}
+              style={{
+                padding: "20px",
+                fontSize: "34px",
+                border: "none",
+                textAlign: 'center',
+                color: "#182060",
+                fontWeight: "bold",
+                width: "55%"
+              }}
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={userDetails.email}
+              onChange={handleChange}
+              style={{
+                padding: "20px",
+                fontSize: "34px",
+                border: "none",
+                textAlign: 'center',
+                color: "#1B236A",
+                fontWeight: "bold",
+                width: "55%"
+              }}
+              required
+            />
+            <button
+              type="submit"
+              style={{
+                width: "250px",
+                height: "80px",
+                cursor: "pointer",
+                // borderRadius: "10px",
+                border: "none",
+                fontSize: "40px",
+                fontWeight: "bold",
+                backgroundColor: "#3A49D4", // Default color
+                color: "#fff", // Default text color
+                transition: "background-color 0.3s ease, color 0.3s ease",
+                position: 'absolute',
+                top: '80%'
+              }}
+            >
+              Continue
+            </button>
+          </form>
         </div>
       )}
 
@@ -168,21 +271,14 @@ function Camer() {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <img
-            src={two}
-            alt=""
-            style={{
-              width: "100%",
-              position: "absolute",
-              zIndex: "-100",
-            }}
-          />
+
           <div
             style={{
               width: "100%",
               height: "720px",
               display: "flex",
-              justifyContent: "flex-start",
+              flexDirection: 'row',
+              justifyContent: "center",
             }}
           >
             <button
@@ -192,15 +288,14 @@ function Camer() {
                 backgroundSize: "cover", // Ensure the image covers the button entirely
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                width: "293px",
-                height: "358px",
+                width: "298px",
+                height: "291px",
                 border: "none", // Start with no border
                 cursor: "pointer",
                 backgroundColor: "transparent", // Transparent to show background image
                 transition: "border 0.3s ease", // Smooth border transition
                 boxSizing: "border-box",
-                marginRight: "80px", // Ensures the border is included in the button's size
-                marginLeft: "165px", // Ensures the border is included in the button's size
+                marginRight: "20px", // Ensures the border is included in the button's size
               }}
               onClick={(e) => {
                 // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click 
@@ -216,13 +311,14 @@ function Camer() {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                width: "293px", // Adjust width as needed
-                height: "358px", // Adjust height as needed
+                width: "298px",
+                height: "291px",
                 border: "none",
                 cursor: "pointer", // Show pointer cursor on hover
                 backgroundColor: "transparent",
                 transition: "border 0.3s ease", // Smooth border transition
                 boxSizing: "border-box", // Ensures the border is included in the button's size
+                marginLeft: "20px",
               }}
               onClick={(e) => {
                 // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
@@ -312,63 +408,258 @@ function Camer() {
         </div>
       )}
 
-      <div
-        style={{
-          textAlign: "center",
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        {/* Camera Capture Code  */}
-        {isCameraOn && (
+
+      {/* Camera Capture Code  */}
+      {isCameraOn && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
           <video
             ref={videoRef}
             autoPlay
             style={{
               display: "block",
-              boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0)" : "none",
-              aspectRatio: "1080 / 1920",
-              objectFit: "cover",
-              width: "600px",
-              height: "704px",
-              borderRadius: "15px",
-              marginTop: "160px",
-              border: "10px solid #30A6EC",
+              boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0, 0.5)" : "none",
+              objectFit: "cover", // Ensures the video fills the container while maintaining aspect ratio
+              width: "100%",      // Makes the video responsive
+              height: "100%",     // Fills the parent container
+              maxWidth: "950px",  // Restrict maximum width for better control
+              maxHeight: "440px", // Restrict maximum height for better control
             }}
           ></video>
-        )}
-        <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-        {isCameraOn && (
+
+          <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           <button
             style={{
-              marginTop: "100px",
-              width: "350px",
-              height: "120px",
+              width: "250px",
+              height: "80px",
               cursor: "pointer",
-              borderRadius: "10px",
+              // borderRadius: "10px",
               border: "none",
-              fontSize: "48px",
+              fontSize: "40px",
               fontWeight: "bold",
-              backgroundColor: "#ffffff", // Default color
-              color: "#000000", // Default text color
+              backgroundColor: "#3A49D4", // Default color
+              color: "#fff", // Default text color
               transition: "background-color 0.3s ease, color 0.3s ease",
+              position: 'absolute',
+              top: '80%'
             }}
             onClick={(e) => {
-              e.target.style.backgroundColor = "#30A6EC"; // Change background
+              e.target.style.backgroundColor = "#3A49D0"; // Change background
               e.target.style.color = "#ffffff"; // Change text color
               setTimeout(captureImage, 500); // Correctly invoke captureImage after 500ms
             }}
           >
             Capture
           </button>
-        )}
-      </div>
-    </section>
+        </div>
+      )}
+      {isGender === "male" && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundRepeat: "no-repeat",
+            gap: '8px'
+          }}
+        >
+          <img
+            src={m1}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `m1.jpg`);
+                setIsImg(`lm.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+
+          <img
+            src={m2}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `m2.jpg`);
+                setIsImg(`nm.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+          <img
+            src={m3}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `m1.jpg`);
+                setIsImg(`pm.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+
+          <img
+            src={m4}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `m2.jpg`);
+                setIsImg(`sm.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+          <img
+            src={m5}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `m1.jpg`);
+                setIsImg(`tm.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+        </div>
+
+      )}
+
+      {isGender === "female" && (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundRepeat: "no-repeat",
+            gap: '8px'
+          }}
+        >
+          <img
+            src={f1}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `f1.jpg`);
+                setIsImg(`lf.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+
+          <img
+            src={f2}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `f2.jpg`);
+                setIsImg(`nf.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+          <img
+            src={f3}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `f2.jpg`);
+                setIsImg(`pf.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+          <img
+            src={f4}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `f2.jpg`);
+                setIsImg(`sf.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+          <img
+            src={f5}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `f2.jpg`);
+                setIsImg(`tf.png`)
+                setIsCameraOn(true)
+                setIsGender('')
+
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+        </div>
+      )}
+    </section >
   );
 }
 
