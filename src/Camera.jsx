@@ -10,27 +10,26 @@ import male from "/assets/male.png";
 import female from "/assets/female.png";
 import buttonBg from "/assets/startbg.png";
 import m1 from "/london.png"; // Import the PNG image
-import m2 from "/nyc.png"; // Import the PNG image 
-import m3 from "/paris.png"; // Import the PNG image 
-import m4 from "/swi.png"; // Import the PNG image 
+import m2 from "/nyc.png"; // Import the PNG image
+import m3 from "/paris.png"; // Import the PNG image
+import m4 from "/swi.png"; // Import the PNG image
 import m5 from "/tok.png"; // Import the PNG image
 
 import f1 from "/london.png"; // Import the PNG image
-import f2 from "/nyc.png"; // Import the PNG image 
-import f3 from "/paris.png"; // Import the PNG image 
-import f4 from "/swi.png"; // Import the PNG image 
-import f5 from "/tok.png"; // Import the PNG image 
-
+import f2 from "/nyc.png"; // Import the PNG image
+import f3 from "/paris.png"; // Import the PNG image
+import f4 from "/swi.png"; // Import the PNG image
+import f5 from "/tok.png"; // Import the PNG image
 
 const imgStyle = {
   width: "312px",
-  height: '226px',
+  height: "226px",
   objectFit: "contain",
   justifyContent: "center",
   alignItems: "center",
   // border: '5px solid #fff',
   cursor: "pointer",
-}
+};
 const CaptureButton = styled.button`
   background-image: url(${captureImageIcon});
   background-repeat: no-repeat;
@@ -53,7 +52,7 @@ function Camer() {
   const navigate = useNavigate();
   const [flash, setFlash] = useState(false);
   const [gender, setGender] = useState(null);
-  const [isGender, setIsGender] = useState('');
+  const [isGender, setIsGender] = useState("");
   const [isStarted, setIsStarted] = useState(true);
   const [isGenderShow, setIsGenderShow] = useState(false);
   const [isOptions, setIsOptions] = useState(false);
@@ -115,13 +114,14 @@ function Camer() {
         if (section) {
           section.classList.add("animate__animated", "animate__bounceOut");
           setTimeout(() => {
-            navigate("/swap", { state: { sourceImage: blob, isImg, userDetails } });
+            navigate("/swap", {
+              state: { sourceImage: blob, isImg, userDetails },
+            });
           }, 1000); // Adjust timing as needed
         }
       }, "image/jpeg");
     }, 500);
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -129,15 +129,13 @@ function Camer() {
       ...prevDetails,
       [name]: value,
     }));
-
-
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsGenderShow(true);
     setIsStarted(false);
-    console.log(userDetails, 'userDetails');
+    console.log(userDetails, "userDetails");
   };
   // 'animate__animated animate__bounceOut'
   return (
@@ -150,110 +148,93 @@ function Camer() {
     >
       {/* Start button code  */}
       {isStarted && (
-        <div
-          style={{
-            width: "100vw",
-            height: "100vh",
-            // backgroundImage: `url(${one})`,
-          }}
-        >
+    
+    <>
+    <style>
+      {`
+        input::placeholder {
+          color: #9A9A9A; /* Placeholder text color */
+          font-weight: bold;
+        }
 
-          {/* <button
-            style={{
-              width: "350px",
-              height: "120px",
-              cursor: "pointer",
-              bottom: "15%",
-              left: "15%",
-              position: "absolute",
-              borderRadius: "10px",
-              border: "none",
-              fontSize: "48px",
-              fontWeight: "bold",
-              backgroundColor: "#ffffff", // Default color
-              color: "#000000", // Default text color
-              transition: "background-color 0.3s ease, color 0.3s ease",
-            }}
-            onClick={(e) => {
-              e.target.style.backgroundColor = "#30A6EC"; // Change background
-              e.target.style.color = "#ffffff"; // Change text color
-              setTimeout(() => {
-              4
-              }, 500); // Wait 500ms then proceed
-            }}
-          >
-            Start
-          </button> */}
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-              width: "100%",
-              height: '100%',
-              // backgroundColor: "#ffffff",
-              borderRadius: "10px",
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
+        input {
+          outline: none;
+        }
 
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter your name"
-              value={userDetails.name}
-              onChange={handleChange}
-              style={{
-                padding: "20px",
-                fontSize: "34px",
-                border: "none",
-                textAlign: 'center',
-                color: "#182060",
-                fontWeight: "bold",
-                width: "55%"
-              }}
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={userDetails.email}
-              onChange={handleChange}
-              style={{
-                padding: "20px",
-                fontSize: "34px",
-                border: "none",
-                textAlign: 'center',
-                color: "#1B236A",
-                fontWeight: "bold",
-                width: "55%"
-              }}
-              required
-            />
-            <button
-              type="submit"
-              style={{
-                width: "250px",
-                height: "80px",
-                cursor: "pointer",
-                // borderRadius: "10px",
-                border: "none",
-                fontSize: "40px",
-                fontWeight: "bold",
-                backgroundColor: "#3A49D4", // Default color
-                color: "#fff", // Default text color
-                transition: "background-color 0.3s ease, color 0.3s ease",
-                position: 'absolute',
-                top: '80%'
-              }}
-            >
-              Continue
-            </button>
-          </form>
-        </div>
+        button:hover {
+          background-color: #2A3AB5; /* Hover background color */
+          color: #E6E6E6; /* Hover text color */
+        }
+      `}
+    </style>
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        width: "100%",
+        height: "100%",
+        borderRadius: "10px",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter your name"
+        value={userDetails.name}
+        onChange={handleChange}
+        style={{
+          padding: "20px",
+          fontSize: "34px",
+          border: "none",
+          textAlign: "center",
+          color: "#182060",
+          fontWeight: "bold",
+          width: "55%",
+          textTransform: "capitalize",
+        }}
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="Enter your email"
+        value={userDetails.email}
+        onChange={handleChange}
+        style={{
+          padding: "20px",
+          fontSize: "34px",
+          border: "none",
+          textAlign: "center",
+          color:"#182060",
+          fontWeight: "bold",
+          width: "55%",
+        }}
+        required
+      />
+      <button
+        type="submit"
+        style={{
+          width: "250px",
+          height: "80px",
+          cursor: "pointer",
+          border: "none",
+          fontSize: "40px",
+          fontWeight: "bold",
+          backgroundColor: "#3A49D4",
+          color: "#fff",
+          transition: "background-color 0.3s ease, color 0.3s ease",
+          position: "absolute",
+          top: "80%",
+        }}
+      >
+        Continue
+      </button>
+    </form>
+  </>
       )}
 
       {/* Gender Selcet Code  */}
@@ -271,13 +252,12 @@ function Camer() {
             backgroundRepeat: "no-repeat",
           }}
         >
-
           <div
             style={{
               width: "100%",
               height: "720px",
               display: "flex",
-              flexDirection: 'row',
+              flexDirection: "row",
               justifyContent: "center",
             }}
           >
@@ -298,8 +278,9 @@ function Camer() {
                 marginRight: "20px", // Ensures the border is included in the button's size
               }}
               onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click 
-                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
+                e.target.style.boxShadow =
+                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
                 setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
               }}
             ></button>
@@ -322,7 +303,8 @@ function Camer() {
               }}
               onClick={(e) => {
                 // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+                e.target.style.boxShadow =
+                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
                 setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
               }}
             ></button>
@@ -408,7 +390,6 @@ function Camer() {
         </div>
       )}
 
-
       {/* Camera Capture Code  */}
       {isCameraOn && (
         <div
@@ -430,10 +411,10 @@ function Camer() {
               display: "block",
               boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0, 0.5)" : "none",
               objectFit: "cover", // Ensures the video fills the container while maintaining aspect ratio
-              width: "100%",      // Makes the video responsive
-              height: "100%",     // Fills the parent container
-              maxWidth: "950px",  // Restrict maximum width for better control
-              maxHeight: "440px", // Restrict maximum height for better control
+              width: "100%", // Makes the video responsive
+              height: "100%", // Fills the parent container
+              maxWidth: "950px", // Restrict maximum width for better control
+              maxHeight: "500px", // Restrict maximum height for better control
             }}
           ></video>
 
@@ -450,8 +431,8 @@ function Camer() {
               backgroundColor: "#3A49D4", // Default color
               color: "#fff", // Default text color
               transition: "background-color 0.3s ease, color 0.3s ease",
-              position: 'absolute',
-              top: '80%'
+              position: "absolute",
+              top: "80%",
             }}
             onClick={(e) => {
               e.target.style.backgroundColor = "#3A49D0"; // Change background
@@ -474,7 +455,7 @@ function Camer() {
             justifyContent: "center",
             alignItems: "center",
             backgroundRepeat: "no-repeat",
-            gap: '8px'
+            gap: "8px",
           }}
         >
           <img
@@ -486,10 +467,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `m1.jpg`);
-                setIsImg(`lm.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`lm.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -503,10 +483,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `m2.jpg`);
-                setIsImg(`nm.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`nm.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -519,10 +498,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `m1.jpg`);
-                setIsImg(`pm.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`pm.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -536,10 +514,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `m2.jpg`);
-                setIsImg(`sm.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`sm.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -552,15 +529,13 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `m1.jpg`);
-                setIsImg(`tm.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`tm.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
         </div>
-
       )}
 
       {isGender === "female" && (
@@ -574,7 +549,7 @@ function Camer() {
             justifyContent: "center",
             alignItems: "center",
             backgroundRepeat: "no-repeat",
-            gap: '8px'
+            gap: "8px",
           }}
         >
           <img
@@ -586,9 +561,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `f1.jpg`);
-                setIsImg(`lf.png`)
-                setIsCameraOn(true)
-                setIsGender('')
+                setIsImg(`lf.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -602,10 +577,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `f2.jpg`);
-                setIsImg(`nf.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`nf.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -618,10 +592,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `f2.jpg`);
-                setIsImg(`pf.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`pf.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -634,10 +607,9 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `f2.jpg`);
-                setIsImg(`sf.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`sf.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
@@ -650,16 +622,15 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `f2.jpg`);
-                setIsImg(`tf.png`)
-                setIsCameraOn(true)
-                setIsGender('')
-
+                setIsImg(`tf.png`);
+                setIsCameraOn(true);
+                setIsGender("");
               }, 500); // Wait 50ms then proceed
             }}
           />
         </div>
       )}
-    </section >
+    </section>
   );
 }
 

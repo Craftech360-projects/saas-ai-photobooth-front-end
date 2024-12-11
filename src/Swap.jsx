@@ -16,7 +16,7 @@ function Swap() {
   const sourceImageBlob = location.state?.sourceImage;
   const selectedImage = location.state?.isImg;
   const userDetails = location.state?.userDetails;
-  const isGender = ''; // Static gender value from location state
+  const isGender = ""; // Static gender value from location state
   const [loading, setLoading] = useState(false); // State to manage loading animation
   const [resultImageUrl, setResultImageUrl] = useState(null); // Store the result image URL
   const [imageLoaded, setImageLoaded] = useState(false); // State to check if image has been loaded
@@ -51,10 +51,13 @@ function Swap() {
         formData.append("name", userDetails.name);
         formData.append("email", userDetails.email);
 
-        const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
-          method: "POST",
-          body: formData,
-        });
+        const swapResponse = await fetch(
+          "http://localhost:8000/api/swap-face/",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         if (!swapResponse.ok) {
           throw new Error("Something went wrong with the swap API call");
@@ -90,8 +93,6 @@ function Swap() {
 
     fetchData(); // Call the async function
   }, [sourceImageBlob]); // Dependency array
-
-
 
   // Function to handle image submission and swapping
   const handleSubmit = async (e, selectedImage) => {
@@ -278,56 +279,28 @@ function Swap() {
       </div>
     );
   };
-
-  // Component to display loading animation
+  
+  const animloader = keyframes`
+    0% { height: 48px; }
+    100% { height: 4px; }
+  `;
+  
+  const LoaderContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Spacing between bars */
+  `;
+  
+  const Bar = styled.div`
+    width: 8px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: ${(props) => props.color};
+    animation: ${animloader} 0.3s ${(props) => props.delay}s linear infinite alternate;
+  `;
+  
   const LoadingAnimation = () => {
-    const rotation = keyframes`
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  `;
-
-    const rotationBack = keyframes`
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(-360deg);
-    }
-  `;
-
-    const LoaderWrapper = styled.div`
-      width: 200px; /* Increased size */
-      height: 200px; /* Increased size */
-      border: 16px dotted #fff; /* Increased size */
-      border-style: solid solid dotted dotted;
-      border-radius: 50%;
-      display: inline-block;
-      position: relative;
-      box-sizing: border-box;
-      animation: ${rotation} 2s linear infinite;
-    `;
-
-    const LoaderInner = styled.div`
-      content: "";
-      box-sizing: border-box;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-      border: 16px dotted #30a6ec; /* Increased size */
-      border-style: solid solid dotted;
-      width: 100px; /* Increased size */
-      height: 100px; /* Increased size */
-      border-radius: 50%;
-      animation: ${rotationBack} 0.5s linear infinite;
-      transform-origin: center center;
-    `;
     return (
       <div
         style={{
@@ -339,12 +312,17 @@ function Swap() {
           width: "100vw",
         }}
       >
-        <LoaderWrapper>
-          <LoaderInner />
-        </LoaderWrapper>
+        <LoaderContainer>
+          <Bar color="rgb(31 187 238)" delay={0.3} /> {/* Blue */}
+          <Bar color="rgb(176 210 55)" delay={0.2} /> {/* Green */}
+          <Bar color="rgb(255 202 7)" delay={0.1} /> {/* Yellow */}
+          <Bar color="rgb(212 58 42)" delay={0} /> {/* Red */}
+        </LoaderContainer>
       </div>
     );
   };
+  
+  
 
   // Create a PrintableImage component using forwardRef
   const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
@@ -378,10 +356,7 @@ function Swap() {
     };
 
     return (
-      <div
-      >
-
-
+      <div>
         {imageLoaded && (
           <div
             style={{
@@ -389,7 +364,7 @@ function Swap() {
               height: "100%",
               display: "flex",
               alignItems: "center",
-              paddingTop: '200px'
+              paddingTop: "200px",
             }}
           >
             <div
@@ -408,10 +383,17 @@ function Swap() {
                   // borderRadius: "16px",
                   padding: "15px",
                   backgroundColor: "#fff",
-                  marginBottom: '25px'
+                  marginBottom: "25px",
                 }}
               />
-              <h1 style={{ fontSize: "30px", lineHeight: "40px", fontWeight: 'bold', color: '#fff' }}>
+              <h1
+                style={{
+                  fontSize: "30px",
+                  lineHeight: "40px",
+                  fontWeight: "bold",
+                  color: "#fff",
+                }}
+              >
                 {" "}
                 Scan QR code
               </h1>
@@ -420,12 +402,11 @@ function Swap() {
                   fontSize: "20px",
                   lineHeight: "25px",
                   marginTop: "-16px",
-                  color: '#fff'
+                  color: "#fff",
                 }}
               >
                 to download image
               </h1>
-
             </div>
             <img
               className="animate__animated animate__zoomIn animate__delay-2s"
