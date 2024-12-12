@@ -1,83 +1,56 @@
 import React, { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
-import * as Hands from "@mediapipe/hands";
 import * as cam from "@mediapipe/camera_utils";
 
 const HandGestureInteractiveLeaves = () => {
   const webcamRef = useRef(null);
   const interactiveCanvasRef = useRef(null); // Canvas for interactive leaves
-  const leafImageRef = useRef();
+  const leafImageRef = useRef([]);
   const leavesRef = useRef([]);
   const animationFrameRef = useRef();
-  const timeRef = useRef(0);
   const [isWebcamReady, setIsWebcamReady] = useState(false);
 
   let mouseX = 0;
   let mouseY = 0;
 
-  const onResults = (results) => {
-    if (results.multiHandLandmarks && results.multiHandLandmarks[0]) {
-      // Map the first landmark (index finger tip) to mouseX and mouseY
-      const landmarks = results.multiHandLandmarks[0];
-      mouseX = (1 - landmarks[8].x) * window.innerWidth; // Normalized to canvas width, flipped for mirror effect
-      mouseY = landmarks[8].y * window.innerHeight; // Normalized to canvas height
-    }
-  };
-
+  // Track mouse position
   useEffect(() => {
-    const hands = new Hands.Hands({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
-    });
-
-    hands.setOptions({
-      maxNumHands: 1,
-      modelComplexity: 1,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-    });
-
-    hands.onResults(onResults);
-
-    const initializeCamera = () => {
-      if (
-        webcamRef.current &&
-        webcamRef.current.video.readyState === 4
-      ) {
-        setIsWebcamReady(true);
-        const video = webcamRef.current.video;
-        video.width = 640;
-        video.height = 480;
-
-        const camera = new cam.Camera(video, {
-          onFrame: async () => {
-            await hands.send({ image: video });
-          },
-          width: 640,
-          height: 480,
-        });
-        camera.start();
-      }
+    const handleMouseMove = (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
     };
 
-    const interval = setInterval(() => {
-      if (webcamRef.current?.video.readyState === 4) {
-        initializeCamera();
-        clearInterval(interval);
-      }
-    }, 100);
+    window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      clearInterval(interval);
+      window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
   useEffect(() => {
     const canvas = interactiveCanvasRef.current;
     const ctx = canvas.getContext("2d");
-    const leafImage = new Image();
-    leafImage.crossOrigin = "anonymous";
-    leafImage.src = "assets/cftt.png";
-    leafImageRef.current = leafImage;
+
+    // List of image paths (can be extended to include more images)
+    const leafImagePaths = [
+      "assets/flower/1.png",
+      "assets/flower/2.png",
+      "assets/flower/3.png",
+      "assets/flower/4.png", // Add as many images as needed
+      "assets/flower/5.png",
+      "assets/flower/6.png",
+      "assets/flower/7.png",
+    ];
+
+    // Load images into a list
+    const leafImages = leafImagePaths.map((src) => {
+      const img = new Image();
+      img.src = src;
+      img.crossOrigin = "anonymous"; // Allow cross-origin if necessary
+      return img;
+    });
+
+    leafImageRef.current = leafImages; // Store the images
 
     const initializeLeaves = () => {
       const leaves = [];
@@ -89,6 +62,10 @@ const HandGestureInteractiveLeaves = () => {
         for (let y = 0; y < rows; y++) {
           const posX = x * (baseLeafSize / 2) + Math.random() * 30 - 15;
           const posY = y * (baseLeafSize / 2) + Math.random() * 30 - 15;
+
+          // Randomly choose an image from the loaded images
+          const randomImageIndex = Math.floor(Math.random() * leafImages.length);
+
           leaves.push({
             x: posX,
             y: posY,
@@ -96,10 +73,11 @@ const HandGestureInteractiveLeaves = () => {
             targetY: posY,
             originalX: posX,
             originalY: posY,
-            scale: Math.random() * 1.4 + 0.6,
-            speed: Math.random() * 2 + 1,
-            rotation: Math.random() * Math.PI * 2,
+            scale: Math.random() * 1.4 + 0.6,  // Random scaling factor
+            speed: Math.random() * 2 + 1,     // Random speed
+            rotation: Math.random() * Math.PI * 2, // Random rotation
             rotationSpeed: (Math.random() - 0.5) * 0.02,
+            image: leafImages[randomImageIndex], // Assign the random image
           });
         }
       }
@@ -108,7 +86,7 @@ const HandGestureInteractiveLeaves = () => {
 
     const draw = (time) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const repulsionRadius = 900;
+      const repulsionRadius = 2500;
 
       leavesRef.current.forEach((leaf) => {
         const distToMouse = Math.hypot(mouseX - leaf.x, mouseY - leaf.y);
@@ -136,8 +114,9 @@ const HandGestureInteractiveLeaves = () => {
         ctx.rotate(leaf.rotation);
 
         const leafSize = 50 * leaf.scale;
+        
         ctx.drawImage(
-          leafImageRef.current,
+          leaf.image, // Use the randomly selected image
           -leafSize / 2,
           -leafSize / 2,
           leafSize,
