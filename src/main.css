@@ -1,7 +1,7 @@
 @font-face {
-  font-family: "Inter";
+  font-family: 'UniNeue';
   /* Provide a name for your font */
-  src: url("/hoves.otf") format("truetype");
+  src: url("/UniNeue-Trial-Bold.ttf") format("truetype");
   /* Replace '/path/to/font.ttf' with the actual path to your .ttf file */
 }
 
@@ -25,4 +25,7 @@ p {
   text-transform: capitalize;
   font-weight: bold;
   font-size: 16px;
+}
+input::placeholder {
+  color: #5F259D; /* Set placeholder color */
 }

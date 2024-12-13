@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef, forwardRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import QRCode from "qrcode.react";
-import buttonBg from "/assets/pst.png";
-import ReactToPrint from "react-to-print";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Forward ref for the component to print
 const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
@@ -64,7 +62,8 @@ function Result() {
               justifyContent: "center",
               alignItems: "center",
               borderRadius: "16px",
-              border: "16px solid #30A6EC",
+              border: "12px solid #FFCE00",
+            
             }}
           />
           {imageLoaded && (
@@ -127,38 +126,9 @@ function Result() {
                   </h1>
                 </div>
                 {/* ReactToPrint with a reference to the rendered PrintableImage */}
-                <ReactToPrint
-                  trigger={() => (
-                    <button
-                      type="button"
-                      style={{
-                        width: "250px",
-                        height: "80px",
-                        cursor: "pointer",
-                        borderRadius: "10px",
-                        border: "none",
-                        fontSize: "40px",
-                        fontWeight: "bold",
-                        backgroundColor: "#ffffff", // Default color
-                        color: "#000000", // Default text color
-                        transition:"background-color 0.3s ease, color 0.3s ease",
-                        marginBottom: "16px",
-                        marginTop: "16px",
-                      }}
-                    >
-                      Print
-                    </button>
-                  )}
-                  content={() => printRef.current} // Correct reference to PrintableImage
-                />
+               
 
-                {/* The PrintableImage component */}
-                <div style={{ display: "none" }}>
-                  <PrintableImage
-                    ref={printRef}
-                    resultImageUrl={resultImageUrl}
-                  />
-                </div>
+              
 
                 <button
                   type="submit"
