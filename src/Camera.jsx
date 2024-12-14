@@ -7,17 +7,17 @@ import female from "/assets/female.png";
 import male from "/assets/male.png";
 import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
 import two from "/assets/two.png";
-import m1 from "/m1.jpeg"; // Import the PNG image
-import m2 from "/m2.jpeg"; // Import the PNG image
-import m3 from "/m3.jpeg"; // Import the PNG image
-import m4 from "/m4.jpeg"; // Import the PNG image
-import m5 from "/m5.jpeg"; // Import the PNG image
+import m1 from "/m1.png"; // Import the PNG image
+import m2 from "/m2.png"; // Import the PNG image
+import m3 from "/m3.png"; // Import the PNG image
+import m4 from "/m4.png"; // Import the PNG image
+import m5 from "/m5.png"; // Import the PNG image
 
-import f1 from "/f1.jpeg"; // Import the PNG image
-import f2 from "/f2.jpeg"; // Import the PNG image
-import f3 from "/f3.jpeg"; // Import the PNG image
-import f4 from "/f4.jpeg"; // Import the PNG image
-import f5 from "/f5.jpeg"; // Import the PNG image
+import f1 from "/f1.png"; // Import the PNG image
+import f2 from "/f2.png"; // Import the PNG image
+import f3 from "/f3.png"; // Import the PNG image
+import f4 from "/f4.png"; // Import the PNG image
+import f5 from "/f5.png"; // Import the PNG image
 const imgStyle = {
   width: "auto", // Keep the width auto to preserve the aspect ratio
   height: "auto", // Keep the height auto to preserve the aspect ratio
@@ -582,7 +582,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`m1.jpeg`);
+            setIsImg(`m1.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -596,7 +596,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`m2.jpeg`);
+            setIsImg(`m2.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -622,7 +622,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`m3.jpeg`);
+            setIsImg(`m3.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -636,7 +636,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`m4.jpeg`);
+            setIsImg(`m4.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -662,7 +662,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`m5.jpeg`);
+            setIsImg(`m5.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -713,7 +713,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`f1.jpeg`);
+            setIsImg(`f1.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -727,7 +727,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`f2.jpeg`);
+            setIsImg(`f2.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -753,7 +753,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`f3.jpeg`);
+            setIsImg(`f3.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -767,7 +767,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`f4.jpeg`);
+            setIsImg(`f4.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
@@ -793,7 +793,7 @@ CAPTURE          </button>
           e.target.style.boxShadow =
             "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
           setTimeout(() => {
-            setIsImg(`f5.jpeg`);
+            setIsImg(`f5.png`);
             setIsCameraOn(true);
             setIsGender("");
           }, 500);
