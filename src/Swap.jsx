@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useRef, forwardRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import QRCode from "qrcode.react";
-import { supabase } from "./supabaseClient";
-import m1 from "/assets/m1.png"; // Import the PNG image
-import m2 from "/assets/m2.png"; // Import the PNG image
-import f1 from "/assets/f1.png"; // Import the PNG image
-import f2 from "/assets/f2.png"; // Import the PNG image
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 import styled, { keyframes } from "styled-components";
+import { supabase } from "./supabaseClient";
+import f1 from "/assets/f1.png"; // Import the PNG image
+import f2 from "/assets/f2.png"; // Import the PNG image
+import m1 from "/assets/m1.png"; // Import the PNG image
+import m2 from "/assets/m2.png"; // Import the PNG image
 
 function Swap() {
   const navigate = useNavigate();
@@ -24,25 +24,111 @@ function Swap() {
 
   const [hasFetched, setHasFetched] = useState(false);
 
+  // useEffect(() => {
+  //   if (hasFetched) return; // Prevent re-execution
+
+  //   const fetchData = async () => {
+  //     setHasFetched(true); // Mark as executed
+  //     if (!sourceImageBlob) {
+  //       console.error("Source image is not provided.");
+  //       navigate("/");
+  //     }
+  //     setLoading(true);
+
+  //     try {
+  //       const formData = new FormData();
+  //       formData.append(
+  //         "targetImage",
+  //         new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
+  //       );
+
+  //       const response = await fetch(selectedImage);
+  //       const targetImageBlob = await response.blob();
+  //       formData.append(
+  //         "sourceImage",
+  //         new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
+  //       );
+  //       formData.append("name", userDetails.name);
+  //       formData.append("email", userDetails.email);
+  //       console.log("4");
+  //       const swapResponse = await fetch(
+  //         "http://localhost:5000/api/upload",
+  //         {
+  //           method: "POST",
+  //           body: formData,
+  //         }
+  //       );
+  //       console.log("3");
+  //       console.log(response.body);
+  //       if (swapResponse.status !== 200) {
+  //         throw new Error("Something went wrong with the swap API call");
+  //       }
+        
+
+  //       const swappedImageBlob = await swapResponse.blob();
+  //       const convertedBlob = await convertImageToJPEG(swappedImageBlob);
+
+  //       const fileName = `swapped-images/${Date.now()}-result.jpg`;
+  //       const { error: uploadError } = await supabase.storage
+  //         .from("test-bucket")
+  //         .upload(fileName, convertedBlob, {
+  //           contentType: "image/jpeg",
+  //         });
+
+  //       if (uploadError) {
+  //         throw uploadError;
+  //       }
+
+  //       const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
+  //       if (publicURL) {
+  //         setResultImageUrl(publicURL); // Set the result image URL
+  //         setLoading(false); // Hide loading animation
+  //       } else {
+  //         console.error("Failed to get public URL");
+  //         navigate("/error");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //       navigate("/error");
+  //     }
+  //   };
+
+  //   fetchData(); // Call the async function
+  // }, [sourceImageBlob]); // Dependency array
+
+
   useEffect(() => {
     if (hasFetched) return; // Prevent re-execution
-
+  
     const fetchData = async () => {
       setHasFetched(true); // Mark as executed
+  
       if (!sourceImageBlob) {
         console.error("Source image is not provided.");
         navigate("/");
+        return;
       }
+  
+      if (!userDetails.name || !userDetails.email) {
+        console.error("User details are missing.");
+        navigate("/");
+        return;
+      }
+  
       setLoading(true);
-
+  
       try {
         const formData = new FormData();
         formData.append(
           "targetImage",
           new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
         );
-
+  
         const response = await fetch(selectedImage);
+        if (!response.ok) {
+          throw new Error("Failed to fetch the target image.");
+        }
+  
         const targetImageBlob = await response.blob();
         formData.append(
           "sourceImage",
@@ -50,49 +136,52 @@ function Swap() {
         );
         formData.append("name", userDetails.name);
         formData.append("email", userDetails.email);
-
-        const swapResponse = await fetch(
-          "http://localhost:8000/api/swap-face/",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
+  
+        console.log("Sending images to the backend...");
+        const swapResponse = await fetch("http://localhost:8000/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+  
         if (!swapResponse.ok) {
-          throw new Error("Something went wrong with the swap API call");
+          const errorData = await swapResponse.json();
+          console.error("Swap API Error:", errorData);
+          throw new Error("Something went wrong with the swap API call.");
         }
-
-        const swappedImageBlob = await swapResponse.blob();
+  
+        const swapResult = await swapResponse.json();
+        console.log("Swap API Response:", swapResult);
+  
+        const swappedImageBlob = await fetch(swapResult.image_url).then((res) =>
+          res.blob()
+        );
+  
         const convertedBlob = await convertImageToJPEG(swappedImageBlob);
-
         const fileName = `swapped-images/${Date.now()}-result.jpg`;
+  
         const { error: uploadError } = await supabase.storage
           .from("test-bucket")
           .upload(fileName, convertedBlob, {
             contentType: "image/jpeg",
           });
-
+  
         if (uploadError) {
           throw uploadError;
         }
-
+  
         const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
-        if (publicURL) {
-          setResultImageUrl(publicURL); // Set the result image URL
-          setLoading(false); // Hide loading animation
-        } else {
-          console.error("Failed to get public URL");
-          navigate("/error");
-        }
+        setResultImageUrl(publicURL);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error:", error.message);
         navigate("/error");
+      } finally {
+        setLoading(false);
       }
     };
-
-    fetchData(); // Call the async function
-  }, [sourceImageBlob]); // Dependency array
+  
+    fetchData();
+  }, [sourceImageBlob, hasFetched, navigate, selectedImage, userDetails]);
+  
 
   // Function to handle image submission and swapping
   const handleSubmit = async (e, selectedImage) => {
@@ -108,16 +197,18 @@ function Swap() {
 
       const response = await fetch(selectedImage);
       const targetImageBlob = await response.blob();
+       console.log("1");
       formData.append(
         "sourceImage",
         new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
       );
 
-      const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
+      const swapResponse = await fetch("http://localhost:8000/api/upload", {
         method: "POST",
         body: formData,
       });
-
+      console.log("2");
+      console.log(swapResponse);
       if (!swapResponse.ok) {
         throw new Error("Something went wrong with the swap API call");
       }

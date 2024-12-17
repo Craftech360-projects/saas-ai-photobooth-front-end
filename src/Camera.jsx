@@ -1,19 +1,17 @@
 /* eslint-disable no-dupe-keys */
 // eslint-disable-next-line no-unused-vars
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
-import one from "/assets/one.png";
-import two from "/assets/two.png";
-import male from "/assets/male.png";
 import female from "/assets/female.png";
-import buttonBg from "/assets/startbg.png";
+import male from "/assets/male.png";
+import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
+import two from "/assets/two.png";
 import m1 from "/london.png"; // Import the PNG image
 import m2 from "/nyc.png"; // Import the PNG image
 import m3 from "/paris.png"; // Import the PNG image
-import m4 from "/swi.png"; // Import the PNG image
 import m5 from "/tok.png"; // Import the PNG image
+import m4 from "/toro.png"; // Import the PNG image
 
 import f1 from "/london.png"; // Import the PNG image
 import f2 from "/nyc.png"; // Import the PNG image
@@ -133,9 +131,10 @@ function Camer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsGenderShow(true);
+   // setIsGenderShow(true);
     setIsStarted(false);
-    console.log(userDetails, "userDetails");
+    console.log(userDetails, "userDetails")
+    setTimeout(() => startProcess("male"), 500); ;
   };
   // 'animate__animated animate__bounceOut'
   return (
@@ -474,21 +473,7 @@ function Camer() {
             }}
           />
 
-          <img
-            src={m2}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `m2.jpg`);
-                setIsImg(`nm.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
+        
           <img
             src={m3}
             alt="Swapped Result"
@@ -514,7 +499,7 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `m2.jpg`);
-                setIsImg(`sm.png`);
+                setIsImg(`tm.png`);
                 setIsCameraOn(true);
                 setIsGender("");
               }, 500); // Wait 50ms then proceed
@@ -529,7 +514,22 @@ function Camer() {
                 "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
               setTimeout(() => {
                 // handleSubmit(e, `m1.jpg`);
-                setIsImg(`tm.png`);
+                setIsImg(`tokyom.png`);
+                setIsCameraOn(true);
+                setIsGender("");
+              }, 500); // Wait 50ms then proceed
+            }}
+          />
+            <img
+            src={m2}
+            alt="Swapped Result"
+            style={imgStyle}
+            onClick={(e) => {
+              e.target.style.boxShadow =
+                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
+              setTimeout(() => {
+                // handleSubmit(e, `m2.jpg`);
+                setIsImg(`nm.png`);
                 setIsCameraOn(true);
                 setIsGender("");
               }, 500); // Wait 50ms then proceed
