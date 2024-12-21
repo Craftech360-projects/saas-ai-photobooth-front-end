@@ -175,8 +175,7 @@ function Result() {
                     transition: "background-color 0.3s ease, color 0.3s ease",
                   }}
                   onClick={(e) => {
-                    e.target.style.backgroundColor = "#30A6EC"; // Change background
-                    e.target.style.color = "#ffffff"; // Change text color
+                    e.target.style.shadow = "rgba(149, 157, 165, 0.2) 0px 8px 24px";
                     setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
                   }}
                 >

@@ -1,8 +1,7 @@
 @font-face {
-  font-family: "Inter";
-  /* Provide a name for your font */
-  src: url("/hoves.otf") format("truetype");
-  /* Replace '/path/to/font.ttf' with the actual path to your .ttf file */
+  font-family: "Colgate"; /* Font name */
+  src: url("/ColgateReadyBETA5-Bold.otf") format("opentype");
+  /* Ensure that '/ColgateReadyBETA5-Bold.otf' is the correct path to your font file */
 }
 
 body {
@@ -13,16 +12,15 @@ body {
   overflow: hidden;
   display: flex;
   place-items: center;
-  /* background-color: #eeeee4; */
-  background-image: url("/Login.png");
+  background-color: #d61e24;
+  /* background-image: url("/Login.png"); */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  font-family: Roboto, sans-serif;
+  font-family: "Colgate", sans-serif;
+  color: aliceblue;
 }
 
-p {
-  text-transform: capitalize;
-  font-weight: bold;
-  font-size: 16px;
+input::placeholder {
+  color: #DF1E24; /* Change the placeholder color for the 'name' field */
 }

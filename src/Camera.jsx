@@ -1,78 +1,51 @@
 /* eslint-disable no-dupe-keys */
-// eslint-disable-next-line no-unused-vars
-import React, { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
-import one from "/assets/one.png";
-import two from "/assets/two.png";
-import male from "/assets/male.png";
-import female from "/assets/female.png";
-import buttonBg from "/assets/startbg.png";
-import m1 from "/london.png"; // Import the PNG image
-import m2 from "/nyc.png"; // Import the PNG image
-import m3 from "/paris.png"; // Import the PNG image
-import m4 from "/swi.png"; // Import the PNG image
-import m5 from "/tok.png"; // Import the PNG image
+import React, { useRef, useEffect, useState, forwardRef } from "react";
+import QRCode from "qrcode.react";
+import styled, { keyframes } from "styled-components";
+import { supabase } from "./supabaseClient";
+import one from "/one.png";
+import login from "/login.png";
+import output from "/output.png";
+import ReactToPrint from "react-to-print";
 
-import f1 from "/london.png"; // Import the PNG image
-import f2 from "/nyc.png"; // Import the PNG image
-import f3 from "/paris.png"; // Import the PNG image
-import f4 from "/swi.png"; // Import the PNG image
-import f5 from "/tok.png"; // Import the PNG image
+// Forward ref for the component to print
+const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        maxWidth: "4in", // Set max width for 4x6 printing
+        maxHeight: "6in", // Set max height for 4x6 printing
+        margin: "0 auto", // Center the image
+        overflow: "hidden",
+      }}
+    >
+      <img
+        ref={ref}
+        src={resultImageUrl}
+        alt="Swapped Result"
+        style={{
+          width: "100%",
+          height: "96%",
+          objectFit: "contain", // Ensure the image fits within the specified area without getting cut off
+        }}
+      />
+    </div>
+  );
+});
 
-const imgStyle = {
-  width: "312px",
-  height: "226px",
-  objectFit: "contain",
-  justifyContent: "center",
-  alignItems: "center",
-  // border: '5px solid #fff',
-  cursor: "pointer",
-};
-const CaptureButton = styled.button`
-  background-image: url(${captureImageIcon});
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-color: transparent;
-  border: none;
-  width: 270px; /* Adjust width and height according to your image dimensions */
-  height: 100px;
-  cursor: pointer;
-  text-indent: -9999px; /* Hide text visually but keep it for accessibility */
-  position: relative;
-  margin-top: 90px;
-`;
 function Camer() {
-  const maleImages = ["male1", "male1"];
-  const femaleImages = ["female1", "female1"];
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
-  const navigate = useNavigate();
-  const [flash, setFlash] = useState(false);
-  const [gender, setGender] = useState(null);
-  const [isGender, setIsGender] = useState("");
-  const [isStarted, setIsStarted] = useState(true);
-  const [isGenderShow, setIsGenderShow] = useState(false);
-  const [isOptions, setIsOptions] = useState(false);
-  const [isImg, setIsImg] = useState(false);
-  const [userDetails, setUserDetails] = useState({ name: "", email: "" });
-  const getRandomImage = (images) => {
-    return images[Math.floor(Math.random() * images.length)];
-  };
-
-  const startProcess = (value) => {
-    setIsStarted(false);
-    setIsGenderShow(false);
-    setIsGender(value);
-    // setIsCameraOn(true);
-    // const selectedImg =
-    //   value === "male"
-    //     ? getRandomImage(maleImages)
-    //     : getRandomImage(femaleImages);
-    setGender(value);
-  };
+  const [isStarted, setIsStarted] = useState(false);
+  const [isShow, setIsShow] = useState(true);
+  const [userDetails, setUserDetails] = useState({ name: "", age: "" });
+  const [loading, setLoading] = useState(false);
+  const [resultImageUrl, setResultImageUrl] = useState(null);
+  const [hasFetched, setHasFetched] = useState(false);
+  const printRef = useRef(); // Ref for the printable component
 
   useEffect(() => {
     if (isCameraOn) {
@@ -86,19 +59,17 @@ function Camer() {
           setIsCameraOn(false);
         });
     } else {
-      if (videoRef.current && videoRef.current.srcObject) {
-        let tracks = videoRef.current.srcObject.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
+      stopCamera();
     }
 
-    return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        let tracks = videoRef.current.srcObject.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-    };
+    return () => stopCamera();
   }, [isCameraOn]);
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+    }
+  };
 
   const captureImage = () => {
     setTimeout(() => {
@@ -108,20 +79,81 @@ function Camer() {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
       canvas.toBlob((blob) => {
-        // Add animation before navigation
-        const section = document.querySelector("section");
-        if (section) {
-          section.classList.add("animate__animated", "animate__bounceOut");
-          setTimeout(() => {
-            navigate("/swap", {
-              state: { sourceImage: blob, isImg, userDetails },
-            });
-          }, 1000); // Adjust timing as needed
-        }
+        processImage(blob);
       }, "image/jpeg");
     }, 500);
   };
+
+  const processImage = async (sourceImageBlob) => {
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append(
+        "sourceImage",
+        new File([sourceImageBlob], "sourceImage.jpeg", { type: "image/jpeg" })
+      );
+      formData.append("name", userDetails.name);
+      formData.append("age", userDetails.age);
+
+      const response = await fetch("http://127.0.0.1:5000/process-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Image processing failed.");
+
+      // const processedImageBlob = await response.blob();
+      // const processedImageUrl = URL.createObjectURL(processedImageBlob);
+      // setResultImageUrl(processedImageUrl);
+      const swappedImageBlob = await response.blob();
+      const convertedBlob = await convertImageToJPEG(swappedImageBlob);
+
+      const fileName = `swapped-images/${Date.now()}-result.jpg`;
+      const { error: uploadError } = await supabase.storage
+        .from("test-bucket")
+        .upload(fileName, convertedBlob, {
+          contentType: "image/jpeg",
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
+      if (publicURL) {
+        setResultImageUrl(publicURL); // Set the result image URL
+        setLoading(false); // Hide loading animation
+      } else {
+        console.error("Failed to get public URL");
+        navigate("/error");
+      }
+    } catch (error) {
+      console.error("Error in image processing:", error);
+    } finally {
+      setLoading(false);
+      stopCamera();
+    }
+  };
+  function convertImageToJPEG(blob) {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(resolve, "image/jpeg");
+      };
+
+      img.onerror = reject;
+      img.src = URL.createObjectURL(blob);
+    });
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -130,268 +162,218 @@ function Camer() {
       [name]: value,
     }));
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsGenderShow(true);
     setIsStarted(false);
-    console.log(userDetails, "userDetails");
+    setIsCameraOn(true);
   };
-  // 'animate__animated animate__bounceOut'
-  return (
-    <section
-      style={{
-        textAlign: "center",
-        width: "100vw",
-        height: "100vh",
-      }}
-    >
-      {/* Start button code  */}
-      {isStarted && (
-    
-    <>
-    <style>
-      {`
-        input::placeholder {
-          color: #9A9A9A; /* Placeholder text color */
-          font-weight: bold;
-        }
+  const startProcess = () => {
+    setIsStarted(true);
+    setIsShow(false);
+  };
 
-        input {
-          outline: none;
-        }
+  const animloader = keyframes`
+    0% { height: 48px; }
+    100% { height: 4px; }
+  `;
 
-        button:hover {
-          background-color: #2A3AB5; /* Hover background color */
-          color: #E6E6E6; /* Hover text color */
-        }
-      `}
-    </style>
-    <form
-      onSubmit={handleSubmit}
+  const LoaderContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  `;
+
+  const Bar = styled.div`
+    width: 8px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: ${(props) => props.color};
+    animation: ${animloader} 0.3s ${(props) => props.delay}s linear infinite
+      alternate;
+  `;
+
+  const LoadingAnimation = () => (
+    <div
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
-        width: "100%",
-        height: "100%",
-        borderRadius: "10px",
-        alignItems: "center",
         justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
       }}
     >
-      <input
-        type="text"
-        name="name"
-        placeholder="Enter your name"
-        value={userDetails.name}
-        onChange={handleChange}
-        style={{
-          padding: "20px",
-          fontSize: "34px",
-          border: "none",
-          textAlign: "center",
-          color: "#182060",
-          fontWeight: "bold",
-          width: "55%",
-          textTransform: "capitalize",
-        }}
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Enter your email"
-        value={userDetails.email}
-        onChange={handleChange}
-        style={{
-          padding: "20px",
-          fontSize: "34px",
-          border: "none",
-          textAlign: "center",
-          color:"#182060",
-          fontWeight: "bold",
-          width: "55%",
-        }}
-        required
-      />
-      <button
-        type="submit"
-        style={{
-          width: "250px",
-          height: "80px",
-          cursor: "pointer",
-          border: "none",
-          fontSize: "40px",
-          fontWeight: "bold",
-          backgroundColor: "#3A49D4",
-          color: "#fff",
-          transition: "background-color 0.3s ease, color 0.3s ease",
-          position: "absolute",
-          top: "80%",
-        }}
-      >
-        Continue
-      </button>
-    </form>
-  </>
-      )}
+      <LoaderContainer>
+        <Bar color="rgb(31 187 238)" delay={0.3} />
+        <Bar color="rgb(176 210 55)" delay={0.2} />
+        <Bar color="rgb(255 202 7)" delay={0.1} />
+        <Bar color="rgb(212 58 42)" delay={0} />
+      </LoaderContainer>
+    </div>
+  );
 
-      {/* Gender Selcet Code  */}
-      {isGenderShow && (
+  return (
+    <section style={{ textAlign: "center", width: "100vw", height: "100vh" }}>
+      {isShow && (
         <div
           style={{
             textAlign: "center",
             width: "100vw",
             height: "100vh",
+            color: "#fff",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
+            justifyContent: "center",
             alignItems: "center",
-            // backgroundImage: `url(${two})`,
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              height: "720px",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${male})`,
-                backgroundSize: "cover", // Ensure the image covers the button entirely
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "298px",
-                height: "291px",
-                border: "none", // Start with no border
-                cursor: "pointer",
-                backgroundColor: "transparent", // Transparent to show background image
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box",
-                marginRight: "20px", // Ensures the border is included in the button's size
-              }}
-              onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
-              }}
-            ></button>
-
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${female})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "298px",
-                height: "291px",
-                border: "none",
-                cursor: "pointer", // Show pointer cursor on hover
-                backgroundColor: "transparent",
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box", // Ensures the border is included in the button's size
-                marginLeft: "20px",
-              }}
-              onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
-              }}
-            ></button>
-          </div>
-        </div>
-      )}
-      {/* Options Selcet Code  */}
-      {isOptions && (
-        <div
-          style={{
-            textAlign: "center",
-            width: "100vw",
-            height: "100vh",
-            display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            // backgroundImage: `url(${two})`,
-            backgroundRepeat: "no-repeat",
           }}
         >
           <img
-            src={two}
+            src={one}
             alt=""
             style={{
-              width: "100%",
-              position: "absolute",
+              width: "100vw",
+              height: "100vh",
               zIndex: "-100",
+              position: "absolute",
             }}
           />
-          <div
+          <button
+            // onClick={() => {
+            //   setIsStarted(true);
+            //   console.log("Button clicked, isStarted set to:", isStarted); // Check state update
+            // }} // Start camera
             style={{
-              width: "100%",
-              height: "720px",
-              display: "flex",
-              justifyContent: "flex-start",
+              marginTop: "350px",
+              width: "272px",
+              height: "82px",
+              fontSize: "44px",
+              fontWeight: "bold",
+              backgroundColor: "#fff",
+              color: "#d61e24",
+              border: "none",
+              cursor: "pointer",
+              borderRadius: "100px",
+            }}
+            onClick={(e) => {
+              e.target.style.transition =
+                "color 0.5s ease, background-color 0.5s ease";
+              e.target.style.color = "#fff";
+              setTimeout(startProcess, 500);
             }}
           >
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${male})`,
-                backgroundSize: "cover", // Ensure the image covers the button entirely
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "293px",
-                height: "358px",
-                border: "none", // Start with no border
-                cursor: "pointer",
-                backgroundColor: "transparent", // Transparent to show background image
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box",
-                marginRight: "80px", // Ensures the border is included in the button's size
-                marginLeft: "165px", // Ensures the border is included in the button's size
-              }}
-              onClick={(e) => {
-                e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
-              }}
-            ></button>
-
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${female})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "293px", // Adjust width as needed
-                height: "358px", // Adjust height as needed
-                border: "none",
-                cursor: "pointer", // Show pointer cursor on hover
-                backgroundColor: "transparent",
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box", // Ensures the border is included in the button's size
-              }}
-              onClick={(e) => {
-                e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
-              }}
-            ></button>
-          </div>
+            Start
+          </button>
         </div>
       )}
+      {isStarted && (
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          <img
+            src={login}
+            alt=""
+            style={{
+              width: "100vw",
+              height: "100vh",
+              zIndex: "-100",
+              position: "absolute",
+            }}
+          />
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            value={userDetails.name}
+            onChange={handleChange}
+            style={{
+              padding: "20px",
+              paddingLeft: "50px",
+              fontSize: "34px",
+              border: "none",
+              textAlign: "left",
+              color: "#000",
+              fontWeight: "bold",
+              width: "35%",
+              borderRadius: "10px",
+              textTransform: "capitalize",
+            }}
+            required
+          />
+          {/* <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={userDetails.email}
+            onChange={handleChange}
+            style={{
+              padding: "20px",
+              paddingLeft: "50px",
+              fontSize: "34px",
+              border: "none",
+              textAlign: "left",
+              color: "#000",
+              fontWeight: "bold",
+              width: "35%",
+              borderRadius: "10px",
+            }}
+            required
+          /> */}
+          <input
+            type="text"
+            name="age"
+            placeholder="Enter your age"
+            value={userDetails.age}
+            onChange={handleChange}
+            style={{
+              padding: "20px",
+              paddingLeft: "50px",
+              fontSize: "34px",
+              border: "none",
+              textAlign: "left",
+              color: "#000",
+              fontWeight: "bold",
+              width: "35%",
+              borderRadius: "10px",
+            }}
+            required
+          />
 
-      {/* Camera Capture Code  */}
-      {isCameraOn && (
+          <button
+            type="submit"
+            style={{
+              width: "272px",
+              height: "82px",
+              fontSize: "40px",
+              fontWeight: "bold",
+              backgroundColor: "#FFFFFF",
+              color: "#DF1E24",
+              border: "none",
+              cursor: "pointer",
+              marginTop: "50px",
+              borderRadius: "100px",
+            }}
+            // onClick={(e) => {
+            //   e.target.style.transition =
+            //     "color 0.5s ease, background-color 0.5s ease";
+            //   e.target.style.color = "#fff";
+            //   setTimeout(handleSubmit, 500);
+            // }}
+          >
+            Next
+          </button>
+        </form>
+      )}
+
+      {isCameraOn && !loading && !resultImageUrl && (
         <div
           style={{
             textAlign: "center",
@@ -400,10 +382,19 @@ function Camer() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center",
-            backgroundRepeat: "no-repeat",
+            alignItems: "flex-start",
           }}
         >
+          <img
+            src={login}
+            alt=""
+            style={{
+              width: "100vw",
+              height: "100vh",
+              zIndex: "-100",
+              position: "absolute",
+            }}
+          />
           <video
             ref={videoRef}
             autoPlay
@@ -411,40 +402,41 @@ function Camer() {
               display: "block",
               boxShadow: isCameraOn ? "0 1px 10px rgba(0, 0, 0, 0.5)" : "none",
               objectFit: "cover", // Ensures the video fills the container while maintaining aspect ratio
-              width: "100%", // Makes the video responsive
-              height: "100%", // Fills the parent container
-              maxWidth: "950px", // Restrict maximum width for better control
-              maxHeight: "500px", // Restrict maximum height for better control
+              width: "50%", // Makes the video responsive
+              height: "50%", // Fills the parent container
+              maxWidth: "304", // Restrict maximum width for better control
+              maxHeight: "600", // Restrict maximum height for better control
+              transform: "rotate(90deg)", // Rotates the video 90 degrees
+              transformOrigin: "center center", // Sets the rotation origin
+              marginLeft: "250px",
             }}
           ></video>
-
           <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           <button
+            onClick={captureImage}
             style={{
               width: "250px",
               height: "80px",
-              cursor: "pointer",
-              // borderRadius: "10px",
-              border: "none",
               fontSize: "40px",
               fontWeight: "bold",
-              backgroundColor: "#3A49D4", // Default color
-              color: "#fff", // Default text color
-              transition: "background-color 0.3s ease, color 0.3s ease",
+              backgroundColor: "#FFFFFF",
+              color: "#DF1E24",
+              borderRadius: "10px",
+              border: "none",
+              cursor: "pointer",
               position: "absolute",
-              top: "80%",
-            }}
-            onClick={(e) => {
-              e.target.style.backgroundColor = "#3A49D0"; // Change background
-              e.target.style.color = "#ffffff"; // Change text color
-              setTimeout(captureImage, 500); // Correctly invoke captureImage after 500ms
+              top: "50%",
+              left: "65%",
             }}
           >
             Capture
           </button>
         </div>
       )}
-      {isGender === "male" && (
+
+      {loading && <LoadingAnimation />}
+
+      {resultImageUrl && (
         <div
           style={{
             textAlign: "center",
@@ -454,180 +446,88 @@ function Camer() {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            backgroundRepeat: "no-repeat",
-            gap: "8px",
           }}
         >
           <img
-            src={m1}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `m1.jpg`);
-                setIsImg(`lm.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
+            src={output}
+            alt=""
+            style={{
+              width: "100vw",
+              height: "100vh",
+              zIndex: "-100",
+              position: "absolute",
             }}
           />
 
           <img
-            src={m2}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `m2.jpg`);
-                setIsImg(`nm.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
+            src={resultImageUrl}
+            alt="Processed Result"
+            style={{ width: "45vw", marginTop: "100px" }}
           />
-          <img
-            src={m3}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `m1.jpg`);
-                setIsImg(`pm.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
+          <div
+            style={{
+              textAlign: "center",
+              width: "40vw",
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          />
+          >
+            <QRCode
+              value={resultImageUrl}
+              size={180}
+              style={{ border: "8px solid #CE1D23", padding: "5px" }}
+            />
+            <h1 style={{ color: "#CB1E24", fontSize: "30px" }}>
+              Scan the QR CODE <br />
+              to download image
+            </h1>
 
-          <img
-            src={m4}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `m2.jpg`);
-                setIsImg(`sm.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
-          <img
-            src={m5}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `m1.jpg`);
-                setIsImg(`tm.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
-        </div>
-      )}
-
-      {isGender === "female" && (
-        <div
-          style={{
-            textAlign: "center",
-            width: "100vw",
-            height: "100vh",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundRepeat: "no-repeat",
-            gap: "8px",
-          }}
-        >
-          <img
-            src={f1}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `f1.jpg`);
-                setIsImg(`lf.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
-
-          <img
-            src={f2}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `f2.jpg`);
-                setIsImg(`nf.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
-          <img
-            src={f3}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `f2.jpg`);
-                setIsImg(`pf.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
-          <img
-            src={f4}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `f2.jpg`);
-                setIsImg(`sf.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
-          <img
-            src={f5}
-            alt="Swapped Result"
-            style={imgStyle}
-            onClick={(e) => {
-              e.target.style.boxShadow =
-                "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-              setTimeout(() => {
-                // handleSubmit(e, `f2.jpg`);
-                setIsImg(`tf.png`);
-                setIsCameraOn(true);
-                setIsGender("");
-              }, 500); // Wait 50ms then proceed
-            }}
-          />
+            <ReactToPrint
+              trigger={() => (
+                <button
+                  type="button"
+                  style={{
+                    width: "230px",
+                    height: "60px",
+                    fontSize: "20px",
+                    backgroundColor: "#E11E24",
+                    color: "#fff",
+                    border: "none",
+                    cursor: "pointer",
+                    borderRadius: "10px",
+                    fontWeight:'bold'
+                  }}
+                >
+                  Print
+                </button>
+              )}
+              content={() => printRef.current} // Correct reference to PrintableImage
+            />
+            <br />
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                width: "230px",
+                height: "60px",
+                fontSize: "20px",
+                backgroundColor: "#E11E24",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                borderRadius: "10px",
+                fontWeight:'bold'
+              }}
+            >
+              Home
+            </button>
+          </div>
+          {/* The PrintableImage component */}
+          <div style={{ display: "none" }}>
+            <PrintableImage ref={printRef} resultImageUrl={resultImageUrl} />
+          </div>
         </div>
       )}
     </section>
