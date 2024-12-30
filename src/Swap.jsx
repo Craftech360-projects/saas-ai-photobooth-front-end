@@ -25,6 +25,8 @@ function Swap() {
   const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
+    console.log(userDetails, "userDetails");
+
     if (!sourceImageBlob) {
       console.error("Source image is not provided.");
       navigate("/");
@@ -41,7 +43,7 @@ function Swap() {
         new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
       );
 
-      const response = await fetch(selectedImage);
+      const response = await fetch("/couple/5.png");
       const targetImageBlob = await response.blob();
       formData.append(
         "sourceImage",
@@ -73,8 +75,17 @@ function Swap() {
 
       const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
       if (publicURL) {
-        setResultImageUrl(publicURL); // Set the result image URL
-        setLoading(false); // Hide loading animation
+        const { error: insertError } = await supabase
+          .from("users")
+          .insert([{ ...userDetails, publicURL }]);
+        if (insertError) {
+          throw new Error(
+            `Failed to save user details: ${insertError.message}`
+          );
+        } else {
+          setResultImageUrl(publicURL); // Set the result image URL
+          setLoading(false); // Hide loading animation
+        }
       } else {
         console.error("Failed to get public URL");
         navigate("/error");
@@ -222,66 +233,89 @@ function Swap() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                paddingTop: "200px",
               }}
             >
-              <QRCode
-                value={resultImageUrl}
-                size={300}
+              <img
+                className="animate__animated animate__zoomIn"
+                src={resultImageUrl}
+                alt="Swapped Result"
                 style={{
-                  // border: "20px solid #30A6EC",
+                  width: "85%", // Set to 100% to fill the container
+                  height: "auto", // Use auto for height to maintain aspect ratio
+                  objectFit: "cover", // Ensure the image covers the container
                   // borderRadius: "16px",
-                  padding: "15px",
-                  backgroundColor: "#fff",
-                  marginBottom: "25px",
+                  border: "10px solid #FFF",
                 }}
               />
-              <h1
-                style={{
-                  fontSize: "40px",
-                  lineHeight: "40px",
-                  fontWeight: "bold",
-                  color: "#fff",
-                }}
-              >
-                {" "}
-                Scan QR code
-              </h1>
-              <h1
-                style={{
-                  fontSize: "30px",
-                  lineHeight: "25px",
-                  marginTop: "-16px",
-                  color: "#fff",
-                  letterSpacing:'5px'
-                }}
-              >
-                to download image
-              </h1>
             </div>
-            <img
-            hidden
-              className="animate__animated animate__zoomIn animate__delay-2s"
-              src={resultImageUrl}
-              alt="Swapped Result"
-              style={{
-                width: "50%", // Set to 100% to fill the container
-                height: "auto", // Use auto for height to maintain aspect ratio
-                objectFit: "cover", // Ensure the image covers the container
-                // borderRadius: "16px",
-                // border: "16px solid #30A6EC",
-              }}
-            />
             <div
               style={{
-                width: "50vw",
+                width: "70vw",
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "rpow",
                 alignItems: "center",
-                justifyContent:'space-around',
-                paddingTop: "50px",
+                justifyContent: "space-around",
               }}
             >
-              {/* <div
+              <div
+                style={{
+                  width: "50vw",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "20vh",
+                  marginTop: "65px",
+                }}
+              >
+                <QRCode
+                  value={resultImageUrl}
+                  size={270}
+                  style={{
+                    // border: "20px solid #30A6EC",
+                    // borderRadius: "16px",
+                    padding: "15px",
+                    backgroundColor: "#fff",
+                    marginBottom: "25px",
+                    textAlign: "center",
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  width: "50vw",
+                  height: "20vh",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                }}
+              >
+                <h1
+                  style={{
+                    fontSize: "35px",
+                    lineHeight: "40px",
+                    fontWeight: "bold",
+                    color: "#fff",
+                  }}
+                >
+                  {" "}
+                  Scan QR code
+                </h1>
+                <h1
+                  style={{
+                    fontSize: "25px",
+                    lineHeight: "25px",
+                    marginTop: "-16px",
+                    color: "#fff",
+                    letterSpacing: "5px",
+                  }}
+                >
+                  to download image
+                </h1>
+                {/* <div
                 style={{
                   color: "#fff",
                   textAlign: "left",
@@ -302,62 +336,63 @@ function Swap() {
                   your warrior alter ego.
                 </h1>
               </div> */}
-              {/* ReactToPrint with a reference to the rendered PrintableImage */}
-              <ReactToPrint
-                trigger={() => (
-                  <button
-                    type="button"
-                    style={{
-                      width: "250px",
-                      height: "80px",
-                      cursor: "pointer",
-                      // borderRadius: "10px",
-                      border: "none",
-                      fontSize: "40px",
-                      fontWeight: "bold",
-                      backgroundColor: "#3A49D4", // Default color
-                      color: "#fff", // Default text color
-                      transition: "background-color 0.3s ease, color 0.3s ease",
-                      marginBottom: "16px",
-                      marginTop: "16px",
-                    }}
-                  >
-                    Print
-                  </button>
-                )}
-                content={() => printRef.current} // Correct reference to PrintableImage
-              />
-
-              {/* The PrintableImage component */}
-              <div style={{ display: "none" }}>
-                <PrintableImage
-                  ref={printRef}
-                  resultImageUrl={resultImageUrl}
+                {/* ReactToPrint with a reference to the rendered PrintableImage */}
+                <ReactToPrint
+                  trigger={() => (
+                    <button
+                      type="button"
+                      style={{
+                        width: "312px",
+                        height: "80px",
+                        cursor: "pointer",
+                        // borderRadius: "10px",
+                        border: "none",
+                        fontSize: "40px",
+                        fontWeight: "bold",
+                        backgroundColor: "#3A49D4", // Default color
+                        color: "#fff", // Default text color
+                        transition:
+                          "background-color 0.3s ease, color 0.3s ease",
+                        marginBottom: "16px",
+                        marginTop: "16px",
+                      }}
+                    >
+                      Print
+                    </button>
+                  )}
+                  content={() => printRef.current} // Correct reference to PrintableImage
                 />
-              </div>
 
-              <button
-                type="submit"
-                style={{
-                  width: "250px",
-                  height: "80px",
-                  cursor: "pointer",
-                  border: "none",
-                  fontSize: "40px",
-                  fontWeight: "bold",
-                  backgroundColor: "#3A49D4", // Default color
-                  color: "#fff", // Default text color
-                  transition: "background-color 0.3s ease, color 0.3s ease",
-                }}
-                onClick={(e) => {
-                  e.target.style.backgroundColor = "#30A6EC"; // Change background
-                  e.target.style.color = "#ffffff"; // Change text color
-                  setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
-                }}
-              >
-                Home
-              </button>
-              {/* <button
+                {/* The PrintableImage component */}
+                <div style={{ display: "none" }}>
+                  <PrintableImage
+                    ref={printRef}
+                    resultImageUrl={resultImageUrl}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    width: "312px",
+                    height: "80px",
+                    cursor: "pointer",
+                    border: "none",
+                    fontSize: "40px",
+                    fontWeight: "bold",
+                    backgroundColor: "#3A49D4", // Default color
+                    color: "#fff", // Default text color
+                    transition: "background-color 0.3s ease, color 0.3s ease",
+                  }}
+                  onClick={(e) => {
+                    e.target.style.backgroundColor = "#30A6EC"; // Change background
+                    e.target.style.color = "#ffffff"; // Change text color
+                    setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
+                  }}
+                >
+                  Home
+                </button>
+                {/* <button
                 type="submit"
                 style={{
                   width: "250px",
@@ -379,6 +414,7 @@ function Swap() {
               >
                 Try Again
               </button> */}
+              </div>
             </div>
           </div>
         )}

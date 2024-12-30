@@ -104,7 +104,6 @@ function Camer() {
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
-    gender: "",
   });
   const [selectedOption, setSelectedOption] = useState(null);
 
