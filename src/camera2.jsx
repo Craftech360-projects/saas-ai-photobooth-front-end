@@ -71,7 +71,7 @@ const StyledSelect = styled.select`
   }
 `;
 
-function Camer() {
+function Camer2() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const navigate = useNavigate();
@@ -323,4 +323,4 @@ function Camer() {
   );
 }
 
-export default Camer;
+export default Camer2;

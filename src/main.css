@@ -1,11 +1,10 @@
 @font-face {
-  font-family: 'UniNeue';
-  /* Provide a name for your font */
-  src: url("/UniNeue-Trial-Bold.ttf") format("truetype");
-  /* Replace '/path/to/font.ttf' with the actual path to your .ttf file */
+  font-family: 'PayPal'; /* Name your custom font */
+  src: url("/PayPal.ttf") format("truetype");
+  /* Ensure the path to your .ttf file is correct */
 }
-
 body {
+  font-family: PayPal, sans-serif;
   margin: 0;
   padding: 0;
   width: 100vw;
@@ -14,11 +13,10 @@ body {
   display: flex;
   place-items: center;
   /* background-color: #eeeee4; */
-  background-image: url("/sattvaBg.png");
+  background-image: url("/firstImg.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  font-family: Roboto, sans-serif;
 }
 
 p {

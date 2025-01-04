@@ -43,7 +43,7 @@ function Swap() {
         new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
       );
 
-      const response = await fetch("/couple/5.png");
+      const response = await fetch(`/${selectedImage}`);
       const targetImageBlob = await response.blob();
       formData.append(
         "sourceImage",
@@ -61,8 +61,21 @@ function Swap() {
 
       const swappedImageBlob = await swapResponse.blob();
       const convertedBlob = await convertImageToJPEG(swappedImageBlob);
+      const getISTDate = () => {
+        const now = new Date();
+        const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+        const istDate = new Date(now.getTime() + istOffset);
+        const day = String(istDate.getDate()).padStart(2, "0");
+        const month = String(istDate.getMonth() + 1).padStart(2, "0");
+        const year = String(istDate.getFullYear()).slice(-2); // Get last two digits of the year
+        return `${day}-${month}-${year}`;
+      };
 
-      const fileName = `swapped-images/sattva/${Date.now()}-result.jpg`;
+      const fileName = `swapped-images/paypal/${getISTDate()}-${Date.now()}.jpg`;
+
+      console.log(fileName);
+
+      // const fileName = `swapped-images/paypal/${Date.now()}-result.jpg`;
       const { error: uploadError } = await supabase.storage
         .from("test-bucket")
         .upload(fileName, convertedBlob, {
@@ -135,7 +148,24 @@ function Swap() {
           paddingTop: "800px",
         }}
       >
-        <button onClick={handleSubmit}>SEE THE MAGIC</button>
+        <button
+          onClick={handleSubmit}
+          style={{
+            width: "386px",
+            height: "80px",
+            cursor: "pointer",
+            border: "none",
+            fontSize: "45px",
+            fontWeight: "bold",
+            backgroundColor: "#FFF",
+            color: "#002992",
+            transition: "background-color 0.3s ease, color 0.3s ease",
+            position: "absolute",
+            top: "50%",
+          }}
+        >
+          AI MAGIC
+        </button>
       </div>
     );
   };
@@ -174,10 +204,10 @@ function Swap() {
         }}
       >
         <LoaderContainer>
-          <Bar color="rgb(31 187 238)" delay={0.3} /> {/* Blue */}
-          <Bar color="rgb(176 210 55)" delay={0.2} /> {/* Green */}
-          <Bar color="rgb(255 202 7)" delay={0.1} /> {/* Yellow */}
-          <Bar color="rgb(212 58 42)" delay={0} /> {/* Red */}
+          <Bar color="rgb(255 255 255)" delay={0.3} /> {/* Blue */}
+          <Bar color="rgb(255 255 255)" delay={0.2} /> {/* Green */}
+          <Bar color="rgb(255 255 255)" delay={0.1} /> {/* Yellow */}
+          <Bar color="rgb(255 255 255)" delay={0} /> {/* Red */}
         </LoaderContainer>
       </div>
     );
@@ -233,7 +263,7 @@ function Swap() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                paddingTop: "200px",
+                paddingTop: "350px",
               }}
             >
               <img
@@ -241,19 +271,19 @@ function Swap() {
                 src={resultImageUrl}
                 alt="Swapped Result"
                 style={{
-                  width: "85%", // Set to 100% to fill the container
+                  width: "45%", // Set to 100% to fill the container
                   height: "auto", // Use auto for height to maintain aspect ratio
                   objectFit: "cover", // Ensure the image covers the container
                   // borderRadius: "16px",
-                  border: "10px solid #FFF",
+                  border: "5px solid #FFF",
                 }}
               />
             </div>
             <div
               style={{
-                width: "70vw",
+                width: "55vw",
                 display: "flex",
-                flexDirection: "rpow",
+                flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-around",
               }}
@@ -265,19 +295,15 @@ function Swap() {
                   alignItems: "center",
                   justifyContent: "center",
                   height: "20vh",
-                  marginTop: "65px",
                 }}
               >
                 <QRCode
                   value={resultImageUrl}
-                  size={270}
+                  size={180}
                   style={{
-                    // border: "20px solid #30A6EC",
-                    // borderRadius: "16px",
                     padding: "15px",
                     backgroundColor: "#fff",
-                    marginBottom: "25px",
-                    textAlign: "center",
+                    textAlign: "left",
                   }}
                 />
               </div>
@@ -288,33 +314,36 @@ function Swap() {
                   height: "20vh",
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "center",
+                  alignItems: "left",
                   justifyContent: "center",
-                  textAlign: "center",
+                  textAlign: "left",
                 }}
               >
                 <h1
                   style={{
-                    fontSize: "35px",
+                    fontSize: "25px",
                     lineHeight: "40px",
-                    fontWeight: "bold",
                     color: "#fff",
+                    textAlign: "left",
+                    width: "100%",
                   }}
                 >
                   {" "}
-                  Scan QR code
+                  Scan the QR CODE <br /> to download image
                 </h1>
-                <h1
+                {/* <h1
                   style={{
                     fontSize: "25px",
                     lineHeight: "25px",
-                    marginTop: "-16px",
                     color: "#fff",
                     letterSpacing: "5px",
+                    textAlign: "left",
+                    width: "100%",
+                    marginLeft: "20px",
                   }}
                 >
                   to download image
-                </h1>
+                </h1> */}
                 {/* <div
                 style={{
                   color: "#fff",
@@ -340,6 +369,7 @@ function Swap() {
                 <ReactToPrint
                   trigger={() => (
                     <button
+                      hidden
                       type="button"
                       style={{
                         width: "312px",
@@ -374,14 +404,14 @@ function Swap() {
                 <button
                   type="submit"
                   style={{
-                    width: "312px",
-                    height: "80px",
+                    width: "212px",
+                    height: "60px",
                     cursor: "pointer",
                     border: "none",
-                    fontSize: "40px",
+                    fontSize: "35px",
                     fontWeight: "bold",
-                    backgroundColor: "#3A49D4", // Default color
-                    color: "#fff", // Default text color
+                    backgroundColor: "#FFF", // Default color
+                    color: "#002992", // Default text color
                     transition: "background-color 0.3s ease, color 0.3s ease",
                   }}
                   onClick={(e) => {
@@ -390,7 +420,7 @@ function Swap() {
                     setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
                   }}
                 >
-                  Home
+                  Restart
                 </button>
                 {/* <button
                 type="submit"
