@@ -1,25 +1,23 @@
 /* eslint-disable no-dupe-keys */
 // eslint-disable-next-line no-unused-vars
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
-import one from "/assets/one.png";
-import two from "/assets/two.png";
-import male from "/assets/male.png";
 import female from "/assets/female.png";
-import buttonBg from "/assets/startbg.png";
+import male from "/assets/male.png";
+import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
+import two from "/assets/two.png";
 import m1 from "/london.png"; // Import the PNG image
 import m2 from "/nyc.png"; // Import the PNG image
 import m3 from "/paris.png"; // Import the PNG image
 import m4 from "/swi.png"; // Import the PNG image
 import m5 from "/tok.png"; // Import the PNG image
 
-import f1 from "/london.png"; // Import the PNG image
-import f2 from "/nyc.png"; // Import the PNG image
-import f3 from "/paris.png"; // Import the PNG image
-import f4 from "/swi.png"; // Import the PNG image
-import f5 from "/tok.png"; // Import the PNG image
+import f1 from "/f1l.png"; // Import the PNG image
+import f2 from "/f2l.png"; // Import the PNG image
+import f3 from "/f3l.png"; // Import the PNG image
+import f4 from "/f4l.png"; // Import the PNG image
+import f5 from "/f5l.png"; // Import the PNG image
 
 const imgStyle = {
   width: "312px",
@@ -190,8 +188,8 @@ function Camer() {
           padding: "20px",
           fontSize: "34px",
           border: "none",
-          textAlign: "center",
-          color: "#182060",
+          textAlign: "left",
+          color: "#001965",
           fontWeight: "bold",
           width: "55%",
           textTransform: "capitalize",
@@ -208,109 +206,205 @@ function Camer() {
           padding: "20px",
           fontSize: "34px",
           border: "none",
-          textAlign: "center",
-          color:"#182060",
+          textAlign: "left",
+          color:"#001965",
           fontWeight: "bold",
           width: "55%",
         }}
         required
       />
-      <button
-        type="submit"
-        style={{
-          width: "250px",
-          height: "80px",
-          cursor: "pointer",
-          border: "none",
-          fontSize: "40px",
-          fontWeight: "bold",
-          backgroundColor: "#3A49D4",
-          color: "#fff",
-          transition: "background-color 0.3s ease, color 0.3s ease",
-          position: "absolute",
-          top: "80%",
-        }}
-      >
-        Continue
-      </button>
+ <button
+  type="submit"
+  style={{
+    width: "250px",
+    height: "80px",
+    cursor: "pointer",
+    border: " solid white", // White border
+    fontSize: "40px",
+  
+     backgroundColor: "#001965",
+    color: "#fff", // White text color
+    transition: "background-color 0.3s ease, color 0.3s ease",
+    position: "absolute",
+    top: "80%",
+    borderRadius: "40px", // Makes the button rounded
+  }}
+>
+  Submit
+</button>
+
     </form>
   </>
       )}
 
       {/* Gender Selcet Code  */}
-      {isGenderShow && (
-        <div
-          style={{
-            textAlign: "center",
-            width: "100vw",
-            height: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            // backgroundImage: `url(${two})`,
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              height: "720px",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${male})`,
-                backgroundSize: "cover", // Ensure the image covers the button entirely
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "298px",
-                height: "291px",
-                border: "none", // Start with no border
-                cursor: "pointer",
-                backgroundColor: "transparent", // Transparent to show background image
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box",
-                marginRight: "20px", // Ensures the border is included in the button's size
-              }}
-              onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("male"), 500); // Proceed after 500ms
-              }}
-            ></button>
+      {/* {isGenderShow && (
+  <div
+    style={{
+      textAlign: "center",
+      width: "100vw",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      backgroundRepeat: "no-repeat",
+    }}
+  >
+    <div
+      style={{
+        marginTop: "30px",
+        fontSize: "32px", // Adjust the font size
+     //   fontWeight: "bold", // Make the text bold
+        color: "#fff", // White text color
+       // Space between the text and the buttons
+        letterSpacing: "2px", // Space out the letters a bit
+      }}
+    >
+      Select Gender
+    </div>
 
-            <button
-              style={{
-                borderRadius: "10px",
-                backgroundImage: `url(${female})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                width: "298px",
-                height: "291px",
-                border: "none",
-                cursor: "pointer", // Show pointer cursor on hover
-                backgroundColor: "transparent",
-                transition: "border 0.3s ease", // Smooth border transition
-                boxSizing: "border-box", // Ensures the border is included in the button's size
-                marginLeft: "20px",
-              }}
-              onClick={(e) => {
-                // e.target.style.border = "5px solid #30A6EC"; // Set a visible border on click
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)";
-                setTimeout(() => startProcess("female"), 500); // Proceed after 500ms
-              }}
-            ></button>
-          </div>
-        </div>
-      )}
+    <div
+      style={{
+        marginTop: "30px",
+        width: "100%",
+        height: "720px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+      }}
+    >
+      <button
+        style={{
+          borderRadius: "10px",
+          backgroundImage: `url(${male})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          width: "298px",
+          height: "291px",
+          border: "none",
+          cursor: "pointer",
+          backgroundColor: "transparent",
+          transition: "border 0.3s ease",
+          boxSizing: "border-box",
+          marginRight: "20px",
+          marginTop: "30px",
+        }}
+        onClick={(e) => {
+          e.target.style.boxShadow =
+            "0px 0px 19px 16px rgba(255,255,255,0.5)";
+          setTimeout(() => startProcess("male"), 500);
+        }}
+      ></button>
+
+      <button
+        style={{
+          borderRadius: "10px",
+          backgroundImage: `url(${female})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          width: "298px",
+          height: "291px",
+          border: "none",
+          cursor: "pointer",
+          backgroundColor: "transparent",
+          transition: "border 0.3s ease",
+          boxSizing: "border-box",
+          marginLeft: "20px",
+          marginTop: "30px",
+        }}
+        onClick={(e) => {
+          e.target.style.boxShadow =
+            "0px 0px 19px 16px rgba(255,255,255,0.5)";
+          setTimeout(() => startProcess("female"), 500);
+        }}
+      ></button>
+    </div>
+  </div>
+)} */}
+{isGenderShow && (
+  <div
+    style={{
+      textAlign: "center",
+      width: "100vw",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column", // Stack the elements vertically
+      justifyContent: "center", // Center the content vertically
+      alignItems: "center", // Center the content horizontally
+      backgroundRepeat: "no-repeat",
+    }}
+  >
+    <div
+      style={{
+        fontSize: "32px", // Adjust the font size
+        color: "#fff", // White text color
+        letterSpacing: "2px", // Space out the letters a bit
+      }}
+    >
+      Select Gender
+    </div>
+
+    <div
+      style={{
+        width: "100%",
+        height: "auto", // Allow height to adjust based on content
+        display: "flex",
+        flexDirection: "row", // Place buttons horizontally
+        justifyContent: "center", // Center the buttons horizontally
+        gap: "20px", // Space between buttons
+        marginTop: "30px", // Space between text and buttons
+      }}
+    >
+      <button
+        style={{
+          borderRadius: "10px",
+          backgroundImage: `url(${male})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          width: "298px",
+          height: "291px",
+          border: "none",
+          cursor: "pointer",
+          backgroundColor: "transparent",
+          transition: "border 0.3s ease",
+          boxSizing: "border-box",
+        }}
+        onClick={(e) => {
+          e.target.style.boxShadow =
+            "0px 0px 19px 16px rgba(255,255,255,0.5)";
+          setTimeout(() => startProcess("male"), 500);
+        }}
+      ></button>
+
+      <button
+        style={{
+          borderRadius: "10px",
+          backgroundImage: `url(${female})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          width: "298px",
+          height: "291px",
+          border: "none",
+          cursor: "pointer",
+          backgroundColor: "transparent",
+          transition: "border 0.3s ease",
+          boxSizing: "border-box",
+        }}
+        onClick={(e) => {
+          e.target.style.boxShadow =
+            "0px 0px 19px 16px rgba(255,255,255,0.5)";
+          setTimeout(() => startProcess("female"), 500);
+        }}
+      ></button>
+    </div>
+  </div>
+)}
+
       {/* Options Selcet Code  */}
       {isOptions && (
         <div
@@ -420,20 +514,22 @@ function Camer() {
 
           <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           <button
-            style={{
-              width: "250px",
-              height: "80px",
-              cursor: "pointer",
-              // borderRadius: "10px",
-              border: "none",
-              fontSize: "40px",
-              fontWeight: "bold",
-              backgroundColor: "#3A49D4", // Default color
-              color: "#fff", // Default text color
-              transition: "background-color 0.3s ease, color 0.3s ease",
-              position: "absolute",
-              top: "80%",
-            }}
+            
+              style={{
+                width: "250px",
+                height: "80px",
+                cursor: "pointer",
+                border: " solid white", // White border
+                fontSize: "40px",
+                fontWeight: "bold",
+                 backgroundColor: "#001965",
+                color: "#fff", // White text color
+                transition: "background-color 0.3s ease, color 0.3s ease",
+                position: "absolute",
+                top: "80%",
+                borderRadius: "40px", // Makes the button rounded
+              }}
+            
             onClick={(e) => {
               e.target.style.backgroundColor = "#3A49D0"; // Change background
               e.target.style.color = "#ffffff"; // Change text color
@@ -444,7 +540,8 @@ function Camer() {
           </button>
         </div>
       )}
-      {isGender === "male" && (
+      {/* {isGender === "male" && (
+        <>
         <div
           style={{
             textAlign: "center",
@@ -458,6 +555,18 @@ function Camer() {
             gap: "8px",
           }}
         >
+          <div> <div
+        style={{
+        
+          fontSize: "32px", // Adjust the font size
+          fontWeight: "bold", // Make the text bold
+          color: "#fff", // White text color
+         // Space between the text and the buttons
+          letterSpacing: "2px", // Space out the letters a bit
+        }}
+      >
+        Select Gender
+      </div></div>
           <img
             src={m1}
             alt="Swapped Result"
@@ -535,10 +644,14 @@ function Camer() {
               }, 500); // Wait 50ms then proceed
             }}
           />
-        </div>
-      )}
+        </div></>
+        
+      )} */}
 
-      {isGender === "female" && (
+
+
+
+      {/* {isGender === "female" && (
         <div
           style={{
             textAlign: "center",
@@ -629,7 +742,195 @@ function Camer() {
             }}
           />
         </div>
-      )}
+      )} */}
+
+{(isGender === "male" || isGender === "female") && (
+  <div
+    style={{
+      textAlign: "center",
+      width: "100vw",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column", // Stack vertically
+      justifyContent: "center", // Center the content vertically
+      alignItems: "center", // Center the content horizontally
+      backgroundRepeat: "no-repeat",
+      gap: "20px", // Space between the text and the images
+    }}
+  >
+    {/* Centered "Select Character" Text */}
+    <div
+      style={{
+        fontSize: "40px", // Adjust the font size
+    
+        color: "#fff", // White text color
+        letterSpacing: "2px", // Space out the letters a bit
+        marginBottom:"30px",
+      }}
+    >
+      Select your Character
+    </div>
+
+    {/* Images row for Male */}
+    {isGender === "male" && (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "row", // Place images horizontally
+          justifyContent: "center", // Center the images horizontally
+          gap: "15px", // Space between images
+        }}
+      >
+        <img
+          src={m1}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`m1.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={m2}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`m2.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={m3}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`m3.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={m4}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`m4.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={m5}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`m5.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+      </div>
+    )}
+
+    {/* Images row for Female */}
+    {isGender === "female" && (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "row", // Place images horizontally
+          justifyContent: "center", // Center the images horizontally
+          gap: "10px", // Space between images
+        }}
+      >
+        <img
+          src={f1}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`f1.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={f2}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`f2.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={f3}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`f3.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={f4}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`f4.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+        <img
+          src={f5}
+          alt="Swapped Result"
+          style={imgStyle}
+          onClick={(e) => {
+            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            setTimeout(() => {
+              setIsImg(`f5.png`);
+              setIsCameraOn(true);
+              setIsGender("");
+            }, 500);
+          }}
+        />
+      </div>
+    )}
+  </div>
+)}
+
     </section>
   );
 }

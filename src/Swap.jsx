@@ -1,14 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useRef, forwardRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import QRCode from "qrcode.react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
 import { supabase } from "./supabaseClient";
-import m1 from "/assets/m1.png"; // Import the PNG image
-import m2 from "/assets/m2.png"; // Import the PNG image
 import f1 from "/assets/f1.png"; // Import the PNG image
 import f2 from "/assets/f2.png"; // Import the PNG image
-import ReactToPrint from "react-to-print";
-import styled, { keyframes } from "styled-components";
+import m1 from "/assets/m1.png"; // Import the PNG image
+import m2 from "/assets/m2.png"; // Import the PNG image
 
 function Swap() {
   const navigate = useNavigate();
@@ -300,6 +299,28 @@ function Swap() {
     animation: ${animloader} 0.3s ${(props) => props.delay}s linear infinite alternate;
   `;
   
+  // const LoadingAnimation = () => {
+  //   return (
+  //     <div
+  //       style={{
+  //         display: "flex",
+  //         flexDirection: "column",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         height: "100vh",
+  //         width: "100vw",
+  //       }}
+  //     >
+  //       <LoaderContainer>
+  //         <Bar color="rgb(31 187 238)" delay={0.3} /> {/* Blue */}
+  //         <Bar color="rgb(176 210 55)" delay={0.2} /> {/* Green */}
+  //         <Bar color="rgb(255 202 7)" delay={0.1} /> {/* Yellow */}
+  //         <Bar color="rgb(212 58 42)" delay={0} /> {/* Red */}
+  //       </LoaderContainer>
+  //     </div>
+  //   );
+  // };
+  
   const LoadingAnimation = () => {
     return (
       <div
@@ -312,15 +333,51 @@ function Swap() {
           width: "100vw",
         }}
       >
-        <LoaderContainer>
-          <Bar color="rgb(31 187 238)" delay={0.3} /> {/* Blue */}
-          <Bar color="rgb(176 210 55)" delay={0.2} /> {/* Green */}
-          <Bar color="rgb(255 202 7)" delay={0.1} /> {/* Yellow */}
-          <Bar color="rgb(212 58 42)" delay={0} /> {/* Red */}
-        </LoaderContainer>
+        {/* Display the loading text with animation */}
+        <div style={{ textAlign: "center" }}>
+          <h2
+            style={{
+              fontSize: "50px",
+              color: "#fff",
+              letterSpacing: "2px",
+              animation: "fadeInOut 3s infinite", // Apply animation
+            }}
+          >
+            <span style={{ fontWeight: "bold" }}>Sculpting</span>
+          </h2>
+          <h2
+            style={{
+              fontSize: "50px",
+              fontWeight: "normal", // Make this part normal weight
+              color: "#fff",
+              letterSpacing: "2px",
+              animation: "fadeInOut 3s infinite", // Apply animation to both lines
+            }}
+          >
+            your future self...
+          </h2>
+        </div>
+  
+        {/* Add CSS for the animation */}
+        <style>
+          {`
+            @keyframes fadeInOut {
+              0% {
+                opacity: 0;
+              }
+              50% {
+                opacity: 1;
+              }
+              100% {
+                opacity: 0;
+              }
+            }
+          `}
+        </style>
       </div>
     );
   };
+  
   
   
 
@@ -360,14 +417,32 @@ function Swap() {
         {imageLoaded && (
           <div
             style={{
+             
               width: "100%",
               height: "100%",
               display: "flex",
+              justifyContent: "center",
               alignItems: "center",
               paddingTop: "200px",
             }}
           >
-            <div
+          
+            <img
+              className="animate__animated animate__zoomIn animate__delay-2s"
+              src={resultImageUrl}
+              alt="Swapped Result"
+              style={{
+                width: "50%", // Set to 100% to fill the container
+                height: "auto", // Use auto for height to maintain aspect ratio
+                objectFit: "cover", 
+                display: "flex",
+                justifyContent: "center",
+                // Ensure the image covers the container
+                // borderRadius: "16px",
+                // border: "16px solid #30A6EC",
+              }}
+            />
+              <div
               style={{
                 width: "25%",
                 display: "flex",
@@ -384,6 +459,8 @@ function Swap() {
                   padding: "15px",
                   backgroundColor: "#fff",
                   marginBottom: "25px",
+                
+                
                 }}
               />
               <h1
@@ -407,94 +484,22 @@ function Swap() {
               >
                 to download image
               </h1>
-            </div>
-            <img
-              className="animate__animated animate__zoomIn animate__delay-2s"
-              src={resultImageUrl}
-              alt="Swapped Result"
-              style={{
-                width: "50%", // Set to 100% to fill the container
-                height: "auto", // Use auto for height to maintain aspect ratio
-                objectFit: "cover", // Ensure the image covers the container
-                // borderRadius: "16px",
-                // border: "16px solid #30A6EC",
-              }}
-            />
-            <div
-              style={{
-                width: "25%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              {/* <div
-                style={{
-                  color: "#fff",
-                  textAlign: "left",
-                  backgroundColor: "rgb(0 29 131)",
-                }}
-              >
-                <h1 style={{ fontSize: "42px", lineHeight: "40px" }}>
-                  {" "}
-                  Scan and Download
-                </h1>
-                <h1
-                  style={{
-                    fontSize: "20px",
-                    lineHeight: "25px",
-                    marginTop: "-16px",
-                  }}
-                >
-                  your warrior alter ego.
-                </h1>
-              </div> */}
-              {/* ReactToPrint with a reference to the rendered PrintableImage */}
-              <ReactToPrint
-                trigger={() => (
-                  <button
-                    type="button"
-                    style={{
-                      width: "250px",
-                      height: "80px",
-                      cursor: "pointer",
-                      // borderRadius: "10px",
-                      border: "none",
-                      fontSize: "40px",
-                      fontWeight: "bold",
-                      backgroundColor: "#3A49D4", // Default color
-                      color: "#fff", // Default text color
-                      transition: "background-color 0.3s ease, color 0.3s ease",
-                      marginBottom: "16px",
-                      marginTop: "16px",
-                    }}
-                  >
-                    Print
-                  </button>
-                )}
-                content={() => printRef.current} // Correct reference to PrintableImage
-              />
-
-              {/* The PrintableImage component */}
-              <div style={{ display: "none" }}>
-                <PrintableImage
-                  ref={printRef}
-                  resultImageUrl={resultImageUrl}
-                />
-              </div>
-
               <button
                 type="submit"
                 style={{
                   width: "250px",
-                  height: "80px",
-                  cursor: "pointer",
-                  border: "none",
-                  fontSize: "40px",
-                  fontWeight: "bold",
-                  backgroundColor: "#3A49D4", // Default color
-                  color: "#fff", // Default text color
-                  transition: "background-color 0.3s ease, color 0.3s ease",
+                height: "80px",
+                cursor: "pointer",
+                border: " solid white", // White border
+                fontSize: "40px",
+                fontWeight: "bold",
+                 backgroundColor: "#001965",
+                color: "#fff", // White text color
+                transition: "background-color 0.3s ease, color 0.3s ease",
+                position: "absolute",
+                top: "80%",
+                borderRadius: "40px",
+                 
                 }}
                 onClick={(e) => {
                   e.target.style.backgroundColor = "#30A6EC"; // Change background
@@ -504,29 +509,10 @@ function Swap() {
               >
                 Home
               </button>
-              {/* <button
-                type="submit"
-                style={{
-                  width: "250px",
-                  height: "80px",
-                  cursor: "pointer",
-                  borderRadius: "10px",
-                  border: "none",
-                  fontSize: "40px",
-                  fontWeight: "bold",
-                  backgroundColor: "#ffffff", // Default color
-                  color: "#000000", // Default text color
-                  transition: "background-color 0.3s ease, color 0.3s ease",
-                }}
-                onClick={(e) => {
-                  e.target.style.backgroundColor = "#30A6EC"; // Change background
-                  e.target.style.color = "#ffffff"; // Change text color
-                  setTimeout(resetSelection(), 500); // Correctly invoke captureImage after 500ms
-                }}
-              >
-                Try Again
-              </button> */}
             </div>
+
+            
+          
           </div>
         )}
       </div>
