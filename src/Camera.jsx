@@ -7,11 +7,11 @@ import female from "/assets/female.png";
 import male from "/assets/male.png";
 import captureImageIcon from "/assets/pcp.png"; // Import the PNG image
 import two from "/assets/two.png";
-import m1 from "/london.png"; // Import the PNG image
-import m2 from "/nyc.png"; // Import the PNG image
-import m3 from "/paris.png"; // Import the PNG image
-import m4 from "/swi.png"; // Import the PNG image
-import m5 from "/tok.png"; // Import the PNG image
+import m1 from "/m1l.png"; // Import the PNG image
+import m2 from "/m2l.png"; // Import the PNG image
+import m3 from "/m3l.png"; // Import the PNG image
+import m4 from "/m4l.png"; // Import the PNG image
+import m5 from "/m5l.png"; // Import the PNG image
 
 import f1 from "/f1l.png"; // Import the PNG image
 import f2 from "/f2l.png"; // Import the PNG image
