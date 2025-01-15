@@ -816,7 +816,7 @@ function Camer() {
           onClick={(e) => {
             e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
             setTimeout(() => {
-              setIsImg(`m3.jpg`);
+              setIsImg(`m3.png`);
               setIsCameraOn(true);
               setIsGender("");
             }, 500);
