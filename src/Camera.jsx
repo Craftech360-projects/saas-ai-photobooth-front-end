@@ -20,11 +20,12 @@ import f4 from "/f4l.png"; // Import the PNG image
 import f5 from "/f5l.png"; // Import the PNG image
 
 const imgStyle = {
-  width: "312px",
+  width: "auto",
   height: "226px",
   objectFit: "contain",
   justifyContent: "center",
-  alignItems: "center",
+  alignItems: "center", 
+  gap:"30px",
   // border: '5px solid #fff',
   cursor: "pointer",
 };
@@ -779,7 +780,7 @@ function Camer() {
           display: "flex",
           flexDirection: "row", // Place images horizontally
           justifyContent: "center", // Center the images horizontally
-          gap: "15px", // Space between images
+          gap: "30px", // Space between images
         }}
       >
         <img
@@ -787,7 +788,7 @@ function Camer() {
           alt="Swapped Result"
           style={imgStyle}
           onClick={(e) => {
-            e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
+            e.target.style.boxShadow = "0px 0px 16px 16px rgba(255,255,255,0.5)";
             setTimeout(() => {
               setIsImg(`m1.png`);
               setIsCameraOn(true);
@@ -815,7 +816,7 @@ function Camer() {
           onClick={(e) => {
             e.target.style.boxShadow = "0px 0px 19px 16px rgba(255,255,255,0.5)";
             setTimeout(() => {
-              setIsImg(`m3.png`);
+              setIsImg(`m3.jpg`);
               setIsCameraOn(true);
               setIsGender("");
             }, 500);
@@ -858,7 +859,7 @@ function Camer() {
           display: "flex",
           flexDirection: "row", // Place images horizontally
           justifyContent: "center", // Center the images horizontally
-          gap: "10px", // Space between images
+          gap: "30px", // Space between images
         }}
       >
         <img
