@@ -452,8 +452,8 @@ function Swap() {
                   backgroundColor: "#fff",  // Transparent background
                   color: "#710100",  // White text color
                   transition: "background-color 0.3s ease, color 0.3s ease",
-                  position: "absolute",
-                  top: "78%",
+                  // position: "absolute",
+                  // top: "78%",
                   borderRadius: "40px",
                  
                 }}
