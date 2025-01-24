@@ -394,7 +394,7 @@ function Swap() {
 
                 // Ensure the image covers the container
                 // borderRadius: "16px",
-                border: "15px solid #fff",
+                // border: "15px solid #fff",
                 // borderRadius: "16px",
             
               }}
