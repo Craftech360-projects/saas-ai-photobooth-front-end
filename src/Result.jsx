@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, forwardRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import QRCode from "qrcode.react";
-import buttonBg from "/assets/pst.png";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 
 // Forward ref for the component to print

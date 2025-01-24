@@ -140,8 +140,8 @@ function Camer() {
               border: "solid white",
               fontSize: "40px",
               fontWeight: "bold",
-              backgroundColor: "transparent",  // Transparent background
-                        color: "#fff",  // White text color
+              backgroundColor: "#fff",  // Transparent background
+              color: "#710100",   // White text color
               transition: "background-color 0.3s ease, color 0.3s ease",
               position: "absolute",
               top: "80%",
@@ -151,7 +151,7 @@ function Camer() {
               setTimeout(captureImage, 500);
             }}
           >
-            Capture
+            CAPTURE
           </button>
         </div>
       )}

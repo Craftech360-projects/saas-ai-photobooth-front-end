@@ -318,9 +318,9 @@ function Swap() {
       >
         {/* Display the loading bars */}
         <LoaderContainer>
-          <Bar color="#30A6EC" delay="0" />
-          <Bar color="#30A6EC" delay="0.2" />
-          <Bar color="#30A6EC" delay="0.4" />
+          <Bar color="#fff" delay="0" />
+          <Bar color="#fff" delay="0.2" />
+          <Bar color="#fff" delay="0.4" />
         </LoaderContainer>
         <h2
           style={{
@@ -334,66 +334,6 @@ function Swap() {
       </div>
     );
   };
-  // const LoadingAnimation = () => {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         flexDirection: "column",
-  //         justifyContent: "center",
-  //         alignItems: "flex-start", // Align items to the left
-  //         height: "100vh",
-  //         width: "100vw",
-  //         paddingLeft: "50px", // Add padding from the left
-  //       }}
-  //     >
-  //       {/* Display the loading text with animation */}
-  //       <div style={{ textAlign: "left" }}>
-  //         <h2
-  //           style={{
-  //             fontSize: "80px",
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             lineHeight: "70px", // Reduced line height to decrease spacing
-  //             animation: "fadeInOut 3s infinite", // Apply animation
-  //           }}
-  //         >
-  //           <span style={{ fontWeight: "bold" }}>Sculpting</span>
-  //         </h2>
-  //         <h2
-  //           style={{
-  //             fontSize: "80px",
-  //             fontWeight: "normal", // Make this part normal weight
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             lineHeight: "70px", // Reduced line height to match the first line
-  //             animation: "fadeInOut 3s infinite", // Apply animation to both lines
-  //           }}
-  //         >
-  //           your future self...
-  //         </h2>
-  //       </div>
-  
-  //       {/* Add CSS for the animation */}
-  //       <style>
-  //         {`
-  //           @keyframes fadeInOut {
-  //             0% {
-  //               opacity: 0;
-  //             }
-  //             50% {
-  //               opacity: 1;
-  //             }
-  //             100% {
-  //               opacity: 0;
-  //             }
-  //           }
-  //         `}
-  //       </style>
-  //     </div>
-  //   );
-  // };
-  
   
   const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
     return (
@@ -441,6 +381,7 @@ function Swap() {
           >
           
             <img
+            
               className="animate__animated animate__zoomIn animate__delay-2s"
               src={resultImageUrl}
               alt="Swapped Result"
@@ -450,9 +391,12 @@ function Swap() {
                 objectFit: "cover", 
                 display: "flex",
                 justifyContent: "center",
+
                 // Ensure the image covers the container
                 // borderRadius: "16px",
-                // border: "16px solid #30A6EC",
+                border: "15px solid #fff",
+                // borderRadius: "16px",
+            
               }}
             />
               <div
@@ -467,11 +411,11 @@ function Swap() {
                 value={resultImageUrl}
                 size={200}
                 style={{
-                  // border: "20px solid #30A6EC",
+                   border: "15px solid #710100",
                   // borderRadius: "16px",
                   padding: "15px",
                   backgroundColor: "#fff",
-                  marginBottom: "15px",
+                  marginBottom: "10px",
                 
                 
                 }}
@@ -501,25 +445,25 @@ function Swap() {
                 type="submit"
                 style={{
                   width: "250px",
-                  height: "80px",
+                  height: "70px",
                   cursor: "pointer",
                   border: "2px solid white",  // Add a border to make it visible
                   fontSize: "40px",
-                  backgroundColor: "transparent",  // Transparent background
-                  color: "#fff",  // White text color
+                  backgroundColor: "#fff",  // Transparent background
+                  color: "#710100",  // White text color
                   transition: "background-color 0.3s ease, color 0.3s ease",
                   position: "absolute",
-                  top: "75%",
+                  top: "78%",
                   borderRadius: "40px",
                  
                 }}
                 onClick={(e) => {
-                  e.target.style.backgroundColor = "#30A6EC"; // Change background
+                  e.target.style.backgroundColor = "#b7b7b7"; // Change background
                   e.target.style.color = "#ffffff"; // Change text color
                   setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
                 }}
               >
-                Home
+                RESTART
               </button>
             </div>
 

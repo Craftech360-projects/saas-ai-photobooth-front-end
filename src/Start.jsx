@@ -32,8 +32,8 @@ function Start() {
                         cursor: "pointer",
                         border: "2px solid white",  // Add a border to make it visible
                         fontSize: "40px",
-                        backgroundColor: "transparent",  // Transparent background
-                        color: "#fff",  // White text color
+                        backgroundColor: "#fff",  // Transparent background
+                        color: "#710100",  // White text color
                         transition: "background-color 0.3s ease, color 0.3s ease",
                         borderRadius: "40px",
                         position: "absolute",
@@ -43,7 +43,7 @@ function Start() {
                     }}
                     onClick={() => navigate("/start")}
                 >
-                    Start
+                    START
                 </button>
             </div>
         </div>
