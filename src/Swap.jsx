@@ -4,11 +4,11 @@ import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { supabase } from "./supabaseClient";
-import f1 from "/assets/f1.png"; // Import the PNG image
-import f2 from "/assets/f2.png"; // Import the PNG image
+
 import m1 from "/assets/m1.png"; // Import the PNG image
 import m2 from "/assets/m2.png"; // Import the PNG image
-
+import m3 from "/assets/m3.png"; // Import the PNG image
+import m4 from "/assets/m4.png"; // Import the PNG image
 function Swap() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,14 +37,14 @@ function Swap() {
       try {
         const formData = new FormData();
         formData.append(
-          "targetImage",
+          "src_image",
           new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
         );
 
         const response = await fetch(selectedImage);
         const targetImageBlob = await response.blob();
         formData.append(
-          "sourceImage",
+          "bgr_image",
           new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
         );
         formData.append("name", userDetails.name);
@@ -54,7 +54,7 @@ function Swap() {
         console.log("formdata",formData);
 
         const swapResponse = await fetch(
-          "http://localhost:8000/api/swap-face/",
+          "http://localhost:3000/upload-images",
           {
             method: "POST",
             body: formData,
@@ -240,7 +240,7 @@ function Swap() {
         ) : (
           <>
             <img
-              src={f1}
+              src={m3}
               alt="Swapped Result"
               style={{
                 width: "70%",
@@ -255,13 +255,13 @@ function Swap() {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
                 setTimeout(() => {
-                  handleSubmit(e, `f1.jpg`);
+                  handleSubmit(e, `m3.jpg`);
                 }, 500); // Wait 50ms then proceed
               }}
             />
 
             <img
-              src={f2}
+              src={m4}
               alt="Swapped Result"
               style={{
                 width: "70%",
@@ -275,7 +275,7 @@ function Swap() {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
                 setTimeout(() => {
-                  handleSubmit(e, `f2.jpg`);
+                  handleSubmit(e, `m4.jpg`);
                 }, 500); // Wait 50ms then proceed
               }}
             />
@@ -304,29 +304,36 @@ function Swap() {
     background-color: ${(props) => props.color};
     animation: ${animloader} 0.3s ${(props) => props.delay}s linear infinite alternate;
   `;
-  
-  // const LoadingAnimation = () => {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         flexDirection: "column",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         height: "100vh",
-  //         width: "100vw",
-  //       }}
-  //     >
-  //       <LoaderContainer>
-  //         <Bar color="rgb(31 187 238)" delay={0.3} /> {/* Blue */}
-  //         <Bar color="rgb(176 210 55)" delay={0.2} /> {/* Green */}
-  //         <Bar color="rgb(255 202 7)" delay={0.1} /> {/* Yellow */}
-  //         <Bar color="rgb(212 58 42)" delay={0} /> {/* Red */}
-  //       </LoaderContainer>
-  //     </div>
-  //   );
-  // };
-  
+  const LoadingAnimation = () => {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100vw",
+        }}
+      >
+        {/* Display the loading bars */}
+        <LoaderContainer>
+          <Bar color="#30A6EC" delay="0" />
+          <Bar color="#30A6EC" delay="0.2" />
+          <Bar color="#30A6EC" delay="0.4" />
+        </LoaderContainer>
+        <h2
+          style={{
+            fontSize: "40px",
+            color: "#fff",
+            marginTop: "20px",
+          }}
+        >
+          {/* Loading... */}
+        </h2>
+      </div>
+    );
+  };
   // const LoadingAnimation = () => {
   //   return (
   //     <div
@@ -337,16 +344,17 @@ function Swap() {
   //         alignItems: "flex-start", // Align items to the left
   //         height: "100vh",
   //         width: "100vw",
-  //         paddingLeft: "250px", // Add padding from the left
+  //         paddingLeft: "50px", // Add padding from the left
   //       }}
   //     >
   //       {/* Display the loading text with animation */}
   //       <div style={{ textAlign: "left" }}>
   //         <h2
   //           style={{
-  //             fontSize: "100px",
+  //             fontSize: "80px",
   //             color: "#fff",
   //             letterSpacing: "2px",
+  //             lineHeight: "70px", // Reduced line height to decrease spacing
   //             animation: "fadeInOut 3s infinite", // Apply animation
   //           }}
   //         >
@@ -354,10 +362,11 @@ function Swap() {
   //         </h2>
   //         <h2
   //           style={{
-  //             fontSize: "100px",
+  //             fontSize: "80px",
   //             fontWeight: "normal", // Make this part normal weight
   //             color: "#fff",
   //             letterSpacing: "2px",
+  //             lineHeight: "70px", // Reduced line height to match the first line
   //             animation: "fadeInOut 3s infinite", // Apply animation to both lines
   //           }}
   //         >
@@ -384,138 +393,8 @@ function Swap() {
   //     </div>
   //   );
   // };
-  const LoadingAnimation = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start", // Align items to the left
-          height: "100vh",
-          width: "100vw",
-          paddingLeft: "50px", // Add padding from the left
-        }}
-      >
-        {/* Display the loading text with animation */}
-        <div style={{ textAlign: "left" }}>
-          <h2
-            style={{
-              fontSize: "80px",
-              color: "#fff",
-              letterSpacing: "2px",
-              lineHeight: "70px", // Reduced line height to decrease spacing
-              animation: "fadeInOut 3s infinite", // Apply animation
-            }}
-          >
-            <span style={{ fontWeight: "bold" }}>Sculpting</span>
-          </h2>
-          <h2
-            style={{
-              fontSize: "80px",
-              fontWeight: "normal", // Make this part normal weight
-              color: "#fff",
-              letterSpacing: "2px",
-              lineHeight: "70px", // Reduced line height to match the first line
-              animation: "fadeInOut 3s infinite", // Apply animation to both lines
-            }}
-          >
-            your future self...
-          </h2>
-        </div>
-  
-        {/* Add CSS for the animation */}
-        <style>
-          {`
-            @keyframes fadeInOut {
-              0% {
-                opacity: 0;
-              }
-              50% {
-                opacity: 1;
-              }
-              100% {
-                opacity: 0;
-              }
-            }
-          `}
-        </style>
-      </div>
-    );
-  };
   
   
-  
-  // const LoadingAnimation = () => {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         flexDirection: "column",
-  //         justifyContent: "center",
-  //         alignItems: "flex-start", // Align items to the left
-  //         height: "100vh",
-  //         width: "100vw",
-  //         paddingLeft: "250px", // Add padding from the left
-  //       }}
-  //     >
-  //       {/* Display the loading text with animation */}
-  //       <div style={{ textAlign: "left" }}>
-  //         <h2
-  //           style={{
-  //             fontSize: "100px",
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             lineHeight: "80px", // Reduced line height
-  //             animation: "pulseEffect 2s infinite", // New animation
-  //           }}
-  //         >
-  //           <span style={{ fontWeight: "bold" }}>Sculpting</span>
-  //         </h2>
-  //         <h2
-  //           style={{
-  //             fontSize: "100px",
-  //             fontWeight: "normal", // Make this part normal weight
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             lineHeight: "80px", // Reduced line height
-  //             animation: "pulseEffect 2s infinite", // Apply same animation to both lines
-  //           }}
-  //         >
-  //           your future self...
-  //         </h2>
-  //       </div>
-  
-  //       {/* Add CSS for the animation */}
-  //       <style>
-  //         {`
-  //           @keyframes pulseEffect {
-  //             0% {
-  //               transform: scale(1);
-  //               opacity: 0.8;
-  //               color: #fff;
-  //             }
-  //             50% {
-  //               transform: scale(1.1);
-  //               opacity: 1;
-  //               color: #30A6EC; /* Change to a highlight color */
-  //             }
-  //             100% {
-  //               transform: scale(1);
-  //               opacity: 0.8;
-  //               color: #fff;
-  //             }
-  //           }
-  //         `}
-  //       </style>
-  //     </div>
-  //   );
-  // };
-  
-  
-  
-
-  // Create a PrintableImage component using forwardRef
   const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
     return (
       <div ref={ref}>
@@ -592,7 +471,7 @@ function Swap() {
                   // borderRadius: "16px",
                   padding: "15px",
                   backgroundColor: "#fff",
-                  marginBottom: "25px",
+                  marginBottom: "15px",
                 
                 
                 }}
@@ -622,17 +501,16 @@ function Swap() {
                 type="submit"
                 style={{
                   width: "250px",
-                height: "80px",
-                cursor: "pointer",
-                border: " solid white", // White border
-                fontSize: "40px",
-                fontWeight: "bold",
-                 backgroundColor: "#001965",
-                color: "#fff", // White text color
-                transition: "background-color 0.3s ease, color 0.3s ease",
-                position: "absolute",
-                top: "80%",
-                borderRadius: "40px",
+                  height: "80px",
+                  cursor: "pointer",
+                  border: "2px solid white",  // Add a border to make it visible
+                  fontSize: "40px",
+                  backgroundColor: "transparent",  // Transparent background
+                  color: "#fff",  // White text color
+                  transition: "background-color 0.3s ease, color 0.3s ease",
+                  position: "absolute",
+                  top: "75%",
+                  borderRadius: "40px",
                  
                 }}
                 onClick={(e) => {

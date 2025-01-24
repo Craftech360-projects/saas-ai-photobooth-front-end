@@ -1,19 +1,21 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Camer from './Camera';
-import Swap from './Swap';
-import Result from './Result';
-import LoadingPage from './LoadingPage';
-import Error from './Error';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Admin from './Admin';
+import Camer from './Camera';
+import Error from './Error';
+import LoadingPage from './LoadingPage';
+import Result from './Result';
+import Start from './Start';
+import Swap from './Swap';
 
 function App() {
   return (
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<Camer />} />
+        <Route path="/" element={<Start />} />
+          <Route path="/start" element={<Camer />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/result" element={<Result />} />
           <Route path="/loading" element={<LoadingPage />} />

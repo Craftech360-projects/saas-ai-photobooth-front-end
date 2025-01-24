@@ -2,6 +2,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
+// Define the rotation animation for the spinner
 const rotation = keyframes`
   0% {
     transform: rotate(0deg);
@@ -20,6 +21,7 @@ const rotationBack = keyframes`
   }
 `;
 
+// Styled-component for the outer spinner circle
 const LoaderWrapper = styled.div`
   width: 200px; /* Increased size */
   height: 200px; /* Increased size */
@@ -32,6 +34,7 @@ const LoaderWrapper = styled.div`
   animation: ${rotation} 2s linear infinite;
 `;
 
+// Styled-component for the inner spinner circle
 const LoaderInner = styled.div`
   content: '';  
   box-sizing: border-box;
@@ -41,20 +44,28 @@ const LoaderInner = styled.div`
   top: 0;
   bottom: 0;
   margin: auto;
-  border: 16px dotted #30A6EC; /* Increased size */
+  border: 16px dottedrgb(226, 226, 226); /* Inner circle style */
   border-style: solid solid dotted;
-  width: 100px; /* Increased size */
-  height: 100px; /* Increased size */
+  width: 100px; /* Inner circle size */
+  height: 100px; /* Inner circle size */
   border-radius: 50%;
   animation: ${rotationBack} .5s linear infinite;
   transform-origin: center center;
 `;
 
-
-
+// Centered loader component
 function LoadingPage() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+    <div 
+      style={{
+        display: 'flex',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh', 
+        width: '100vw',
+        backgroundColor: '#000', // Optional background for contrast
+      }}
+    >
       <LoaderWrapper>
         <LoaderInner />
       </LoaderWrapper>
