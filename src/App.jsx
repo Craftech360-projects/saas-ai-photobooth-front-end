@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Admin from './Admin';
 import Camer from './Camera';
 import Error from './Error';
+import ImagePage from './ImagePage';
 import LoadingPage from './LoadingPage';
 import Result from './Result';
 import Start from './Start';
@@ -21,6 +22,7 @@ function App() {
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="/error" element={<Error />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/image" element={<ImagePage />} />
         </Routes>
       </div>
     </Router>

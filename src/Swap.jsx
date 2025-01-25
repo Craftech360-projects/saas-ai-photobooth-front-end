@@ -407,7 +407,7 @@ function Swap() {
                 alignItems: "center",
               }}
             >
-              <QRCode
+              {/* <QRCode
                 value={resultImageUrl}
                 size={200}
                 style={{
@@ -419,7 +419,21 @@ function Swap() {
                 
                 
                 }}
-              />
+              /> */}
+              <QRCode
+  value={`https://utkarsh-3aaf5.web.app/?imageUrl=${encodeURIComponent(resultImageUrl)}`}
+  size={200}
+  style={{
+     border: "15px solid #710100",
+    // borderRadius: "16px",
+    padding: "15px",
+    backgroundColor: "#fff",
+    marginBottom: "10px",
+  
+  
+  }}
+/>
+{/* <div>{`https://utkarsh-3aaf5.web.app/?imageUrl=${encodeURIComponent(resultImageUrl)}`}</div> */}
               <h1
                 style={{
                   fontSize: "30px",
