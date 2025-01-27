@@ -162,12 +162,12 @@ function Result() {
                 <button
                   type="submit"
                   style={{
-                    width: "250px",
-                    height: "80px",
+                    width: "150px", // Decreased width
+                    height: "50px", // Decreased height
                     cursor: "pointer",
                     borderRadius: "10px",
                     border: "none",
-                    fontSize: "40px",
+                    fontSize: "24px", // Decreased font size
                     fontWeight: "bold",
                     backgroundColor: "#ffffff", // Default color
                     color: "#000000", // Default text color
