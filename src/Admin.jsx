@@ -31,8 +31,8 @@ const Admin = () => {
             const { data: fileData, error: fileError } = await supabase.storage
               .from(bucketName)
               .list(folder.name); // Get files in the folder
-            console.log("fileData",fileData);
-            
+            console.log("fileData", fileData);
+
             if (fileError) {
               console.error(
                 `Error fetching files for folder ${folder.name}:`,

@@ -82,7 +82,7 @@ function App() {
             ball catch
           </button>
           <button type="button" onClick={() => selectRandomImage(imageData.imagesArray2)}>
-          century celebration
+            century celebration
           </button>
           <button type="button" onClick={() => selectRandomImage(imageData.imagesArray3)}>
             Use Image Set 3
