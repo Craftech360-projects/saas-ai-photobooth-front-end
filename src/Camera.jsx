@@ -725,8 +725,8 @@ const StyledSelect = styled.select`
   }
 `;
 
-const backgroundImage = "/Login.png";
-
+//const backgroundImage = "/Login.png";
+const backgroundImage = "/background2.jpg";
 function Camer() {
   const maleImages = ["male1", "male1"];
   const femaleImages = ["female1", "female1"];
@@ -841,13 +841,14 @@ function Camer() {
     setSelectedOption(option);
   };
 
-  const handleThemeSelect = (theme) => {
+  const handleThemeSelect = (theme) => { 
+    console.log("htemmmmmmee",theme);
     setSelectedTheme(theme);
     setIsThemeSelected(true); // Set theme as selected
     setIsGenderShow(false);
     setShowScene(true);
     setImageFolder(`${theme.name.toLowerCase().replace(" ", "")}/${userDetails.gender}`);
-    console.log(imageFolder);
+    console.log("folder for theme" ,imageFolder);
   };
 
   const scenes = imageFolder ? [`${imageFolder}/1.png`, `${imageFolder}/2.png`, `${imageFolder}/3.png`, `${imageFolder}/4.png`, `${imageFolder}/5.png`] : [];
@@ -864,40 +865,47 @@ function Camer() {
       className="text-center w-screen h-screen"
       style={{  backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-      {isStarted && (
-        <>
-          <div className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center">
-            <StyledInput
-              type="text"
-              name="name"
-              placeholder="Enter name"
-              value={userDetails.name}
-              onChange={handleChange}
-              required
-            />
+    {isStarted && (
+  <>
+    <div
+      className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center"
+      style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <StyledInput
+        type="text"
+        name="name"
+        placeholder="Enter name"
+        value={userDetails.name}
+        onChange={handleChange}
+        required
+      />
 
-            <StyledInput
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              value={userDetails.email}
-              onChange={handleChange}
-              required
-            />
+      <StyledInput
+        type="email"
+        name="email"
+        placeholder="Enter email"
+        value={userDetails.email}
+        onChange={handleChange}
+        required
+      />
 
-<button
-  onClick={handleSubmit}
-  className="w-[428px] h-[104px] cursor-pointer border-none transition-colors absolute top-[60%]"
->
-  <img src={submit} alt="Submit" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-</button>
-          </div>
-        </>
-      )}
+      <button
+        onClick={handleSubmit}
+        className="w-[428px] h-[104px] cursor-pointer border-none transition-colors absolute top-[60%]"
+      >
+        <img
+          src={submit}
+          alt="Submit"
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        />
+      </button>
+    </div>
+  </>
+)}
 
       {isGenderShow && (
         <div className="text-center w-screen h-screen flex flex-col items-center justify-center bg-no-repeat">
-          <div className="text-3xl text-white tracking-wide mb-4">Select Gender</div>
+          <div className="text-6xl font-semibold text-white tracking-wide mb-4">Select Gender</div>
 
           <div className="flex flex-col items-center justify-center gap-5 mt-6">
             <button
@@ -910,7 +918,7 @@ function Camer() {
             ></button>
 
             <button
-              className="rounded-lg bg-cover bg-center bg-no-repeat w-[298px] h-[291px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
+              className="rounded-lg bg-cover bg-center bg-no-repeat w-[298px] mt-5 h-[291px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
               style={{ backgroundImage: `url(${female})` }}
               onClick={(e) => {
                 e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
@@ -928,7 +936,8 @@ function Camer() {
 
       {isCameraOn && (
         <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
-          <div className="text-center text-6xl font-semibold mb-8 text-white">Smile for the camera</div>
+          <div className="text-center text-6xl font-semibold mb-2 text-white">Smile for the</div>
+          <div className="text-center text-6xl font-semibold mb-8 text-white">camera</div>
           <video
             ref={videoRef}
             autoPlay
@@ -941,7 +950,7 @@ function Camer() {
     e.target.classList.add("bg-blue-900");
     setTimeout(captureImage, 500);
   }}
-  className="w-[854px] h-[208px] cursor-pointer  absolute top-[73%]"
+  className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
 >
   <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
 </button>

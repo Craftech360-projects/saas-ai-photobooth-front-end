@@ -7,7 +7,6 @@ import LoadingPage from "./LoadingPage";
 import { supabase } from "./supabaseClient";
 
 
-
 function Swap() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -101,13 +100,14 @@ function Swap() {
 
         // Get public URL
         const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/${fileName}`;
-        
-        // // Save user details to database
-        // const { error: insertError } = await supabase
-        //   .from("users")
-        //   .insert([{ ...userDetails, publicURL }]);
+        console.log("Public URL:", publicURL);
 
-        // if (insertError) throw insertError;
+        // // Save user details to database
+        const { error: insertError } = await supabase
+          .from("nimhans")
+          .insert([{ ...userDetails, publicURL }]);
+
+        if (insertError) throw insertError;
 
         setResultImageUrl(publicURL);
       } catch (err) {
@@ -148,13 +148,15 @@ function Swap() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <div className="text-white text-xl mb-4">Something went wrong: {error}</div>
+        <div className="bg-red-500 p-16 rounded-lg shadow-lg text-center">
+        <div className="text-white text-3xl mb-4">Something went wrong: {error}</div>
         <button
           onClick={goHome}
-          className="bg-white text-blue-900 px-6 py-2 rounded font-bold"
+          className="bg-white text-3xl  text-blue-900 px-12 py-4 rounded font-bold"
         >
           Try Again
         </button>
+      </div>
       </div>
     );
   }
@@ -170,25 +172,31 @@ function Swap() {
   if (resultImageUrl) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl mt-8 p-8">
+        <div className="flex justify-between items-center pt-20">
+  <div className="text-3xl text-white">&nbsp;</div> {/* Keeps the spacing */}
+</div>
+
+            
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            className="w-full animate__animated animate__zoomIn border-4 border-white"
+            className="w-full animate__animated animate__zoomIn border-6 rounded-4xl border-yellow-400"
           />
           
-          <div className="flex justify-between items-center mt-8">
-            <div className="bg-white p-4">
+          <div className="flex justify-start items-center mt-8">
+            <div className="bg-white p-4 border-12 border-yellow-400 ">
               <QRCodeSVG value={resultImageUrl} size={180} />
             </div>
             
-            <div className="text-white">
-              <h1 className="text-2xl mb-4">Scan the QR CODE to download image</h1>
+            <div className="text-white flex flex-col  ml-50">
+              <h1 className="text-4xl mb-4 font-semibold text-left">Scan the QR <br/> code to download<br/> your AI avatar</h1>
+            
               <button
                 onClick={goHome}
-                className="bg-white text-blue-900 px-8 py-3 text-xl font-bold"
+                className="bg-yellow-400 text-black px-8 py-4 text-4xl font-bold rounded-lg"
               >
-                Restart
+                RESTART
               </button>
             </div>
           </div>

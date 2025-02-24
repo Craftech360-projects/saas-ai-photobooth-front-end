@@ -17,7 +17,8 @@ const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
 
 function Result() {
   const location = useLocation();
-  const { resultImageUrl } = location.state; // Retrieve the image URL passed from Page2
+  //const { resultImageUrl } = location.state; // Retrieve the image URL passed from Page2
+  const { resultImageUrl } = 'https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/swapped-images/1740378112464-result.jpg'; // Retrieve the image URL passed from Page2
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const printRef = useRef(); // Ref for the printable component

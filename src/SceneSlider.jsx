@@ -31,10 +31,10 @@ const SceneSlider = ({ scenes, onSelect }) => {
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute -left-16 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -left-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="h-8 w-8" />
+          <ChevronLeft className="h-16 w-16" />
         </button>
 
         {/* Slides */}
@@ -46,11 +46,11 @@ const SceneSlider = ({ scenes, onSelect }) => {
             return (
               <div
                 key={scene}
-                className={cn("absolute left-0 top-0 h-full w-full transition-all duration-300 ease-in-out", {
-                  "z-30 scale-100 rotate-0": position === 0,
-                  "z-20 -translate-x-[20%] scale-90 rotate-[-5deg]": position === -1 || position === 2,
-                  "z-10 translate-x-[20%] scale-90 rotate-[5deg]": position === 1 || position === -2,
-                })}
+                 className={cn("absolute left-0 top-0 h-full w-full transition-all duration-300 ease-in-out", {
+                         "z-30 scale-100 rotate-0": position === 0,
+                         "z-20 -translate-x-[30%] scale-80 rotate-[-10deg]": position === -1 || position === 2,
+                         "z-10 translate-x-[30%] scale-80 rotate-[10deg]": position === 1 || position === -2,
+                       })}
               >
                 <div className="relative h-full w-full overflow-hidden rounded-3xl border-4 border-yellow-400 bg-gray-900 shadow-xl">
                   <img
@@ -68,10 +68,10 @@ const SceneSlider = ({ scenes, onSelect }) => {
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="absolute -right-16 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -right-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
           aria-label="Next slide"
         >
-          <ChevronRight className="h-8 w-8" />
+          <ChevronRight  className="h-16 w-16" />
         </button>
       </div>
 
