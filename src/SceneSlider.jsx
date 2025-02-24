@@ -24,14 +24,14 @@ const SceneSlider = ({ scenes, onSelect }) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-7xl font-bold text-white">Select your scene</h1>
+        <h1 className="mb-2 text-7xl font-bold text-white">Select the character</h1>
       </div>
 
       <div className="relative flex items-center justify-center px-20">
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute -left-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -left-42 z-10 rounded-full bg-[#FFC462] p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
           aria-label="Previous slide"
         >
           <ChevronLeft className="h-16 w-16" />
@@ -48,11 +48,11 @@ const SceneSlider = ({ scenes, onSelect }) => {
                 key={scene}
                  className={cn("absolute left-0 top-0 h-full w-full transition-all duration-300 ease-in-out", {
                          "z-30 scale-100 rotate-0": position === 0,
-                         "z-20 -translate-x-[30%] scale-80 rotate-[-10deg]": position === -1 || position === 2,
-                         "z-10 translate-x-[30%] scale-80 rotate-[10deg]": position === 1 || position === -2,
+                         "z-20 -translate-x-[40%] scale-80 rotate-[-0deg]": position === -1 || position === 2,
+                         "z-10 translate-x-[40%] scale-80 rotate-[0deg]": position === 1 || position === -2,
                        })}
               >
-                <div className="relative h-full w-full overflow-hidden rounded-3xl border-4 border-yellow-400 bg-gray-900 shadow-xl">
+                <div className="relative h-full w-full overflow-hidden  border-2 border-yellow-400 bg-gray-900 shadow-xl">
                   <img
                     onClick={handleSceneSelect}
                     src={scene}
@@ -68,7 +68,7 @@ const SceneSlider = ({ scenes, onSelect }) => {
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="absolute -right-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -right-42 z-10 rounded-full bg-[#FFC462] p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
           aria-label="Next slide"
         >
           <ChevronRight  className="h-16 w-16" />
@@ -83,7 +83,7 @@ const SceneSlider = ({ scenes, onSelect }) => {
             onClick={() => goToSlide(index)}
             className={cn(
               "h-3 w-3 rounded-full transition-colors",
-              activeIndex === index ? "bg-yellow-400" : "bg-white opacity-50 hover:opacity-75"
+              activeIndex === index ? "bg-[#FFC462]" : "bg-white opacity-50 hover:opacity-75"
             )}
             aria-label={`Go to slide ${index + 1}`}
           />
@@ -92,7 +92,7 @@ const SceneSlider = ({ scenes, onSelect }) => {
 
       {/* Scene Name */}
       {scenes[activeIndex] && (
-        <div className="mt-8 rounded-lg bg-yellow-400 px-6 py-2">
+        <div className="mt-8 rounded-lg bg-[#FFC462] px-6 py-2">
           <span className="text-xl font-bold uppercase text-blue-900">
             {scenes[activeIndex].split('/').pop().split('.')[0]}
           </span>

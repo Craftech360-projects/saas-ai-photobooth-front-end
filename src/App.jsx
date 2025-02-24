@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './App.css'
-import Camer from './Camera'
+import Camer from './Camera.jsx'
 import Error from './Error'
 import LoadingPage from './LoadingPage'
 import Result from './Result'
 import Swap from './Swap'
+
 function App() {
   const [count, setCount] = useState(0)
   const backgroundImage = "/background.jpg";
@@ -18,6 +19,7 @@ function App() {
     >
       <Routes>
         <Route path="/" element={<Camer />} />
+     
         {/* <Route path="/1" element={<ThemeSlider />} /> */}
         <Route path="/swap" element={<Swap />} />
         <Route path="/result" element={<Result />} />

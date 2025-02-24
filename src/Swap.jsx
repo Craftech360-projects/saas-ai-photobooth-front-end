@@ -17,7 +17,7 @@ function Swap() {
   const [resultImageUrl, setResultImageUrl] = useState(null);
   const [error, setError] = useState(null);
   const printRef = useRef();
-
+  const restart = "/plainb.png";
   useEffect(() => {
     // Check if we have the required data
     if (!sourceImageBlob || !selectedImage || !userDetails) {
@@ -91,7 +91,7 @@ function Swap() {
 
         // Upload to Supabase
         const { error: uploadError } = await supabase.storage
-          .from("nimhans")
+          .from("infy")
           .upload(fileName, convertedBlob, {
             contentType: "image/jpeg",
           });
@@ -99,12 +99,12 @@ function Swap() {
         if (uploadError) throw uploadError;
 
         // Get public URL
-        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/${fileName}`;
+        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/infy/${fileName}`;
         console.log("Public URL:", publicURL);
 
         // // Save user details to database
         const { error: insertError } = await supabase
-          .from("nimhans")
+          .from("infy")
           .insert([{ ...userDetails, publicURL }]);
 
         if (insertError) throw insertError;
@@ -119,9 +119,13 @@ function Swap() {
     };
 
     processImages();
-  }, []); // Empty dependency array since we want this to run once on mount
+  }, []); 
+  // 
+  // // Empty dependency array since we want this to run once on mount
 
   // Helper function to convert image to JPEG
+ 
+ 
   const convertImageToJPEG = (blob) => {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
@@ -165,6 +169,7 @@ function Swap() {
     return (
       <div className="flex items-center justify-center h-screen">
         <LoadingPage />
+      
       </div>
     );
   }
@@ -181,23 +186,31 @@ function Swap() {
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            className="w-full animate__animated animate__zoomIn border-6 rounded-4xl border-yellow-400"
+            className="w-full animate__animated animate__zoomIn "
           />
           
           <div className="flex justify-start items-center mt-8">
-            <div className="bg-white p-4 border-12 border-yellow-400 ">
+            <div className="bg-white p-4 border-12 border-orange-400 ">
               <QRCodeSVG value={resultImageUrl} size={180} />
             </div>
             
             <div className="text-white flex flex-col  ml-50">
-              <h1 className="text-4xl mb-4 font-semibold text-left">Scan the QR <br/> code to download<br/> your AI avatar</h1>
+              <h1 className="text-4xl mb-4 font-semibold text-center">Scan the QR Code to download image</h1>
             
-              <button
-                onClick={goHome}
-                className="bg-yellow-400 text-black px-8 py-4 text-4xl font-bold rounded-lg"
-              >
-                RESTART
-              </button>
+           
+
+<button
+  onClick={goHome}
+  className="w-[365px] h-[102px] text-black px-8 py-4 text-4xl font-bold rounded-lg bg-cover bg-center"
+  style={{
+    backgroundImage: `url(${restart})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
+  RESTART
+</button>
+
             </div>
           </div>
         </div>
