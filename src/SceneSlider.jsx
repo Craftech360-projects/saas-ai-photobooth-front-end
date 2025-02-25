@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const SceneSlider = ({ scenes, onSelect }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-
+console.log(scenes.length);
   const nextSlide = () => {
     setActiveIndex((prev) => (prev === scenes.length - 1 ? 0 : prev + 1));
   };

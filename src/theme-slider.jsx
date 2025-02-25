@@ -79,7 +79,7 @@ export function ThemeSlider({ themes, onSelect }) {
           "z-10 translate-x-[30%] scale-80 rotate-[10deg]": position === 1 || position === -2,
         })}
       >
-        <div className="relative h-full w-full overflow-hidden rounded-4xl border-4 border-yellow-400 bg-gray-900 shadow-xl">
+        <div className="relative h-full w-full overflow-hidden ">
           <img  onClick={handleThemeSelect}
             src={theme.image || "/placeholder.svg"}
             alt={theme.name}

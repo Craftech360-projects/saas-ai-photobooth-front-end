@@ -2,6 +2,7 @@
 // import { QRCodeSVG } from "qrcode.react";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
+//import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import { supabase } from "./supabaseClient";
@@ -181,16 +182,16 @@ function Swap() {
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            className="w-full animate__animated animate__zoomIn border-6 rounded-4xl border-yellow-400"
+            className="w-full animate__animated animate__zoomIn p-20"
           />
           
-          <div className="flex justify-start items-center mt-8">
+          <div className="flex justify-start items-center mt-8  px-20">
             <div className="bg-white p-4 border-12 border-yellow-400 ">
               <QRCodeSVG value={resultImageUrl} size={180} />
             </div>
             
-            <div className="text-white flex flex-col  ml-50">
-              <h1 className="text-4xl mb-4 font-semibold text-left">Scan the QR <br/> code to download<br/> your AI avatar</h1>
+            <div className="text-white flex flex-col  ml-40">
+              <h1 className="text-3xl mb-4 font-semibold text-left">Scan the QR <br/> code to download<br/> your AI avatar</h1>
             
               <button
                 onClick={goHome}
