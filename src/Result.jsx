@@ -112,7 +112,7 @@ function Result() {
                     backgroundColor: "rgb(0 29 131)",
                   }}
                 >
-                  <h1 style={{ fontSize: "42px", lineHeight: "40px" }}>
+                  <h1 style={{ fontSize: "42px", lineHeight: "40px", fontFamily: 'Oswald, sans-serif' }}>
                     {" "}
                     Scan and Download
                   </h1>

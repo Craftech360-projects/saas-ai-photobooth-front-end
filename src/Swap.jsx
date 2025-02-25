@@ -2,10 +2,10 @@
 // import { QRCodeSVG } from "qrcode.react";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
+// import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import { supabase } from "./supabaseClient";
-
 
 function Swap() {
   const navigate = useNavigate();
@@ -120,7 +120,7 @@ function Swap() {
 
     processImages();
   }, []); 
-  // 
+  
   // // Empty dependency array since we want this to run once on mount
 
   // Helper function to convert image to JPEG
@@ -156,7 +156,7 @@ function Swap() {
         <div className="text-white text-3xl mb-4">Something went wrong: {error}</div>
         <button
           onClick={goHome}
-          className="bg-white text-3xl  text-blue-900 px-12 py-4 rounded font-bold"
+          className="bg-[#FFC462] text-3xl  text-black px-12 py-4 rounded font-bold"  style={{ fontFamily: 'Oswald, sans-serif' }}
         >
           Try Again
         </button>
@@ -174,50 +174,56 @@ function Swap() {
     );
   }
 
-  if (resultImageUrl) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-4xl mt-8 p-8">
-        <div className="flex justify-between items-center pt-20">
-  <div className="text-3xl text-white">&nbsp;</div> {/* Keeps the spacing */}
-</div>
 
-            
+if (resultImageUrl) {
+  return (
+    <div className="flex flex-col items-center justify-center  ">
+      <div className="w-full max-w-4xl mt-8 p-8">
+        <div className="flex justify-between items-center pt-20">
+          <div className="text-3xl text-white">&nbsp;</div>
+        </div>
+
+        {/* Centered Image */}
+        <div className="flex justify-center">
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            className="w-full animate__animated animate__zoomIn "
+            className="w-full p-10 animate__animated animate__zoomIn max-h-[80vh]"
+            style={{ objectFit: "contain" }}
           />
-          
-          <div className="flex justify-start items-center mt-8">
-            <div className="bg-white p-4 border-12 border-orange-400 ">
-              <QRCodeSVG value={resultImageUrl} size={180} />
-            </div>
-            
-            <div className="text-white flex flex-col  ml-50">
-              <h1 className="text-4xl mb-4 font-semibold text-center">Scan the QR Code to download image</h1>
-            
-           
+        </div>
 
-<button
-  onClick={goHome}
-  className="w-[365px] h-[102px] text-black px-8 py-4 text-4xl font-bold rounded-lg bg-cover bg-center"
-  style={{
-    backgroundImage: `url(${restart})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
->
-  RESTART
-</button>
+        <div className="flex justify-start items-center mt-8 px-10">
+          <div className="bg-white p-4 border-12 border-orange-400">
+            <QRCodeSVG value={resultImageUrl} size={180} />
+          </div>
 
-            </div>
+          <div className="text-white flex flex-col ml-50">
+            <h1
+              className="text-4xl mb-4 font-semibold text-center"
+              style={{ fontFamily: 'Oswald, sans-serif' }}
+            >
+              Scan the QR Code to download image
+            </h1>
+
+            <button
+              onClick={goHome}
+              className="w-[365px] h-[102px] text-black px-8 py-4 text-4xl font-bold rounded-lg bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${restart})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                fontFamily: 'Oswald, sans-serif',
+              }}
+            >
+              RESTART
+            </button>
           </div>
         </div>
       </div>
-    );
-  }
-
+    </div>
+  );
+}
   return null;
 }
 

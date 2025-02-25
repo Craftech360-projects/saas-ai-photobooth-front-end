@@ -24,14 +24,14 @@ const SceneSlider = ({ scenes, onSelect }) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-7xl font-bold text-white">Select the character</h1>
+        <h1 className="mb-2 text-7xl font-semibold text-white"  style={{ fontFamily: 'Oswald, sans-serif' }}>Select the character</h1>
       </div>
 
       <div className="relative flex items-center justify-center px-20">
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute -left-42 z-10 rounded-full bg-[#FFC462] p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -left-42 z-10 rounded-full bg-[#FFC462] p-2 text-black transition-colors hover:bg-yellow-300 shadow-lg"
           aria-label="Previous slide"
         >
           <ChevronLeft className="h-16 w-16" />
@@ -68,7 +68,7 @@ const SceneSlider = ({ scenes, onSelect }) => {
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="absolute -right-42 z-10 rounded-full bg-[#FFC462] p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -right-42 z-10 rounded-full bg-[#FFC462] p-2 text-black transition-colors hover:bg-yellow-300 shadow-lg"
           aria-label="Next slide"
         >
           <ChevronRight  className="h-16 w-16" />
@@ -93,7 +93,7 @@ const SceneSlider = ({ scenes, onSelect }) => {
       {/* Scene Name */}
       {scenes[activeIndex] && (
         <div className="mt-8 rounded-lg bg-[#FFC462] px-6 py-2">
-          <span className="text-xl font-bold uppercase text-blue-900">
+          <span className="text-xl font-bold uppercase text-black">
             {scenes[activeIndex].split('/').pop().split('.')[0]}
           </span>
         </div>

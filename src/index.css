@@ -125,3 +125,9 @@
     background-repeat: no-repeat;
   }
 }
+@font-face {
+  font-family: 'Oswald';
+  src: url('./assets/fonts/Oswald-Medium.ttf') format('truetype');
+  font-weight: 500; /* Medium weight */
+  font-style: normal;
+}
