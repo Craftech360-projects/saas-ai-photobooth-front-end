@@ -1,6 +1,4 @@
 
-
-
 // import { useEffect, useRef, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 // import styled from "styled-components";
@@ -101,9 +99,8 @@
 //   const [selectedTheme, setSelectedTheme] = useState(null);
 //   const [showScene, setShowScene] = useState(false);
 //   const [imageFolder, setImageFolder] = useState(null);
-//   const [isThemeSelected, setIsThemeSelected] = useState(false); 
-//   const [showWarning, setShowWarning] = useState(false); 
-//   // New state
+//   const [isThemeSelected, setIsThemeSelected] = useState(false); // New state
+//   const [showWarning, setShowWarning] = useState(false); // New state for warning message
 //   const camera= "/camera.png";
 //   const submit= "/submit.png";
 //   const themes = [
@@ -181,13 +178,19 @@
 //       ...prevDetails,
 //       [name]: value,
 //     }));
+//     setShowWarning(false); // Hide warning message when user starts typing
 //   };
 
 //   const handleSubmit = (e) => {
+//     console.log("here")
 //     e.preventDefault();
-//     setIsGenderShow(true);
-//     setIsStarted(false);
-//     console.log(userDetails, "userDetails");
+//     if (!userDetails.name || !userDetails.email) {
+//       setShowWarning(true); // Show warning message if name or email is empty
+//     } else {
+//       setIsGenderShow(true);
+//       setIsStarted(false);
+//       console.log(userDetails, "userDetails");
+//     }
 //   };
 
 //   const handleSelection = (option) => {
@@ -227,46 +230,40 @@
 //       className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center"
 //       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
 //     >
-//       <StyledInput
-//         type="text"
-//         name="name"
-//         placeholder="Enter name"
-//         value={userDetails.name}
-//         onChange={handleChange}
-//         required
-//       />
-
-//       <StyledInput
-//         type="email"
-//         name="email"
-//         placeholder="Enter email"
-//         value={userDetails.email}
-//         onChange={handleChange}
-//         required
-//       />
-
-//       {/* <button
-//         onClick={handleSubmit}
-//         className="w-[428px] h-[104px] cursor-pointer border-none transition-colors absolute top-[60%]"
-//       >
-//         <img
-//           src={submit}
-//           alt="Submit"
-//           style={{ width: "100%", height: "100%", objectFit: "contain" }}
+//    <div className="absolute top-[55%] flex flex-col gap-8 items-center w-full">
+//         <StyledInput
+//           type="text"
+//           name="name"
+//           placeholder="Enter name"
+//           value={userDetails.name}
+//           onChange={handleChange}
+//           required
 //         />
-//       </button> */}
 
-// <button
-//   onClick={handleSubmit}
-//   className="w-[428px] h-[104px] cursor-pointer border-none transition-colors absolute top-[60%]"
-//   disabled={!userDetails.name || !userDetails.email} // Disable button if name or email is empty
-// >
-//   <img
-//     src={submit}
-//     alt="Submit"
-//     style={{ width: "100%", height: "100%", objectFit: "contain" }}
-//   />
-// </button>
+//         <StyledInput
+//           type="email"
+//           name="email"
+//           placeholder="Enter email"
+//           value={userDetails.email}
+//           onChange={handleChange}
+//           required
+//         />
+
+//         <button
+//           onClick={handleSubmit}
+//           className="w-[428px] h-[104px] mt-16 cursor-pointer border-none transition-colors"
+//         >
+//           <img
+//             src={submit}
+//             alt="Submit"
+//             style={{ width: "100%", height: "100%", objectFit: "contain" }}
+//           />
+//         </button>
+
+//         {showWarning && (
+//           <div className="text-red-500 text-4xl mt-4">Please enter both name and email.</div>
+//         )}
+//       </div>
 //     </div>
 //   </>
 // )}
@@ -314,14 +311,13 @@
 
 //           <canvas ref={canvasRef} className="hidden"></canvas>
 //           <button
-//   onClick={(e) => {
-  
-//     setTimeout(captureImage, 500);
-//   }}
-//   className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
-// >
-//   <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-// </button>
+//             onClick={(e) => {
+//               setTimeout(captureImage, 500);
+//             }}
+//             className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
+//           >
+//             <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+//           </button>
 //         </div>
 //       )}
 
@@ -336,6 +332,7 @@
 
 
 
+
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -344,11 +341,11 @@ import { ThemeSlider } from "./theme-slider";
 import female from "/assets/female.png";
 import male from "/assets/male.png";
 import captureImageIcon from "/assets/pcp.png";
-import outerspace from "/outerspace.png";
 import redcarpet from "/redcarpet.png";
-// import scifi from "/scifi.png";
-// import sports from "/sports.png";
-import Futuristic from "/Futuristic.png";
+import Scifi from "/scifi.png";
+import outerspace from "/space.png";
+import sports from "/sports.png";
+import superheros from "/superheros.png";
 
 const imgStyle = {
   width: "auto",
@@ -388,6 +385,8 @@ const StyledInput = styled.input`
   text-transform: capitalize;
   background-color: #fff;
   
+  border-radius: 12px; /* Adjust the value as needed */
+
   &::placeholder {
     color: #182060;
   }
@@ -405,14 +404,16 @@ const StyledSelect = styled.select`
   text-transform: capitalize;
   background-color: #fff;
 
+  border-radius: 12px; /* Adjust the value as needed */
+
   appearance: none;
   &::placeholder {
     color: #182060;
   }
 `;
 
-//const backgroundImage = "/Login.png";
 const backgroundImage = "/background2.jpg";
+
 function Camer() {
   const maleImages = ["male1", "male1"];
   const femaleImages = ["female1", "female1"];
@@ -428,24 +429,26 @@ function Camer() {
   const [isOptions, setIsOptions] = useState(false);
   const [isImg, setIsImg] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    name: "",
-    email: "",
+    name: "rahul",
+    email: "rahul@gmail.com",
     gender: "",
   });
+  const [isPressed, setIsPressed] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [showScene, setShowScene] = useState(false);
   const [imageFolder, setImageFolder] = useState(null);
-  const [isThemeSelected, setIsThemeSelected] = useState(false); // New state
-  const [showWarning, setShowWarning] = useState(false); // New state for warning message
+  const [isThemeSelected, setIsThemeSelected] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const camera= "/camera.png";
   const submit= "/submit.png";
   const themes = [
     { id: 1, name: "Red Carpet", image: redcarpet },
-    { id: 2, name: "Outer Space", image: outerspace },
-    { id: 3, name: "Futuristic", image: Futuristic },
-    // { id: 4, name: "Sci-Fi", image: scifi },
-    // { id: 5, name: "Sports", image: sports },
+    { id: 2, name: "Space", image: outerspace },
+    { id: 3, name: "Sci-fi", image: Scifi },
+    { id: 4, name: "Sports", image: sports },
+    { id: 5, name: "Superheros", image: superheros },
   ];
 
   const startProcess = (selectedGender) => {
@@ -486,6 +489,7 @@ function Camer() {
   }, [isCameraOn]);
 
   const captureImage = () => {
+    setTimeout(() => setIsPressed(false), 300);
     setTimeout(() => {
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
@@ -515,14 +519,24 @@ function Camer() {
       ...prevDetails,
       [name]: value,
     }));
+
+    if (name === "email") {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(value)) {
+        setEmailError(true);
+      } else {
+        setEmailError(false);
+      }
+    }
+
     setShowWarning(false); // Hide warning message when user starts typing
   };
 
   const handleSubmit = (e) => {
     console.log("here")
     e.preventDefault();
-    if (!userDetails.name || !userDetails.email) {
-      setShowWarning(true); // Show warning message if name or email is empty
+    if (!userDetails.name || !userDetails.email || emailError) {
+      setShowWarning(true); // Show warning message if name or email is empty or email is invalid
     } else {
       setIsGenderShow(true);
       setIsStarted(false);
@@ -567,39 +581,41 @@ function Camer() {
       className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center"
       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-      <StyledInput
-        type="text"
-        name="name"
-        placeholder="Enter name"
-        value={userDetails.name}
-        onChange={handleChange}
-        required
-      />
-
-      <StyledInput
-        type="email"
-        name="email"
-        placeholder="Enter email"
-        value={userDetails.email}
-        onChange={handleChange}
-        required
-      />
-
-      <button
-        onClick={handleSubmit}
-        className="w-[428px] h-[104px] cursor-pointer border-none transition-colors absolute top-[60%]"
-        // Disable button if name or email is empty
-      >
-        <img
-          src={submit}
-          alt="Submit"
-          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+   <div className="absolute top-[55%] flex flex-col gap-8 items-center w-full">
+        <StyledInput
+          type="text"
+          name="name"
+          placeholder="Enter name"
+          value={userDetails.name}
+          onChange={handleChange}
+          required
         />
-      </button>
+             {emailError && (
+          <div className="text-red-500 text-4xl mt-4">Please enter a valid email address.</div>
+        )}
+        <StyledInput
+          type="email"
+          name="email"
+          placeholder="Enter email"
+          value={userDetails.email}
+          onChange={handleChange}
+          required
+        />
+     
+     {!showWarning && !emailError && (
+  <button
+    onClick={handleSubmit}
+    className="w-[428px] h-[104px] mt-16 cursor-pointer border-none transition-colors"
+  >
+    <img
+      src={submit}
+      alt="Submit"
+      style={{ width: "100%", height: "100%", objectFit: "contain" }}
+    />
+  </button>
+)}
 
-      {showWarning && (
-        <div className="text-red-500 text-4xl mt-4">Please enter both name and email.</div>
-      )}
+      </div>
     </div>
   </>
 )}
@@ -610,7 +626,7 @@ function Camer() {
 
           <div className="flex flex-col items-center justify-center gap-5 mt-6">
             <button
-              className="rounded-lg bg-cover bg-center bg-no-repeat w-[298px] h-[291px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
+              className="rounded-lg p-2 bg-cover bg-center bg-no-repeat w-[425px] h-[483px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
               style={{ backgroundImage: `url(${male})` }}
               onClick={(e) => {
                 e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
@@ -619,7 +635,7 @@ function Camer() {
             ></button>
 
             <button
-              className="rounded-lg bg-cover bg-center bg-no-repeat w-[298px] mt-5 h-[291px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
+              className="rounded-lg p-2 bg-cover bg-center bg-no-repeat w-[425px] mt-5 h-[483px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
               style={{ backgroundImage: `url(${female})` }}
               onClick={(e) => {
                 e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
@@ -630,7 +646,6 @@ function Camer() {
         </div>
       )}
 
-      {/* Show ThemeSlider only if theme is not selected and showScene is false */}
       {isGender && !isThemeSelected && !showScene && (
         <ThemeSlider themes={themes} onSelect={handleThemeSelect} />
       )}
@@ -648,9 +663,12 @@ function Camer() {
           <canvas ref={canvasRef} className="hidden"></canvas>
           <button
             onClick={(e) => {
+              e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
               setTimeout(captureImage, 500);
             }}
-            className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
+          //   className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
+          // >
+          className={`w-[194px] h-[194px] cursor-pointer absolute top-[73%] left-1/2 -translate-x-1/2 rounded-full transition-transform duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none ${isPressed ? 'scale-95 opacity-75' : ''}`}
           >
             <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </button>

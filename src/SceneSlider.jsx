@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from 'react';
 
 const SceneSlider = ({ scenes, onSelect }) => {
@@ -24,17 +23,17 @@ console.log(scenes.length);
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-7xl font-bold text-white">Select your scene</h1>
+        <h1 className="mb-2 text-7xl font-semibolde text-white">Select your Avatar</h1>
       </div>
 
       <div className="relative flex items-center justify-center px-20">
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute -left-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
-          aria-label="Previous slide"
+          className="absolute -left-36 z-10 rounded-full p-2 text-blue-900 transition-colors hover:bg-yellow-300 "
+          aria-label="Next slide"
         >
-          <ChevronLeft className="h-16 w-16" />
+          <img src="/assets/left.png" alt="Next" className="h-24 w-24 object-contain" />
         </button>
 
         {/* Slides */}
@@ -52,14 +51,26 @@ console.log(scenes.length);
                          "z-10 translate-x-[30%] scale-80 rotate-[10deg]": position === 1 || position === -2,
                        })}
               >
-                <div className="relative h-full w-full overflow-hidden rounded-3xl border-4 border-yellow-400 bg-gray-900 shadow-xl">
+                {/* <div className="relative h-full w-full overflow-hidden  shadow-xl rounded-[4rem] border-4 border-transparent bg-gradient-to-br from-[#32BBB9] to-[#FFFFFF] p-[4px]">
                   <img
                     onClick={handleSceneSelect}
                     src={scene}
                     alt={`Scene ${index + 1}`}
                     className="h-full w-full object-cover"
                   />
-                </div>
+                </div> */}
+
+<div className="relative h-full w-full overflow-hidden shadow-xl rounded-[4rem]  border-transparent bg-gradient-to-b from-[#32BBB9] to-[#ffffff6e] p-2">
+  <div className="h-full w-full  rounded-[3.8rem] overflow-hidden">
+    <img
+      onClick={handleSceneSelect}
+      src={scene}
+      alt={`Scene ${index + 1}`}
+      className="h-full w-full object-cover"
+    />
+  </div>
+</div>
+
               </div>
             );
           })}
@@ -67,12 +78,12 @@ console.log(scenes.length);
 
         {/* Next Button */}
         <button
-          onClick={nextSlide}
-          className="absolute -right-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
-          aria-label="Next slide"
-        >
-          <ChevronRight  className="h-16 w-16" />
-        </button>
+  onClick={nextSlide}
+  className="absolute -right-36 z-10 rounded-full p-2 text-blue-900 transition-colors hover:bg-yellow-300 "
+  aria-label="Next slide"
+>
+  <img src="/assets/right.png" alt="Next" className="h-24 w-24 object-contain" />
+</button>
       </div>
 
       {/* Dots */}
@@ -83,7 +94,7 @@ console.log(scenes.length);
             onClick={() => goToSlide(index)}
             className={cn(
               "h-3 w-3 rounded-full transition-colors",
-              activeIndex === index ? "bg-yellow-400" : "bg-white opacity-50 hover:opacity-75"
+              activeIndex === index ? "bg-violet-600" : "bg-white opacity-50 hover:opacity-75"
             )}
             aria-label={`Go to slide ${index + 1}`}
           />
@@ -92,8 +103,8 @@ console.log(scenes.length);
 
       {/* Scene Name */}
       {scenes[activeIndex] && (
-        <div className="mt-8 rounded-lg bg-yellow-400 px-6 py-2">
-          <span className="text-xl font-bold uppercase text-blue-900">
+        <div className="mt-8 rounded-lg bg-violet-600 px-6 py-2">
+          <span className="text-4xl font-bold uppercase text-white">
             {scenes[activeIndex].split('/').pop().split('.')[0]}
           </span>
         </div>

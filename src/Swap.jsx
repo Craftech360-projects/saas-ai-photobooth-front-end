@@ -1,13 +1,12 @@
 // /* eslint-disable no-unused-vars */
 // import { QRCodeSVG } from "qrcode.react";
 import { QRCodeSVG } from "qrcode.react";
-import { useEffect, useRef, useState } from "react";
-//import { useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+//import { useEffect, useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
+import { useEffect, useLocation, useNavigate } from "react-router-dom";
+import ReactToPrint from "react-to-print";
 import LoadingPage from "./LoadingPage";
 import { supabase } from "./supabaseClient";
-
-
 function Swap() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -88,11 +87,11 @@ function Swap() {
         const convertedBlob = await convertImageToJPEG(swappedImageBlob);
 
         // Generate filename with timestamp
-        const fileName = `swapped-images/${Date.now()}-result.jpg`;
+        const fileName = `swapped-images/nielsen${Date.now()}-result.jpg`;
 
         // Upload to Supabase
         const { error: uploadError } = await supabase.storage
-          .from("nimhans")
+          .from("nielsen")
           .upload(fileName, convertedBlob, {
             contentType: "image/jpeg",
           });
@@ -100,12 +99,12 @@ function Swap() {
         if (uploadError) throw uploadError;
 
         // Get public URL
-        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/${fileName}`;
+        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nielsen/${fileName}`;
         console.log("Public URL:", publicURL);
 
         // // Save user details to database
         const { error: insertError } = await supabase
-          .from("nimhans")
+          .from("nielsen")
           .insert([{ ...userDetails, publicURL }]);
 
         if (insertError) throw insertError;
@@ -123,6 +122,19 @@ function Swap() {
   }, []); // Empty dependency array since we want this to run once on mount
 
   // Helper function to convert image to JPEG
+ 
+   // Create a PrintableImage component using forwardRef
+   const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
+     return (
+       <div ref={ref}>
+         <img
+           src={resultImageUrl}
+           alt="Swapped Result"
+           style={{ width: "100%", height: "100%" }}
+         />
+       </div>
+     );
+   });
   const convertImageToJPEG = (blob) => {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
@@ -172,34 +184,57 @@ function Swap() {
 
   if (resultImageUrl) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-4xl mt-8 p-8">
-        <div className="flex justify-between items-center pt-20">
-  <div className="text-3xl text-white">&nbsp;</div> {/* Keeps the spacing */}
+      <div className="realtive  min-h-screen flex flex-col items-center justify-center p-4">
+        <div className=" absolute top-[8%] left-40   w-full max-w-4xl mt-2 p-8 ">
+        <div className="flex justify-center items-center ">
+ {/* Keeps the spacing */}
 </div>
 
             
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            className="w-full animate__animated animate__zoomIn p-20"
+            className="w-[712px] animate__animated animate__zoomIn "
           />
           
-          <div className="flex justify-start items-center mt-8  px-20">
-            <div className="bg-white p-4 border-12 border-yellow-400 ">
-              <QRCodeSVG value={resultImageUrl} size={180} />
+          <div className="flex justify-start items-center mt-6  ">
+            <div className="bg-white p-4 border-12 border-rose-600 ">
+              <QRCodeSVG value={resultImageUrl} size={200} />
             </div>
-            
-            <div className="text-white flex flex-col  ml-40">
-              <h1 className="text-3xl mb-4 font-semibold text-left">Scan the QR <br/> code to download<br/> your AI avatar</h1>
-            
-              <button
-                onClick={goHome}
-                className="bg-yellow-400 text-black px-8 py-4 text-4xl font-bold rounded-lg"
-              >
-                RESTART
-              </button>
-            </div>
+            <div style={{ display: "none" }}>
+                <PrintableImage
+                  ref={printRef}
+                  resultImageUrl={resultImageUrl}
+                />
+              </div>
+          
+              <div className="text-white flex flex-col  items-center">
+  <h1 className="text-3xl mb-4 pl-8 font-semibold text-center">
+    Scan the QR code to download<br/>your AI avatar
+  </h1>
+
+  <div className="flex flex-col items-center gap-3">
+    <ReactToPrint
+      trigger={() => (
+        <button
+          type="button"
+          className="bg-violet-600 text-white w-[314px] px-8 py-4 text-4xl font-bold rounded-3xl"
+        >
+          Print
+        </button>
+      )}
+      content={() => printRef.current}
+    />
+
+    <button
+      onClick={goHome}
+      className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
+    >
+      RESTART
+    </button>
+  </div>
+</div>
+
           </div>
         </div>
       </div>

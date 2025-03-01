@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
+
 import styled, { keyframes } from 'styled-components';
 
 const rotation = keyframes`
@@ -41,7 +40,7 @@ const LoaderInner = styled.div`
   top: 0;
   bottom: 0;
   margin: auto;
-  border: 16px dotted #30A6EC; /* Increased size */
+  border: 16px dotted #6E37FA; /* Increased size */
   border-style: solid solid dotted;
   width: 100px; /* Increased size */
   height: 100px; /* Increased size */
@@ -63,3 +62,10 @@ function LoadingPage() {
 }
 
 export default LoadingPage;
+
+
+
+// src/components/LoadingPage.jsx
+
+
+

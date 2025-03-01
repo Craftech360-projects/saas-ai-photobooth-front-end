@@ -1,9 +1,10 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import * as React from "react"
-
+// import left from "../assets/left.png"; // Relative path
+// import right from "../assets/right.png"; // Relative path
+// import right from "/right.png";
 export function ThemeSlider({ themes, onSelect }) {
   const [activeIndex, setActiveIndex] = React.useState(0)
 
@@ -26,18 +27,32 @@ export function ThemeSlider({ themes, onSelect }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-7xl font-bold text-white">Select your theme</h1>
+        <h1 className="mb-2 text-7xl font-semibold text-white">Select your theme</h1>
       </div>
 
       <div className="relative flex items-center justify-center px-20">
         {/* Navigation Buttons */}
+
         <button
+  onClick={prevSlide}
+  className="absolute -left-36 z-10 rounded-full p-2 text-blue-900 transition-colors hover:bg-yellow-300 "
+  aria-label="Previous slide"
+>
+  <div className="h-24 w-24 relative">
+  <img src="/assets/left.png" alt="Previous" className="h-full w-full object-contain" />
+
+    <div
+      className="absolute inset-0  mix-blend-overlay"
+    />
+  </div>
+</button>
+        {/* <button
           onClick={prevSlide}
-          className="absolute -left-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -left-36 z-10 rounded-full  p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="h-16 w-16" />
-        </button>
+          <ChevronLeft className="h-24 w-24" />
+        </button> */}
 
         {/* Slides */}
         {/* <div className="relative h-[500px] w-[300px]">
@@ -92,12 +107,12 @@ export function ThemeSlider({ themes, onSelect }) {
 </div>
         {/* Next Button */}
         <button
-          onClick={nextSlide}
-          className="absolute -right-32 z-10 rounded-full bg-yellow-400 p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
-          aria-label="Next slide"
-        >
-          <ChevronRight className="h-16 w-16" />
-        </button>
+  onClick={nextSlide}
+  className="absolute -right-36 z-10 rounded-full p-2 text-blue-900 transition-colors hover:bg-yellow-300 "
+  aria-label="Next slide"
+>
+  <img src="/assets/right.png" alt="Next" className="h-24 w-24 object-contain" />
+</button>
       </div>
 
       {/* Dots */}
@@ -108,7 +123,7 @@ export function ThemeSlider({ themes, onSelect }) {
             onClick={() => goToSlide(index)}
             className={cn(
               "h-3 w-3 rounded-full transition-colors",
-              activeIndex === index ? "bg-yellow-400" : "bg-white opacity-50 hover:opacity-75",
+              activeIndex === index ? "bg-violet-600" : "bg-white opacity-50 hover:opacity-75",
             )}
             aria-label={`Go to slide ${index + 1}`}
           />
@@ -116,8 +131,8 @@ export function ThemeSlider({ themes, onSelect }) {
       </div>
 
       {/* Theme Name */}
-      <div className="mt-8 rounded-lg bg-yellow-400 px-12 py-4">
-        <span className="text-3xl font-bold uppercase text-blue-900">{themes[activeIndex].name}</span>
+      <div className="mt-8  rounded-4xl bg-violet-600 px-12 py-4">
+        <span className="text-4xl font-bold uppercase text-white">{themes[activeIndex].name}</span>
       </div>
       {/* <button
         onClick={handleThemeSelect}
