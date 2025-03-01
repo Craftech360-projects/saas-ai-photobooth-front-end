@@ -117,7 +117,7 @@ function Swap() {
         setLoading(false);
       }
     };
-
+    
     processImages();
   }, []); // Empty dependency array since we want this to run once on mount
 
