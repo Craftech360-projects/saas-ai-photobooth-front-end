@@ -2,8 +2,8 @@
 // import { QRCodeSVG } from "qrcode.react";
 import { QRCodeSVG } from "qrcode.react";
 //import { useEffect, useRef, useState } from "react";
-import { forwardRef, useRef, useState } from "react";
-import { useEffect, useLocation, useNavigate } from "react-router-dom";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 import LoadingPage from "./LoadingPage";
 import { supabase } from "./supabaseClient";
@@ -198,7 +198,7 @@ function Swap() {
           />
           
           <div className="flex justify-start items-center mt-6  ">
-            <div className="bg-white p-4 border-12 border-rose-600 ">
+            <div className="bg-white p-4 border-12 border-indigo-950 ">
               <QRCodeSVG value={resultImageUrl} size={200} />
             </div>
             <div style={{ display: "none" }}>
