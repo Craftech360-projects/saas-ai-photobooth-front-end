@@ -120,7 +120,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: url('/login.png');
+    background-image: url('background2.jpg');
     background-size: cover; /* or contain, depending on your preference */
     background-repeat: no-repeat;
   }

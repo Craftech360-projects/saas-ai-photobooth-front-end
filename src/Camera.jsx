@@ -1,351 +1,10 @@
-
-// import { useEffect, useRef, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import styled from "styled-components";
-// import SceneSlider from "./SceneSlider";
-// import { ThemeSlider } from "./theme-slider";
-// import female from "/assets/female.png";
-// import male from "/assets/male.png";
-// import captureImageIcon from "/assets/pcp.png";
-// import outerspace from "/outerspace.png";
-// import redcarpet from "/redcarpet.png";
-// // import scifi from "/scifi.png";
-// // import sports from "/sports.png";
-// import Futuristic from "/Futuristic.png";
-
-// const imgStyle = {
-//   width: "auto",
-//   height: "auto",
-//   maxWidth: "400px",
-//   maxHeight: "250px",
-//   objectFit: "contain",
-//   justifyContent: "center",
-//   alignItems: "center",
-//   cursor: "pointer",
-//   border: "5px solid #FFCE00",
-// };
-
-// const CaptureButton = styled.button`
-//   background-image: url(${captureImageIcon});
-//   background-repeat: no-repeat;
-//   background-size: contain;
-//   background-color: transparent;
-//   border: none;
-//   width: 270px;
-//   height: 100px;
-//   cursor: pointer;
-//   text-indent: -9999px;
-//   position: relative;
-//   margin-top: 90px;
-// `;
-
-// const StyledInput = styled.input`
-//   padding-left: 35px;
-//   font-size: 34px;
-//   border: none;
-//   text-align: left;
-//   color: #182060;
-//   font-weight: bold;
-//   width: 760px;
-//   height: 110px;
-//   text-transform: capitalize;
-//   background-color: #fff;
-  
-//   &::placeholder {
-//     color: #182060;
-//   }
-// `;
-
-// const StyledSelect = styled.select`
-//   padding-left: 35px;
-//   font-size: 34px;
-//   border: none;
-//   text-align: left;
-//   color: #182060;
-//   font-weight: bold;
-//   width: 830px;
-//   height: 110px;
-//   text-transform: capitalize;
-//   background-color: #fff;
-
-//   appearance: none;
-//   &::placeholder {
-//     color: #182060;
-//   }
-// `;
-
-// //const backgroundImage = "/Login.png";
-// const backgroundImage = "/background2.jpg";
-// function Camer() {
-//   const maleImages = ["male1", "male1"];
-//   const femaleImages = ["female1", "female1"];
-//   const videoRef = useRef(null);
-//   const canvasRef = useRef(null);
-//   const [isCameraOn, setIsCameraOn] = useState(false);
-//   const navigate = useNavigate();
-//   const [flash, setFlash] = useState(false);
-//   const [gender, setGender] = useState(null);
-//   const [isGender, setIsGender] = useState("");
-//   const [isStarted, setIsStarted] = useState(true);
-//   const [isGenderShow, setIsGenderShow] = useState(false);
-//   const [isOptions, setIsOptions] = useState(false);
-//   const [isImg, setIsImg] = useState(false);
-//   const [userDetails, setUserDetails] = useState({
-//     name: "",
-//     email: "",
-//     gender: "",
-//   });
-//   const [selectedOption, setSelectedOption] = useState(null);
-//   const [selectedTheme, setSelectedTheme] = useState(null);
-//   const [showScene, setShowScene] = useState(false);
-//   const [imageFolder, setImageFolder] = useState(null);
-//   const [isThemeSelected, setIsThemeSelected] = useState(false); // New state
-//   const [showWarning, setShowWarning] = useState(false); // New state for warning message
-//   const camera= "/camera.png";
-//   const submit= "/submit.png";
-//   const themes = [
-//     { id: 1, name: "Red Carpet", image: redcarpet },
-//     { id: 2, name: "Outer Space", image: outerspace },
-//     { id: 3, name: "Futuristic", image: Futuristic },
-//     // { id: 4, name: "Sci-Fi", image: scifi },
-//     // { id: 5, name: "Sports", image: sports },
-//   ];
-
-//   const startProcess = (selectedGender) => {
-//     console.log(selectedGender);
-//     userDetails.gender = selectedGender;
-//     setIsStarted(false);
-//     setIsGenderShow(false);
-//     setIsGender(selectedGender);
-//     setGender(selectedOption);
-//     console.log(selectedOption, selectedGender);
-//     setSelectedOption(null);
-//   };
-
-//   useEffect(() => {
-//     if (isCameraOn) {
-//       navigator.mediaDevices
-//         .getUserMedia({ video: true })
-//         .then((stream) => {
-//           videoRef.current.srcObject = stream;
-//         })
-//         .catch((err) => {
-//           console.error("error:", err);
-//           setIsCameraOn(false);
-//         });
-//     } else {
-//       if (videoRef.current && videoRef.current.srcObject) {
-//         let tracks = videoRef.current.srcObject.getTracks();
-//         tracks.forEach((track) => track.stop());
-//       }
-//     }
-
-//     return () => {
-//       if (videoRef.current && videoRef.current.srcObject) {
-//         let tracks = videoRef.current.srcObject.getTracks();
-//         tracks.forEach((track) => track.stop());
-//       }
-//     };
-//   }, [isCameraOn]);
-
-//   const captureImage = () => {
-//     setTimeout(() => {
-//       const canvas = canvasRef.current;
-//       const context = canvas.getContext("2d");
-//       const video = videoRef.current;
-//       canvas.width = video.videoWidth;
-//       canvas.height = video.videoHeight;
-//       context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-//       canvas.toBlob((blob) => {
-//         const section = document.querySelector("section");
-//         if (section) {
-//           section.classList.add("animate__animated", "animate__fadeOut");
-//           console.log(">>>>>>>>",blob, userDetails, isImg);
-//           setTimeout(() => {
-//             navigate("/swap", {
-//               state: { sourceImage: blob, userDetails, selectedImage: isImg },
-//             });
-//           }, 1000);
-//           console.log(isImg, userDetails);
-//         }
-//       }, "image/jpeg");
-//     }, 500);
-//   };
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setUserDetails((prevDetails) => ({
-//       ...prevDetails,
-//       [name]: value,
-//     }));
-//     setShowWarning(false); // Hide warning message when user starts typing
-//   };
-
-//   const handleSubmit = (e) => {
-//     console.log("here")
-//     e.preventDefault();
-//     if (!userDetails.name || !userDetails.email) {
-//       setShowWarning(true); // Show warning message if name or email is empty
-//     } else {
-//       setIsGenderShow(true);
-//       setIsStarted(false);
-//       console.log(userDetails, "userDetails");
-//     }
-//   };
-
-//   const handleSelection = (option) => {
-//     setSelectedOption(option);
-//   };
-
-//   const handleThemeSelect = (theme) => { 
-//     console.log("htemmmmmmee",theme);
-//     setSelectedTheme(theme);
-//     setIsThemeSelected(true); // Set theme as selected
-//     setIsGenderShow(false);
-//     setShowScene(true);
-//     console.log(`theeme, ${theme.name.toLowerCase().replace(" ", "")}`);
-    
-//        setImageFolder(`${theme.name.toLowerCase().replace(" ", "")}/${userDetails.gender}`);
-
-//     console.log("folder for theme" ,imageFolder);
-//   };
-
-//   const scenes = imageFolder ? [`${imageFolder}/1.png`, `${imageFolder}/2.png`, `${imageFolder}/3.png`] : [];
-
-//   const handleSceneSelection = (scene) => {
-//     setSelectedOption(scene);
-//     setIsImg(scene);
-//     setIsCameraOn(true);
-//     setShowScene(false);
-//   };
-
-//   return (
-//     <section
-//       className="text-center w-screen h-screen"
-//       style={{  backgroundSize: 'cover', backgroundPosition: 'center' }}
-//     >
-//     {isStarted && (
-//   <>
-//     <div
-//       className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center"
-//       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-//     >
-//    <div className="absolute top-[55%] flex flex-col gap-8 items-center w-full">
-//         <StyledInput
-//           type="text"
-//           name="name"
-//           placeholder="Enter name"
-//           value={userDetails.name}
-//           onChange={handleChange}
-//           required
-//         />
-
-//         <StyledInput
-//           type="email"
-//           name="email"
-//           placeholder="Enter email"
-//           value={userDetails.email}
-//           onChange={handleChange}
-//           required
-//         />
-
-//         <button
-//           onClick={handleSubmit}
-//           className="w-[428px] h-[104px] mt-16 cursor-pointer border-none transition-colors"
-//         >
-//           <img
-//             src={submit}
-//             alt="Submit"
-//             style={{ width: "100%", height: "100%", objectFit: "contain" }}
-//           />
-//         </button>
-
-//         {showWarning && (
-//           <div className="text-red-500 text-4xl mt-4">Please enter both name and email.</div>
-//         )}
-//       </div>
-//     </div>
-//   </>
-// )}
-
-//       {isGenderShow && (
-//         <div className="text-center w-screen h-screen flex flex-col items-center justify-center bg-no-repeat">
-//           <div className="text-6xl font-semibold text-white tracking-wide mb-4">Select Gender</div>
-
-//           <div className="flex flex-col items-center justify-center gap-5 mt-6">
-//             <button
-//               className="rounded-lg bg-cover bg-center bg-no-repeat w-[298px] h-[291px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
-//               style={{ backgroundImage: `url(${male})` }}
-//               onClick={(e) => {
-//                 e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
-//                 setTimeout(() => startProcess("male"), 500);
-//               }}
-//             ></button>
-
-//             <button
-//               className="rounded-lg bg-cover bg-center bg-no-repeat w-[298px] mt-5 h-[291px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
-//               style={{ backgroundImage: `url(${female})` }}
-//               onClick={(e) => {
-//                 e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
-//                 setTimeout(() => startProcess("female"), 500);
-//               }}
-//             ></button>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Show ThemeSlider only if theme is not selected and showScene is false */}
-//       {isGender && !isThemeSelected && !showScene && (
-//         <ThemeSlider themes={themes} onSelect={handleThemeSelect} />
-//       )}
-
-//       {isCameraOn && (
-//         <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
-//           <div className="text-center text-6xl font-semibold mb-2 text-white">Smile for the</div>
-//           <div className="text-center text-6xl font-semibold mb-8 text-white">camera</div>
-//           <video
-//             ref={videoRef}
-//             autoPlay
-//             className="block shadow-md object-cover w-full h-full max-w-[650px] max-h-[650px]"
-//           ></video>
-
-//           <canvas ref={canvasRef} className="hidden"></canvas>
-//           <button
-//             onClick={(e) => {
-//               setTimeout(captureImage, 500);
-//             }}
-//             className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
-//           >
-//             <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-//           </button>
-//         </div>
-//       )}
-
-//       {showScene && (
-//         <SceneSlider scenes={scenes} onSelect={handleSceneSelection} />
-//       )}
-//     </section>
-//   );
-// }
-
-// export default Camer;
-
-
-
-
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SceneSlider from "./SceneSlider";
-import { ThemeSlider } from "./theme-slider";
 import female from "/assets/female.png";
 import male from "/assets/male.png";
 import captureImageIcon from "/assets/pcp.png";
-import redcarpet from "/redcarpet.png";
-import Scifi from "/scifi.png";
-import outerspace from "/space.png";
-import sports from "/sports.png";
-import superheros from "/superheros.png";
+import holi from "/redcarpet.png";
 
 const imgStyle = {
   width: "auto",
@@ -415,6 +74,8 @@ const StyledSelect = styled.select`
 const backgroundImage = "/background2.jpg";
 
 function Camer() {
+  const [imageFolder, setImageFolder] = useState("");
+
   const maleImages = ["male1", "male1"];
   const femaleImages = ["female1", "female1"];
   const videoRef = useRef(null);
@@ -433,34 +94,48 @@ function Camer() {
     email: "rahul@gmail.com",
     gender: "",
   });
+  const [previewImage, setPreviewImage] = useState(null);
+const [showPreview, setShowPreview] = useState(false);
+
   const [isPressed, setIsPressed] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedTheme, setSelectedTheme] = useState(null);
-  const [showScene, setShowScene] = useState(false);
-  const [imageFolder, setImageFolder] = useState(null);
   const [isThemeSelected, setIsThemeSelected] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [nameError, setNameError] = useState(false);
+const [isFormValid, setIsFormValid] = useState(false);
+const [capturedBlob, setCapturedBlob] = useState(null);
+
   const camera= "/camera.png";
   const submit= "/submit.png";
   const themes = [
-    { id: 1, name: "Red Carpet", image: redcarpet },
-    { id: 2, name: "Space", image: outerspace },
-    { id: 3, name: "Sci-fi", image: Scifi },
-    { id: 4, name: "Sports", image: sports },
-    { id: 5, name: "Superheros", image: superheros },
+    { id: 1, name: "holi", image: holi },
+ 
   ];
 
-  const startProcess = (selectedGender) => {
-    console.log(selectedGender);
-    userDetails.gender = selectedGender;
-    setIsStarted(false);
-    setIsGenderShow(false);
-    setIsGender(selectedGender);
-    setGender(selectedOption);
-    console.log(selectedOption, selectedGender);
-    setSelectedOption(null);
-  };
+  // Modify the startProcess function to randomly select an image
+const startProcess = (selectedGender) => {
+  console.log(selectedGender);
+  userDetails.gender = selectedGender;
+  setIsStarted(false);
+  setIsGenderShow(false);
+  setIsGender(selectedGender);
+  setGender(selectedOption);
+  setSelectedOption(null);
+  
+  // Set up image folder path
+  const folderPath = `holi/${selectedGender}`;
+  setImageFolder(folderPath);
+  
+  // Randomly select one of the 5 images
+  const randomImageNumber = Math.floor(Math.random() * 5) + 1;
+  const selectedImage = `${folderPath}/${randomImageNumber}.jpeg`;
+  
+  // Set the selected image and turn on camera
+  setIsImg(selectedImage);
+  setIsCameraOn(true);
+};
 
   useEffect(() => {
     if (isCameraOn) {
@@ -498,19 +173,46 @@ function Camer() {
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
       canvas.toBlob((blob) => {
-        const section = document.querySelector("section");
-        if (section) {
-          section.classList.add("animate__animated", "animate__fadeOut");
-          console.log(">>>>>>>>",blob, userDetails, isImg);
-          setTimeout(() => {
-            navigate("/swap", {
-              state: { sourceImage: blob, userDetails, selectedImage: isImg },
-            });
-          }, 1000);
-          console.log(isImg, userDetails);
-        }
+        setCapturedBlob(blob); // Store the blob
+        setPreviewImage(URL.createObjectURL(blob));
+        setShowPreview(true);
       }, "image/jpeg");
     }, 500);
+  };
+  const handleRetake = () => {
+    setShowPreview(false);
+    setPreviewImage(null);
+    setIsCameraOn(true); // Turn the camera back on
+  
+    // Ensure camera stream is restarted
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then((stream) => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      })
+      .catch((err) => {
+        console.error("Error restarting camera:", err);
+      });
+  };
+  const handleFinalSubmit = () => {
+    if (!capturedBlob) {
+      console.error("No image captured");
+      return;
+    }
+  
+    const section = document.querySelector("section");
+    if (section) {
+      section.classList.add("animate__animated", "animate__fadeOut");
+      navigate("/swap", {
+        state: { 
+          sourceImage: capturedBlob, 
+          userDetails, 
+          selectedImage: isImg 
+        },
+      });
+    }
   };
 
   const handleChange = (e) => {
@@ -519,8 +221,18 @@ function Camer() {
       ...prevDetails,
       [name]: value,
     }));
-
-    if (name === "email") {
+  
+    // Validate name
+    if (name === 'name') {
+      if (value.trim().length < 2) {
+        setNameError(true);
+      } else {
+        setNameError(false);
+      }
+    }
+  
+    // Validate email
+    if (name === 'email') {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(value)) {
         setEmailError(true);
@@ -528,8 +240,15 @@ function Camer() {
         setEmailError(false);
       }
     }
-
-    setShowWarning(false); // Hide warning message when user starts typing
+  
+    // Check if form is valid
+    setTimeout(() => {
+      const isValid = userDetails.name.trim().length >= 2 && 
+                     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email);
+      setIsFormValid(isValid);
+    }, 0);
+  
+    setShowWarning(false);
   };
 
   const handleSubmit = (e) => {
@@ -544,82 +263,76 @@ function Camer() {
     }
   };
 
-  const handleSelection = (option) => {
-    setSelectedOption(option);
-  };
-
-  const handleThemeSelect = (theme) => { 
-    console.log("htemmmmmmee",theme);
-    setSelectedTheme(theme);
-    setIsThemeSelected(true); // Set theme as selected
-    setIsGenderShow(false);
-    setShowScene(true);
-    console.log(`theeme, ${theme.name.toLowerCase().replace(" ", "")}`);
-    
-       setImageFolder(`${theme.name.toLowerCase().replace(" ", "")}/${userDetails.gender}`);
-
-    console.log("folder for theme" ,imageFolder);
-  };
-
-  const scenes = imageFolder ? [`${imageFolder}/1.png`, `${imageFolder}/2.png`, `${imageFolder}/3.png`] : [];
-
-  const handleSceneSelection = (scene) => {
-    setSelectedOption(scene);
-    setIsImg(scene);
-    setIsCameraOn(true);
-    setShowScene(false);
-  };
-
+  
   return (
     <section
       className="text-center w-screen h-screen"
       style={{  backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-    {isStarted && (
+  
+{isStarted && (
   <>
     <div
       className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center"
       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-   <div className="absolute top-[55%] flex flex-col gap-8 items-center w-full">
-        <StyledInput
-          type="text"
-          name="name"
-          placeholder="Enter name"
-          value={userDetails.name}
-          onChange={handleChange}
-          required
-        />
-             {emailError && (
-          <div className="text-red-500 text-4xl mt-4">Please enter a valid email address.</div>
-        )}
-        <StyledInput
-          type="email"
-          name="email"
-          placeholder="Enter email"
-          value={userDetails.email}
-          onChange={handleChange}
-          required
-        />
-     
-     {!showWarning && !emailError && (
-  <button
-    onClick={handleSubmit}
-    className="w-[428px] h-[104px] mt-16 cursor-pointer border-none transition-colors"
-  >
-    <img
-      src={submit}
-      alt="Submit"
-      style={{ width: "100%", height: "100%", objectFit: "contain" }}
-    />
-  </button>
-)}
+      <div className="absolute top-[55%] flex flex-col gap-8 items-center w-full">
+        <div className="flex flex-col items-center">
+          <StyledInput
+            type="text"
+            name="name"
+            placeholder="Enter name"
+            value={userDetails.name}
+            onChange={handleChange}
+            required
+          />
+          {nameError && (
+            <div className="text-red-500 text-2xl mt-2">Name must be at least 2 characters long</div>
+          )}
+        </div>
 
+        <div className="flex flex-col items-center">
+          <StyledInput
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            value={userDetails.email}
+            onChange={handleChange}
+            required
+          />
+          {emailError && (
+            <div className="text-red-500 text-2xl mt-2">Please enter a valid email address</div>
+          )}
+        </div>
+
+        <button
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+          className={`w-[428px] h-[104px] mt-16 cursor-pointer border-none transition-all ${
+            !isFormValid ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          <img
+            src={submit}
+            alt="Submit"
+            style={{ 
+              width: "100%", 
+              height: "100%", 
+              objectFit: "contain",
+              filter: !isFormValid ? 'grayscale(100%)' : 'none'
+            }}
+          />
+        </button>
+
+        {showWarning && (
+          <div className="text-red-500 text-3xl mt-4">
+            Please fill in all fields correctly before proceeding
+          </div>
+        )}
       </div>
     </div>
   </>
 )}
-
       {isGenderShow && (
         <div className="text-center w-screen h-screen flex flex-col items-center justify-center bg-no-repeat">
           <div className="text-6xl font-semibold text-white tracking-wide mb-4">Select Gender</div>
@@ -646,11 +359,8 @@ function Camer() {
         </div>
       )}
 
-      {isGender && !isThemeSelected && !showScene && (
-        <ThemeSlider themes={themes} onSelect={handleThemeSelect} />
-      )}
 
-      {isCameraOn && (
+      {isCameraOn && !showPreview && (
         <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
           <div className="text-center text-6xl font-semibold mb-2 text-white">Smile for the</div>
           <div className="text-center text-6xl font-semibold mb-8 text-white">camera</div>
@@ -662,22 +372,48 @@ function Camer() {
 
           <canvas ref={canvasRef} className="hidden"></canvas>
           <button
-            onClick={(e) => {
-              e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
-              setTimeout(captureImage, 500);
-            }}
-          //   className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
-          // >
-          className={`w-[194px] h-[194px] cursor-pointer absolute top-[73%] left-1/2 -translate-x-1/2 rounded-full transition-transform duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none ${isPressed ? 'scale-95 opacity-75' : ''}`}
-          >
-            <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          </button>
+  onClick={(e) => {
+    e.target.classList.add("shadow-[0_0_19px_16px_rgba(255,255,255,0.5)]", "rounded-full");
+     setTimeout(captureImage, 500);
+  }}
+  className={`w-[194px] h-[194px] cursor-pointer absolute top-[73%] left-1/2 -translate-x-1/2  rounded-full transition-all duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none ${
+    isPressed ? 'scale-95 opacity-75' : ''
+  }`}
+>
+  <img 
+    src={camera} 
+    alt="Capture" 
+    className="w-full h-full object-contain rounded-full"
+  />
+</button>
         </div>
       )}
 
-      {showScene && (
-        <SceneSlider scenes={scenes} onSelect={handleSceneSelection} />
-      )}
+{showPreview && (
+  <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
+    <div className="text-center text-6xl font-semibold mb-8 text-white">Preview</div>
+    <img 
+      src={previewImage} 
+      alt="Preview" 
+      className="block shadow-md object-cover w-full h-full max-w-[650px] max-h-[650px]"
+    />
+    <div className="flex flex-col gap-4 mt-8">
+      <button
+        onClick={handleRetake}
+        className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
+      >
+        Retake
+      </button>
+      <button
+        onClick={handleFinalSubmit}
+        className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+)}
+
     </section>
   );
 }

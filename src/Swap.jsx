@@ -1,12 +1,10 @@
-// /* eslint-disable no-unused-vars */
 // import { QRCodeSVG } from "qrcode.react";
 import { QRCodeSVG } from "qrcode.react";
-//import { useEffect, useRef, useState } from "react";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import ReactToPrint from "react-to-print";
 import LoadingPage from "./LoadingPage";
 import { supabase } from "./supabaseClient";
+
 function Swap() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,12 +17,36 @@ function Swap() {
   const printRef = useRef();
 
   useEffect(() => {
+    // Add print styles when component mounts - PORTRAIT orientation (4in x 6in)
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @media print {
+        @page {
+          size: 4in 6in;
+          margin: 0;
+        }
+        body {
+          margin: 0;
+          padding: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Clean up when component unmounts
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  useEffect(() => {
     // Check if we have the required data
     if (!sourceImageBlob || !selectedImage || !userDetails) {
       console.error("Missing required data:", { sourceImageBlob, selectedImage, userDetails });
       navigate("/");
       return;
     }
+    
     const LoadingAnimation = () => {
       return (
         <div
@@ -46,6 +68,7 @@ function Swap() {
         </div>
       );
     };
+    
     const processImages = async () => {
       setLoading(true);
       try {
@@ -72,7 +95,11 @@ function Swap() {
 
         // Make API call to swap faces
         const swapResponse = await fetch(
-          "http://localhost:8000/api/swap-face/",
+           "http://localhost:8000/api/swap-face/",
+          // "https://nielsen-api.herokuapp.com/api/swap-face/",
+          //  "http://139.59.22.163:8000/api/swap-face/",
+         // "https://nodeshed.com/api/swap-face/",
+        //  "https://api.nodeshed.com/api/swap-face/",
           {
             method: "POST",
             body: formData,
@@ -87,11 +114,11 @@ function Swap() {
         const convertedBlob = await convertImageToJPEG(swappedImageBlob);
 
         // Generate filename with timestamp
-        const fileName = `swapped-images/nielsen${Date.now()}-result.jpg`;
+        const fileName = `swapped-images/holi${Date.now()}-result.jpg`;
 
         // Upload to Supabase
         const { error: uploadError } = await supabase.storage
-          .from("nielsen")
+          .from("holi")
           .upload(fileName, convertedBlob, {
             contentType: "image/jpeg",
           });
@@ -99,12 +126,12 @@ function Swap() {
         if (uploadError) throw uploadError;
 
         // Get public URL
-        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nielsen/${fileName}`;
+        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/holi/${fileName}`;
         console.log("Public URL:", publicURL);
 
-        // // Save user details to database
+        // Save user details to database
         const { error: insertError } = await supabase
-          .from("nielsen")
+          .from("holi")
           .insert([{ ...userDetails, publicURL }]);
 
         if (insertError) throw insertError;
@@ -121,20 +148,20 @@ function Swap() {
     processImages();
   }, []); // Empty dependency array since we want this to run once on mount
 
+  // Create a PrintableImage component using forwardRef - PORTRAIT orientation
+  const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
+    return (
+      <div ref={ref}>
+        <img
+          src={resultImageUrl}
+          alt="Swapped Result"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+    );
+  });
+
   // Helper function to convert image to JPEG
- 
-   // Create a PrintableImage component using forwardRef
-   const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
-     return (
-       <div ref={ref}>
-         <img
-           src={resultImageUrl}
-           alt="Swapped Result"
-           style={{ width: "100%", height: "100%" }}
-         />
-       </div>
-     );
-   });
   const convertImageToJPEG = (blob) => {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
@@ -162,14 +189,14 @@ function Swap() {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <div className="bg-red-500 p-16 rounded-lg shadow-lg text-center">
-        <div className="text-white text-3xl mb-4">Something went wrong: {error}</div>
-        <button
-          onClick={goHome}
-          className="bg-white text-3xl  text-blue-900 px-12 py-4 rounded font-bold"
-        >
-          Try Again
-        </button>
-      </div>
+          <div className="text-white text-3xl mb-4">Something went wrong: {error}</div>
+          <button 
+            onClick={goHome}
+            className="bg-white text-3xl text-blue-900 px-12 py-4 rounded font-bold"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
@@ -184,57 +211,57 @@ function Swap() {
 
   if (resultImageUrl) {
     return (
-      <div className="realtive  min-h-screen flex flex-col items-center justify-center p-4">
-        <div className=" absolute top-[8%] left-40   w-full max-w-4xl mt-2 p-8 ">
-        <div className="flex justify-center items-center ">
- {/* Keeps the spacing */}
-</div>
-
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="absolute top-[8%] left-40 w-full max-w-4xl mt-2 p-8">
+          <div className="flex justify-center items-center">
+            {/* Keeps the spacing */}
+          </div>
             
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            className="w-[712px] animate__animated animate__zoomIn "
+            className="w-[712px] animate__animated animate__zoomIn"
           />
           
-          <div className="flex justify-start items-center mt-6  ">
-            <div className="bg-white p-4 border-12 border-indigo-950 ">
+          <div className="flex justify-start items-center mt-6">
+            <div className="bg-white p-4 border-12 border-indigo-950">
               <QRCodeSVG value={resultImageUrl} size={200} />
             </div>
-            <div style={{ display: "none" }}>
-                <PrintableImage
-                  ref={printRef}
-                  resultImageUrl={resultImageUrl}
-                />
-              </div>
+            
+            {/* Hidden printable component */}
+            <div style={{ display: "none", position: "absolute", left: "-9999px" }}>
+              <PrintableImage
+                ref={printRef}
+                resultImageUrl={resultImageUrl}
+              />
+            </div>
           
-              <div className="text-white flex flex-col  items-center">
-  <h1 className="text-3xl mb-4 pl-8 font-semibold text-center">
-    Scan the QR code to download<br/>your AI avatar
-  </h1>
+            <div className="text-white flex flex-col items-center">
+              <h1 className="text-3xl mb-4 pl-8 font-semibold text-center">
+                Scan the QR code to download<br/>your AI avatar
+              </h1>
 
-  <div className="flex flex-col items-center gap-3">
-    <ReactToPrint
-      trigger={() => (
-        <button
-          type="button"
-          className="bg-violet-600 text-white w-[314px] px-8 py-4 text-4xl font-bold rounded-3xl"
-        >
-          Print
-        </button>
-      )}
-      content={() => printRef.current}
-    />
+              <div className="flex flex-col items-center gap-3">
+                {/* <ReactToPrint
+                  trigger={() => (
+                    <button
+                      type="button"
+                      className="bg-violet-600 text-white w-[314px] px-8 py-4 text-4xl font-bold rounded-3xl"
+                    >
+                      Print
+                    </button>
+                  )}
+                  content={() => printRef.current}
+                /> */}
 
-    <button
-      onClick={goHome}
-      className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
-    >
-      RESTART
-    </button>
-  </div>
-</div>
-
+                <button
+                  onClick={goHome}
+                  className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
+                >
+                  RESTART
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
