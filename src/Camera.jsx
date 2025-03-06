@@ -4,7 +4,6 @@ import styled from "styled-components";
 import female from "/assets/female.png";
 import male from "/assets/male.png";
 import captureImageIcon from "/assets/pcp.png";
-import holi from "/redcarpet.png";
 
 const imgStyle = {
   width: "auto",
@@ -37,17 +36,18 @@ const StyledInput = styled.input`
   font-size: 34px;
   border: none;
   text-align: left;
-  color: #182060;
+  color: #0F2C4E;
+  border: 4px solid #0F2C4E;
+  border-radius: 44px;
   font-weight: bold;
   width: 760px;
   height: 110px;
   text-transform: capitalize;
-  background-color: #fff;
+
   
-  border-radius: 12px; /* Adjust the value as needed */
 
   &::placeholder {
-    color: #182060;
+    color: #0F2C4E;
   }
 `;
 
@@ -56,18 +56,18 @@ const StyledSelect = styled.select`
   font-size: 34px;
   border: none;
   text-align: left;
-  color: #182060;
+  color: #0F2C4E;
   font-weight: bold;
   width: 830px;
   height: 110px;
   text-transform: capitalize;
-  background-color: #fff;
+  
 
-  border-radius: 12px; /* Adjust the value as needed */
+  border-radius: 44px; /* Adjust the value as needed */
 
   appearance: none;
   &::placeholder {
-    color: #182060;
+    color: #0F2C4E;
   }
 `;
 
@@ -124,7 +124,7 @@ const startProcess = (selectedGender) => {
   
   // Randomly select one of the 5 images
   const randomImageNumber = Math.floor(Math.random() * 5) + 1;
-  const selectedImage = `${folderPath}/${randomImageNumber}.jpeg`;
+  const selectedImage = `${folderPath}/${randomImageNumber}.jpg`;
   
   // Set the selected image and turn on camera
   setIsImg(selectedImage);
@@ -270,12 +270,12 @@ const startProcess = (selectedGender) => {
       className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center"
       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-      <div className="absolute top-[55%] flex flex-col gap-8 items-center w-full">
+      <div className="absolute top-[40%] flex flex-col gap-8 items-center w-full">
         <div className="flex flex-col items-center">
           <StyledInput
             type="text"
             name="name"
-            placeholder="Enter name"
+            placeholder="Enter your Name"
             value={userDetails.name}
             onChange={handleChange}
             required
@@ -289,7 +289,7 @@ const startProcess = (selectedGender) => {
           <StyledInput
             type="email"
             name="email"
-            placeholder="Enter email"
+            placeholder="Enter your Email"
             value={userDetails.email}
             onChange={handleChange}
             required
@@ -329,23 +329,23 @@ const startProcess = (selectedGender) => {
 )}
       {isGenderShow && (
         <div className="text-center w-screen h-screen flex flex-col items-center justify-center bg-no-repeat">
-          <div className="text-6xl font-semibold text-white tracking-wide mb-4">Select Gender</div>
+          <div className="text-6xl font-bold text-sky-950 tracking-wide mb-4">Select Your Gender</div>
 
-          <div className="flex flex-col items-center justify-center gap-5 mt-6">
+          <div className="flex  items-center justify-center gap-5 mt-6">
             <button
-              className="rounded-lg p-2 bg-cover bg-center bg-no-repeat w-[425px] h-[483px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
+              className="rounded-lg p-2 bg-cover bg-center bg-no-repeat w-[363px] h-[454px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
               style={{ backgroundImage: `url(${male})` }}
               onClick={(e) => {
-                e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
+                e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(15,44,78,0.5)]");
                 setTimeout(() => startProcess("male"), 500);
               }}
             ></button>
 
             <button
-              className="rounded-lg p-2 bg-cover bg-center bg-no-repeat w-[425px] mt-5 h-[483px] border-none cursor-pointer bg-transparent transition-shadow duration-300"
+              className="rounded-lg p-2 bg-cover bg-center bg-no-repeat w-[363px] h-[454px]  border-none cursor-pointer bg-transparent transition-shadow duration-300"
               style={{ backgroundImage: `url(${female})` }}
               onClick={(e) => {
-                e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
+                e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(15,44,78,0.5)]");
                 setTimeout(() => startProcess("female"), 500);
               }}
             ></button>
@@ -356,8 +356,8 @@ const startProcess = (selectedGender) => {
 
       {isCameraOn && !showPreview && (
         <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
-          <div className="text-center text-6xl font-semibold mb-2 text-white">Smile for the</div>
-          <div className="text-center text-6xl font-semibold mb-8 text-white">camera</div>
+          <div className="text-center text-7xl font-bold mb-2 text-sky-950">Color Up with</div>
+          <div className="text-center text-7xl font-bold mb-8 text-sky-950">Just a Smile</div>
           <video
             ref={videoRef}
             autoPlay
@@ -367,40 +367,38 @@ const startProcess = (selectedGender) => {
           <canvas ref={canvasRef} className="hidden"></canvas>
           <button
   onClick={(e) => {
-    e.target.classList.add("shadow-[0_0_19px_16px_rgba(255,255,255,0.5)]", "rounded-full");
+    e.target.classList.add("shadow-[0_0_19px_16px_rgba(15,44,78,0.5)]");
+    setIsPressed(true);
      setTimeout(captureImage, 500);
-  }}
-  className={`w-[194px] h-[194px] cursor-pointer absolute top-[73%] left-1/2 -translate-x-1/2  rounded-full transition-all duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none ${
+  }} 
+  className={`w-[358px] h-[103px] cursor-pointer absolute top-[76%] left-1/2 -translate-x-1/2   bg-sky-950 text-white  py-4 text-4xl font-bold rounded-[60px] ${
     isPressed ? 'scale-95 opacity-75' : ''
+    
   }`}
->
-  <img 
-    src={camera} 
-    alt="Capture" 
-    className="w-full h-full object-contain rounded-full"
-  />
+>Capture
+
 </button>
         </div>
       )}
 
 {showPreview && (
   <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
-    <div className="text-center text-6xl font-semibold mb-8 text-white">Preview</div>
+    <div className="text-center text-7xl font-bold mb-8 text-sky-950">Preview</div>
     <img 
       src={previewImage} 
       alt="Preview" 
-      className="block shadow-md object-cover w-full h-full max-w-[650px] max-h-[650px]"
+      className="block shadow-md object-cover w-full h-full max-w-[670px] max-h-[670px]"
     />
-    <div className="flex flex-col gap-4 mt-8">
+    <div className="flex  gap-4 mt-16 px-3">
       <button
         onClick={handleRetake}
-        className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
+        className="bg-sky-950 w-[350px] h-[100px]    text-white  py-4 text-4xl font-bold rounded-[60px]"
       >
         Retake
       </button>
       <button
         onClick={handleFinalSubmit}
-        className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
+        className="bg-sky-950 w-[350px] h-[100px]  text-white  py-4 text-4xl font-bold rounded-[60px]"
       >
         Submit
       </button>

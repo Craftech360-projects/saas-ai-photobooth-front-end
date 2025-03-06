@@ -1,6 +1,5 @@
 
 import styled, { keyframes } from 'styled-components';
-import LiquidLoading from './Liquid-landing';
 
 const rotation = keyframes`
   0% {
@@ -23,7 +22,7 @@ const rotationBack = keyframes`
 const LoaderWrapper = styled.div`
   width: 200px; /* Increased size */
   height: 200px; /* Increased size */
-  border: 16px dotted #FFF; /* Increased size */
+  border: 16px dotted #b920b5; /* Increased size */
   border-style: solid solid dotted dotted;
   border-radius: 50%;
   display: inline-block;
