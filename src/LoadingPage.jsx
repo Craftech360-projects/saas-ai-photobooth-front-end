@@ -1,5 +1,6 @@
 
 import styled, { keyframes } from 'styled-components';
+import LiquidLoading from './Liquid-landing';
 
 const rotation = keyframes`
   0% {
@@ -57,6 +58,7 @@ function LoadingPage() {
       <LoaderWrapper>
         <LoaderInner />
       </LoaderWrapper>
+      {/* //  <LiquidLoading /> */}
     </div>
   );
 }

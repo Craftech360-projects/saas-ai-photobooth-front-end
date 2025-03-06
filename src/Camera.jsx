@@ -76,18 +76,16 @@ const backgroundImage = "/background2.jpg";
 function Camer() {
   const [imageFolder, setImageFolder] = useState("");
 
-  const maleImages = ["male1", "male1"];
-  const femaleImages = ["female1", "female1"];
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
   const navigate = useNavigate();
-  const [flash, setFlash] = useState(false);
+  
   const [gender, setGender] = useState(null);
   const [isGender, setIsGender] = useState("");
   const [isStarted, setIsStarted] = useState(true);
   const [isGenderShow, setIsGenderShow] = useState(false);
-  const [isOptions, setIsOptions] = useState(false);
+ 
   const [isImg, setIsImg] = useState(false);
   const [userDetails, setUserDetails] = useState({
     name: "rahul",
@@ -99,8 +97,7 @@ const [showPreview, setShowPreview] = useState(false);
 
   const [isPressed, setIsPressed] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedTheme, setSelectedTheme] = useState(null);
-  const [isThemeSelected, setIsThemeSelected] = useState(false);
+  
   const [showWarning, setShowWarning] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [nameError, setNameError] = useState(false);
@@ -109,10 +106,7 @@ const [capturedBlob, setCapturedBlob] = useState(null);
 
   const camera= "/camera.png";
   const submit= "/submit.png";
-  const themes = [
-    { id: 1, name: "holi", image: holi },
- 
-  ];
+ ;
 
   // Modify the startProcess function to randomly select an image
 const startProcess = (selectedGender) => {
