@@ -88,8 +88,8 @@ function Camer() {
  
   const [isImg, setIsImg] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    name: "rahul",
-    email: "rahul@gmail.com",
+    name: "",
+    email: "",
     gender: "",
   });
   const [previewImage, setPreviewImage] = useState(null);
@@ -356,8 +356,8 @@ const startProcess = (selectedGender) => {
 
       {isCameraOn && !showPreview && (
         <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
-          <div className="text-center text-7xl font-bold mb-2 text-sky-950">Color Up with</div>
-          <div className="text-center text-7xl font-bold mb-8 text-sky-950">Just a Smile</div>
+          <div className="text-center text-5xl font-bold mb-2 text-sky-950">Color Up with</div>
+          <div className="text-center text-5xl font-bold mb-4 text-sky-950">Just a Smile</div>
           <video
             ref={videoRef}
             autoPlay
@@ -371,7 +371,7 @@ const startProcess = (selectedGender) => {
     setIsPressed(true);
      setTimeout(captureImage, 500);
   }} 
-  className={`w-[358px] h-[103px] cursor-pointer absolute top-[76%] left-1/2 -translate-x-1/2   bg-sky-950 text-white  py-4 text-4xl font-bold rounded-[60px] ${
+  className={`w-[358px] h-[103px] cursor-pointer absolute top-[88%] left-1/2 -translate-x-1/2   bg-sky-950 text-white  py-4 text-4xl font-bold rounded-[60px] ${
     isPressed ? 'scale-95 opacity-75' : ''
     
   }`}
@@ -383,7 +383,7 @@ const startProcess = (selectedGender) => {
 
 {showPreview && (
   <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
-    <div className="text-center text-7xl font-bold mb-8 text-sky-950">Preview</div>
+    <div className="text-center text-5xl font-bold mb-8 text-sky-950">Preview</div>
     <img 
       src={previewImage} 
       alt="Preview" 

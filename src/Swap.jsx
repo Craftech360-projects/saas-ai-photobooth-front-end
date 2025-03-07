@@ -147,7 +147,7 @@ function Swap() {
     };
     
     processImages();
-  }, []); // Empty dependency array since we want this to run once on mount
+  }, []);
 
   // Create a PrintableImage component using forwardRef - PORTRAIT orientation
   const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
@@ -210,50 +210,85 @@ function Swap() {
     );
   }
 
-  if (resultImageUrl) {
-    return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="absolute top-[15%] left-40 w-full max-w-[753px]  p-8">
+//   if (resultImageUrl) {
+//     return (
+//       <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
+//         <div className="absolute top-[15%] left-40 w-full max-w-[753px]  p-8">
          
             
-          <img
-            src={resultImageUrl}
-            alt="Swapped Result"
-            className="w-[712px] animate__animated animate__zoomIn"
-          />
+//           <img
+//             src={resultImageUrl}
+//             alt="Swapped Result"
+//             className="w-[712px] animate__animated animate__zoomIn"
+//           />
           
-          <div className="flex justify-start items-center mt-8">
-            <div className="bg-white p-4 border-12 border-sky-950">
-              <QRCodeSVG value={resultImageUrl} size={200} />
-            </div>
+//           <div className="flex justify-start items-center mt-8">
+//             <div className="bg-white p-4 border-12 border-sky-950">
+//               <QRCodeSVG value={resultImageUrl} size={200} />
+//             </div>
             
            
           
 
-<div className="text-sky-950 flex flex-col items-center ml-10  ">
-  {/* Top Text */}
-  <h1 className=" flex flex-col text-4xl mb-4 font-bold  justify-between">
-    Scan the QR code to <br/>download your image
-  </h1>
+// <div className="text-sky-950 flex flex-col items-center ml-10  ">
+//   {/* Top Text */}
+//   <h1 className=" flex flex-col text-4xl mb-4 font-bold  justify-between">
+//     Scan the QR code to <br/>download your image
+//   </h1>
 
  
 
-  {/* Bottom Button */}
-  <div className="flex flex-col items-center gap-6 mt-10">
-    <button
-      onClick={goHome}
-      className="bg-sky-950 text-white w-[300px] h-[90px] py-4 text-4xl font-bold rounded-[60px]"
-    >
-      Home
-    </button>
-  </div>
-</div>
+//   {/* Bottom Button */}
+//   <div className="flex flex-col items-center gap-6 mt-10">
+//     <button
+//       onClick={goHome}
+//       className="bg-sky-950 text-white w-[300px] h-[90px] py-4 text-4xl font-bold rounded-[60px]"
+//     >
+//       Home
+//     </button>
+//   </div>
+// </div>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+if (resultImageUrl) {
+  return (
+    <div className="relative min-h-screen w-screen flex items-center justify-center p-4">
+      <div className="flex flex-row items-start justify-between w-full max-w-[950px] px-8 gap-20">
+        {/* Left side - Image */}
+        <div className="w-[60%]">
+          <img
+            src={resultImageUrl}
+            alt="Swapped Result"
+            className="w-full animate__animated animate__zoomIn"
+          />
+        </div>
+
+        {/* Right side - QR code, text, and button */}
+        <div className="w-[35%] flex flex-col items-center justify-center mt-30 gap-8 ">
+          <h1 className="text-4xl font-bold text-sky-950 text-center w-[400px] leading-tight">
+            Scan the QR code to<br/>download your image
+          </h1>
+          
+          {/* QR Code */}
+          <div className="bg-white p-6 border-12 border-sky-950 shadow-lg mt-9">
+            <QRCodeSVG value={resultImageUrl} size={200} />
           </div>
+
+          {/* Button */}
+          <button
+            onClick={goHome}
+            className="bg-sky-950 text-white w-[350px] h-[100px] py-4 text-4xl mt-20 font-bold rounded-[60px] hover:bg-sky-900 transition-colors"
+          >
+            Home
+          </button>
         </div>
       </div>
-    );
-  }
-
+    </div>
+  );
+}
   return null;
 }
 
