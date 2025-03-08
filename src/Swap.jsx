@@ -2,11 +2,12 @@
 // import { QRCodeSVG } from "qrcode.react";
 import { QRCodeSVG } from "qrcode.react";
 //import { useEffect, useRef, useState } from "react";
-import { forwardRef, useRef, useState } from "react";
-import { useEffect, useLocation, useNavigate } from "react-router-dom";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 import LoadingPage from "./LoadingPage";
 import { supabase } from "./supabaseClient";
+
 function Swap() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +18,7 @@ function Swap() {
   const [resultImageUrl, setResultImageUrl] = useState(null);
   const [error, setError] = useState(null);
   const printRef = useRef();
-
+  
   useEffect(() => {
     // Check if we have the required data
     if (!sourceImageBlob || !selectedImage || !userDetails) {
@@ -25,27 +26,7 @@ function Swap() {
       navigate("/");
       return;
     }
-    const LoadingAnimation = () => {
-      return (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            width: "100vw",
-          }}
-        >
-          <LoaderContainer>
-            <Bar color="rgb(255 255 255)" delay={0.3} /> {/* Blue */}
-            <Bar color="rgb(255 255 255)" delay={0.2} /> {/* Green */}
-            <Bar color="rgb(255 255 255)" delay={0.1} /> {/* Yellow */}
-            <Bar color="rgb(255 255 255)" delay={0} /> {/* Red */}
-          </LoaderContainer>
-        </div>
-      );
-    };
+   
     const processImages = async () => {
       setLoading(true);
       try {
@@ -184,57 +165,106 @@ function Swap() {
 
   if (resultImageUrl) {
     return (
-      <div className="realtive  min-h-screen flex flex-col items-center justify-center p-4">
-        <div className=" absolute top-[8%] left-40   w-full max-w-4xl mt-2 p-8 ">
-        <div className="flex justify-center items-center ">
- {/* Keeps the spacing */}
-</div>
+      <div className="relative min-h-screen w-screen flex items-center justify-center p-4">
+        {/* For landscape orientation */}
+        <div className="hidden lg:flex flex-row items-center justify-between w-full max-w-[950px] px-8 gap-20">
+          {/* Left side - Image */}
+          <div className="w-[60%]">
+            <img
+              src={resultImageUrl}
+              alt="Swapped Result"
+              className="w-full animate__animated animate__zoomIn"
+            />
+          </div>
 
+          {/* Right side - QR code, text, and button */}
+          <div className="w-[35%] flex flex-col items-center justify-center self-center gap-8">
+            <h1 className="text-4xl font-bold text-white text-center w-full leading-tight">
+              Scan the QR code to<br/>download your AI avatar
+            </h1>
             
+            {/* QR Code */}
+            <div className="bg-white p-6 border-8 border-rose-600 shadow-lg mt-4">
+              <QRCodeSVG value={resultImageUrl} size={200} />
+            </div>
+
+            <div style={{ display: "none" }}>
+              <PrintableImage
+                ref={printRef}
+                resultImageUrl={resultImageUrl}
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col items-center gap-5 mt-6 w-full">
+              <ReactToPrint
+                trigger={() => (
+                  <button
+                    type="button"
+                    className="bg-violet-600 text-white w-full max-w-[314px] px-8 py-4 text-3xl font-bold rounded-3xl hover:bg-violet-700 transition-colors"
+                  >
+                    Print
+                  </button>
+                )}
+                content={() => printRef.current}
+              />
+
+              <button
+                onClick={goHome}
+                className="bg-violet-600 text-white w-full max-w-[314px] py-4 text-3xl font-bold rounded-3xl hover:bg-violet-700 transition-colors"
+              >
+                RESTART
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* For portrait orientation (mobile and tablets) */}
+        <div className="lg:hidden flex flex-col items-center justify-center w-full max-w-4xl mt-2 p-4">
           <img
             src={resultImageUrl}
             alt="Swapped Result"
-            className="w-[712px] animate__animated animate__zoomIn "
+            className="w-full max-w-[712px] animate__animated animate__zoomIn"
           />
           
-          <div className="flex justify-start items-center mt-6  ">
-            <div className="bg-white p-4 border-12 border-rose-600 ">
-              <QRCodeSVG value={resultImageUrl} size={200} />
+          <div className="flex flex-col md:flex-row justify-center items-center mt-6 gap-6">
+            <div className="bg-white p-4 border-12 border-rose-600">
+              <QRCodeSVG value={resultImageUrl} size={150} />
             </div>
+            
             <div style={{ display: "none" }}>
-                <PrintableImage
-                  ref={printRef}
-                  resultImageUrl={resultImageUrl}
-                />
-              </div>
+              <PrintableImage
+                ref={printRef}
+                resultImageUrl={resultImageUrl}
+              />
+            </div>
           
-              <div className="text-white flex flex-col  items-center">
-  <h1 className="text-3xl mb-4 pl-8 font-semibold text-center">
-    Scan the QR code to download<br/>your AI avatar
-  </h1>
+            <div className="text-white flex flex-col items-center">
+              <h1 className="text-2xl md:text-3xl mb-4 font-semibold text-center">
+                Scan the QR code to download<br/>your AI avatar
+              </h1>
 
-  <div className="flex flex-col items-center gap-3">
-    <ReactToPrint
-      trigger={() => (
-        <button
-          type="button"
-          className="bg-violet-600 text-white w-[314px] px-8 py-4 text-4xl font-bold rounded-3xl"
-        >
-          Print
-        </button>
-      )}
-      content={() => printRef.current}
-    />
+              <div className="flex flex-col items-center gap-3">
+                <ReactToPrint
+                  trigger={() => (
+                    <button
+                      type="button"
+                      className="bg-violet-600 text-white w-[250px] md:w-[314px] px-6 py-3 text-3xl font-bold rounded-3xl"
+                    >
+                      Print
+                    </button>
+                  )}
+                  content={() => printRef.current}
+                />
 
-    <button
-      onClick={goHome}
-      className="bg-violet-600 text-white w-[314px] py-4 text-4xl font-bold rounded-3xl"
-    >
-      RESTART
-    </button>
-  </div>
-</div>
-
+                <button
+                  onClick={goHome}
+                  className="bg-violet-600 text-white w-[250px] md:w-[314px] py-3 text-3xl font-bold rounded-3xl"
+                >
+                  RESTART
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

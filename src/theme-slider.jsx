@@ -7,6 +7,7 @@ import * as React from "react"
 // import right from "/right.png";
 export function ThemeSlider({ themes, onSelect }) {
   const [activeIndex, setActiveIndex] = React.useState(0)
+  const [isAnimating, setIsAnimating] = React.useState(false)
 
   const nextSlide = () => {
     setActiveIndex((prev) => (prev === themes.length - 1 ? 0 : prev + 1))
@@ -21,7 +22,12 @@ export function ThemeSlider({ themes, onSelect }) {
   }
 
   const handleThemeSelect = () => {
-    onSelect(themes[activeIndex])
+    setIsAnimating(true)
+    
+    // After animation completes, call onSelect
+    setTimeout(() => {
+      onSelect(themes[activeIndex])
+    }, 800)
   }
 
   return (
@@ -32,30 +38,18 @@ export function ThemeSlider({ themes, onSelect }) {
 
       <div className="relative flex items-center justify-center px-20">
         {/* Navigation Buttons */}
-
         <button
-  onClick={prevSlide}
-  className="absolute -left-36 z-10 rounded-full p-2 text-blue-900 transition-colors hover:bg-yellow-300 "
-  aria-label="Previous slide"
->
-  <div className="h-24 w-24 relative">
-  <img src="/assets/left.png" alt="Previous" className="h-full w-full object-contain" />
-
-    <div
-      className="absolute inset-0  mix-blend-overlay"
-    />
-  </div>
-</button>
-        {/* <button
           onClick={prevSlide}
-          className="absolute -left-36 z-10 rounded-full  p-2 text-blue-900 transition-colors hover:bg-yellow-300 shadow-lg"
+          className="absolute -left-36 z-10 rounded-full p-2 text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="h-24 w-24" />
-        </button> */}
-
-        {/* Slides */}
-        {/* <div className="relative h-[500px] w-[300px]">
+          <div className="h-24 w-24 relative">
+            <img src="/assets/left.png" alt="Previous" className="h-full w-full object-contain" />
+            <div className="absolute inset-0 mix-blend-overlay" />
+          </div>
+        </button>
+      
+        <div className="relative h-[750px] w-[450px]">
           {themes.map((theme, index) => {
             // Calculate position relative to active slide
             const position = index - activeIndex
@@ -63,56 +57,50 @@ export function ThemeSlider({ themes, onSelect }) {
             return (
               <div
                 key={theme.id}
-                className={cn("absolute left-0 top-0 h-full w-full transition-all duration-300 ease-in-out", {
-                  "z-30 scale-100 rotate-0": position === 0,
-                  "z-20 -translate-x-[20%] scale-90 rotate-[-5deg]": position === -1 || position === 2,
-                  "z-10 translate-x-[20%] scale-90 rotate-[5deg]": position === 1 || position === -2,
-                })}
+                className={cn(
+                  "absolute left-0 top-0 h-full w-full transition-all duration-300 ease-in-out", 
+                  {
+                    "z-30 scale-100 rotate-0": position === 0,
+                    "z-20 -translate-x-[30%] scale-80 rotate-[-10deg]": position === -1 || position === 2,
+                    "z-10 translate-x-[30%] scale-80 rotate-[10deg]": position === 1 || position === -2,
+                  },
+                  // Replace pulse with a fade effect
+                  position === 0 && isAnimating ? "animate-spin-slow" : ""
+                )}
               >
-                <div className="relative h-full w-full overflow-hidden rounded-3xl border-4 border-yellow-400 bg-gray-900 shadow-xl">
+                <div 
+                  className={cn(
+                    "relative h-full w-full overflow-hidden cursor-pointer"
+                  )}
+                  onClick={position === 0 ? handleThemeSelect : undefined}
+                >
                   <img
                     src={theme.image || "/placeholder.svg"}
                     alt={theme.name}
-                    className="h-full w-full object-cover"
+                    className={cn(
+                      "h-full w-full object-cover transition-transform",
+                      // Replace bounce with a scale effect
+                      // In your image element, replace:
+                      position === 0 && isAnimating ? "scale-105 transition-all duration-500" : ""
+                      
+                      // // With:
+                      // position === 0 && isAnimating ? "animate-zoom-contained" : ""
+                    )}
                   />
                 </div>
               </div>
             )
           })}
-        </div> */}
-        <div className="relative h-[750px] w-[450px]">
-  {themes.map((theme, index) => {
-    // Calculate position relative to active slide
-    const position = index - activeIndex
-
-    return (
-      <div
-        key={theme.id}
-        className={cn("absolute left-0 top-0 h-full w-full transition-all duration-300 ease-in-out", {
-          "z-30 scale-100 rotate-0": position === 0,
-          "z-20 -translate-x-[30%] scale-80 rotate-[-10deg]": position === -1 || position === 2,
-          "z-10 translate-x-[30%] scale-80 rotate-[10deg]": position === 1 || position === -2,
-        })}
-      >
-        <div className="relative h-full w-full overflow-hidden ">
-          <img  onClick={handleThemeSelect}
-            src={theme.image || "/placeholder.svg"}
-            alt={theme.name}
-            className="h-full w-full object-cover"
-          />
         </div>
-      </div>
-    )
-  })}
-</div>
+
         {/* Next Button */}
         <button
-  onClick={nextSlide}
-  className="absolute -right-36 z-10 rounded-full p-2 text-blue-900 transition-colors hover:bg-yellow-300 "
-  aria-label="Next slide"
->
-  <img src="/assets/right.png" alt="Next" className="h-24 w-24 object-contain" />
-</button>
+          onClick={nextSlide}
+          className="absolute -right-36 z-10 rounded-full p-2 text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
+          aria-label="Next slide"
+        >
+          <img src="/assets/right.png" alt="Next" className="h-24 w-24 object-contain" />
+        </button>
       </div>
 
       {/* Dots */}
@@ -131,15 +119,16 @@ export function ThemeSlider({ themes, onSelect }) {
       </div>
 
       {/* Theme Name */}
-      <div className="mt-8  rounded-4xl bg-violet-600 px-12 py-4">
+      <div 
+        onClick={handleThemeSelect} 
+        className={cn(
+          "mt-8 rounded-4xl bg-violet-600 px-12 py-4 cursor-pointer transition-all duration-300",
+          // Replace bounce with a different animation
+          isAnimating ? "bg-yellow-500 scale-110 animate-ping-once" : "hover:scale-105"
+        )}
+      >
         <span className="text-4xl font-bold uppercase text-white">{themes[activeIndex].name}</span>
       </div>
-      {/* <button
-        onClick={handleThemeSelect}
-        className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Select Theme
-      </button> */}
     </div>
   )
 }
