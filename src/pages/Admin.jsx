@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AdminNav } from "../components/admin/AdminNav";
-import { 
-  getAllBackgrounds, 
-  uploadBackground, 
-  toggleBackgroundStatus, 
-  deleteBackground 
+import {
+  deleteBackground,
+  getAllBackgrounds,
+  toggleBackgroundStatus,
+  uploadBackground
 } from "../services/backgroundService";
 
 function Admin() {
@@ -46,15 +46,25 @@ function Admin() {
       setMessage({ text: "Please select an image to upload", type: "error" });
       return;
     }
-
+  
+    // Remove .toLowerCase() from the check
+    if (!["default", "userForm"].includes(backgroundName)) {
+      setMessage({ 
+        text: "Background name must be exactly 'default' or 'userForm'", 
+        type: "error" 
+      });
+      return;
+    }
+  
+    // Rest of the code remains the same
     if (!backgroundName.trim()) {
       setMessage({ text: "Please enter a name for the background", type: "error" });
       return;
     }
-
+  
     setUploading(true);
     setMessage({ text: "", type: "" });
-
+  
     try {
       await uploadBackground(newBackground, backgroundName);
       
@@ -64,6 +74,11 @@ function Admin() {
       document.getElementById("file-upload").value = "";
       setMessage({ text: "Background uploaded successfully!", type: "success" });
       fetchBackgrounds();
+      
+      // Refresh the backgrounds in the context
+      if (typeof refreshBackgrounds === 'function') {
+        refreshBackgrounds();
+      }
     } catch (error) {
       setMessage({ text: "Failed to upload background", type: "error" });
     } finally {
@@ -114,12 +129,13 @@ function Admin() {
             
             <div className="mb-4">
               <label className="block text-gray-700 mb-2">Background Name</label>
+              // In the name input field, update the placeholder:
               <input
                 type="text"
                 value={backgroundName}
                 onChange={(e) => setBackgroundName(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Enter background name (e.g., 'default', 'userForm')"
+                placeholder="Enter exactly 'default' or 'userForm'"
               />
             </div>
             

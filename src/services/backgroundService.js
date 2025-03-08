@@ -24,6 +24,7 @@ export async function getActiveBackgrounds() {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
+   
     return data || [];
   } catch (error) {
     console.error("Error fetching active backgrounds:", error);
@@ -33,9 +34,20 @@ export async function getActiveBackgrounds() {
 
 export async function uploadBackground(file, name) {
   try {
+    // Validate background name
+    if (!["default", "userForm"].includes(name)) {
+      throw new Error("Background name must be either 'default' or 'userForm'");
+    }
+
+    // Check for existing background with same name
+    const { data: existing } = await supabase
+      .from("backgrounds")
+      .select("*")
+      .eq("name", name)
+      .single();
+
     // Upload file to storage
     const fileName = `backgrounds/${Date.now()}-${file.name}`;
-    
     const { error: uploadError } = await supabase.storage
       .from("nielsen")
       .upload(fileName, file);
@@ -44,19 +56,27 @@ export async function uploadBackground(file, name) {
 
     // Get public URL
     const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nielsen/${fileName}`;
-    
-    // Save background info to database
-    const { data, error } = await supabase
-      .from("backgrounds")
-      .insert([
-        {
+
+    // Update or insert based on existence
+    const { data, error } = existing ? 
+      await supabase
+        .from("backgrounds")
+        .update({
+          url: publicURL,
+          storage_path: fileName,
+          is_active: true
+        })
+        .eq("id", existing.id)
+        .select() :
+      await supabase
+        .from("backgrounds")
+        .insert([{
           name,
           url: publicURL,
           storage_path: fileName,
           is_active: true
-        }
-      ])
-      .select();
+        }])
+        .select();
 
     if (error) throw error;
     return data[0];

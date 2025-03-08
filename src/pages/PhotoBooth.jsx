@@ -4,9 +4,9 @@ import { CameraView } from "../components/camera/CameraView";
 import { GenderSelector } from "../components/forms/GenderSelector";
 import { UserForm } from "../components/forms/UserForm";
 import { THEMES } from "../constants/themes";
+import { useBackgrounds } from "../contexts/BackgroundContext";
 import { useCamera } from "../hooks/useCamera";
 import SceneSlider from "../SceneSlider";
-import { getActiveBackgrounds } from "../services/backgroundService";
 import { getSettings } from "../services/settingsService";
 import { getActiveThemes } from "../services/themeService";
 import { ThemeSlider } from "../theme-slider";
@@ -22,32 +22,15 @@ function PhotoBooth() {
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [selectedScene, setSelectedScene] = useState(null);
   const { videoRef, canvasRef, isCameraOn, setIsCameraOn, captureImage } = useCamera();
-  const [backgrounds, setBackgrounds] = useState({
-    default: "/background.jpg",
-    userForm: "/background2.jpg"
-  });
+  const { backgrounds } = useBackgrounds(); // Get backgrounds from context
+  console.log("Current backgrounds from context:", backgrounds);
   const [themes, setThemes] = useState([]);
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Fetch data from the database
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch backgrounds
-        const backgroundsData = await getActiveBackgrounds();
-        if (backgroundsData && backgroundsData.length > 0) {
-          const backgroundsMap = {};
-          backgroundsData.forEach(bg => {
-            backgroundsMap[bg.name] = bg.url;
-          });
-          setBackgrounds(prevBackgrounds => ({
-            ...prevBackgrounds,
-            ...backgroundsMap
-          }));
-        }
-console.log("hereeeee");
-  console.log(backgrounds);
         // Fetch themes
         const themesData = await getActiveThemes();
         if (themesData && themesData.length > 0) {
@@ -65,7 +48,7 @@ console.log("hereeeee");
         setLoading(false);
       }
     };
-
+    
     fetchData();
   }, []);
 
@@ -151,15 +134,16 @@ console.log("hereeeee");
         return <div>Something went wrong</div>;
     }
   };
-
   // Get the appropriate background based on current step
   const getBackgroundImage = () => {
-    if (currentStep === "userForm" && backgrounds.userForm) {
+    console.log("Getting background for step:", currentStep);
+    console.log("Available backgrounds:", backgrounds);
+    
+    if (currentStep === "userForm" && backgrounds?.userForm) {
       return backgrounds.userForm;
     }
-    return backgrounds.default || "/background.jpg";
+    return backgrounds?.default || "/background.jpg";
   };
-
   return (
     <section
       className="text-center w-screen h-screen"
