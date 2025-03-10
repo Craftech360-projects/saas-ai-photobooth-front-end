@@ -105,16 +105,33 @@ function PhotoBooth() {
         // Check if data collection is enabled in settings
         // In the renderStep function, update the UserForm rendering
         if (settings?.enable_data_collection) {
+          // Get form position styling based on settings
+          const formPositionStyle = {};
+          
+          if (settings.form_position === "top") {
+            formPositionStyle.top = "10%";
+          } else if (settings.form_position === "middle") {
+            formPositionStyle.top = "50%";
+            formPositionStyle.transform = "translate(-50%, -50%)";
+          } else if (settings.form_position === "bottom") {
+            formPositionStyle.bottom = "10%";
+          } else if (settings.form_position === "custom" && settings.form_position_percent) {
+            formPositionStyle.top = `${settings.form_position_percent}%`;
+          }
+          
           return (
             <UserForm 
               onSubmit={handleUserFormSubmit} 
               initialValues={userDetails}
               requireName={settings?.require_name}
               requireEmail={settings?.enable_email_collection}
-              position={settings?.form_position || "middle"}
-              style={{
-                top: `${settings?.form_position_percent || 50}%`,
-              }}
+              style={formPositionStyle}
+              formFields={settings?.custom_form_fields || []}
+              formTitle={settings?.form_title || "Please Enter Your Details"}
+              buttonText={settings?.button_text || "Continue"}
+              buttonStyle={settings?.button_style || {}}
+              formStyle={settings?.form_style || {}}
+              buttonBackgroundUrl={settings?.continue_button_background || ""}
             />
           );
         }

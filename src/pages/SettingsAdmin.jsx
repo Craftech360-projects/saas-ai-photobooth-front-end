@@ -1,136 +1,194 @@
 import { useEffect, useState } from "react";
 import { AdminNav } from "../components/admin/AdminNav";
+import CustomFormFields from "../components/admin/settings/CustomFormFields";
+import FormPreview from "../components/admin/settings/FormPreview";
+import GeneralSettings from "../components/admin/settings/GeneralSettings";
+import UserFormCustomization from "../components/admin/settings/UserFormCustomization";
+import { getButtonBackgrounds, uploadButtonBackground } from "../services/backgroundService";
 import { getSettings, updateSettings } from "../services/settingsService";
-import { uploadButtonBackground, getButtonBackgrounds } from "../services/backgroundService";
 
 function SettingsAdmin() {
+  // In your initial state definition
   const [settings, setSettings] = useState({
-    app_title: "AI PhotoBooth",
-    welcome_message: "Welcome to the AI PhotoBooth!",
-    privacy_policy: "", // Ensure this is an empty string
-    terms_of_service: "", // Ensure this is an empty string
-    max_photo_size_mb: 5,
+    app_title: "",
+    welcome_message: "",
+    form_title: "Enter Your Information",
+    button_text: "Continue",
     enable_data_collection: true,
-    enable_email_collection: true,
     require_name: true,
-    require_gender: true,
-    enable_analytics: false,
-    form_position: "center", // Add form position setting
-    start_button_background: "", // Add button background settings
-    continue_button_background: ""
+    enable_email_collection: true,
+    form_position: "middle",
+    form_position_percent: 50,
+    custom_form_fields: [], // Ensure this is initialized as an empty array
+    form_style: {
+      backgroundColor: "#ffffff",
+      color: "#000000",
+      borderRadius: "8px",
+      borderColor: "#cccccc",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      opacity: 1,
+      inputBackgroundColor: "#ffffff",
+      inputTextColor: "#000000",
+      inputBorderColor: "#cccccc",
+      inputBorderRadius: "4px",
+      labelFontSize: "16px",
+      labelFontWeight: "normal",
+      labelFontStyle: "normal",
+      labelColor: "#000000"
+    },
+    button_style: {
+      width: "312px",
+      height: "86px",
+      backgroundColor: "#8b5cf6",
+      color: "#ffffff",
+      borderRadius: "8px",
+      fontSize: "16px",
+      fontWeight: "normal",
+      alignSelf: "center",
+      useCustomBackground: false
+    }
   });
   
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [showFormPreview, setShowFormPreview] = useState(false);
   const [buttonBackgrounds, setButtonBackgrounds] = useState([]);
-  const [uploadingButton, setUploadingButton] = useState(false);
-  const [newButtonBackground, setNewButtonBackground] = useState(null);
-  const [buttonType, setButtonType] = useState("start"); // "start" or "continue"
+  const [uploadingBackground, setUploadingBackground] = useState(false);
+  const [newCustomField, setNewCustomField] = useState({
+    name: "",
+    label: "",
+    type: "text",
+    placeholder: "",
+    required: false,
+    options: ""
+  });
 
   useEffect(() => {
-    fetchSettings();
-    fetchButtonBackgrounds();
-  }, []);
-
-  const fetchSettings = async () => {
-    setLoading(true);
-    try {
-      const data = await getSettings();
-      if (data) {
-        // Ensure all text fields have string values (not null)
-        const sanitizedData = {
-          ...data,
-          privacy_policy: data.privacy_policy || "",
-          terms_of_service: data.terms_of_service || ""
-        };
+    const fetchSettings = async () => {
+      try {
+        const data = await getSettings();
+        if (data) {
+          setSettings(data);
+        }
         
-        // Merge with defaults
-        setSettings(prevSettings => ({
-          ...prevSettings,
-          ...sanitizedData
-        }));
+        const backgrounds = await getButtonBackgrounds();
+        if (backgrounds) {
+          setButtonBackgrounds(backgrounds);
+        }
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+        setMessage({ text: "Failed to load settings. Please try again.", type: "error" });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setMessage({ text: "Failed to load settings", type: "error" });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  const fetchButtonBackgrounds = async () => {
-    try {
-      const data = await getButtonBackgrounds();
-      setButtonBackgrounds(data);
-    } catch (error) {
-      console.error("Failed to load button backgrounds", error);
-      // Don't show an error message to the user, just log it
-      // The UI will handle the empty state gracefully
-    }
-  };
-
-  const handleButtonFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setNewButtonBackground(file);
-    } else {
-      setMessage({ text: "Please select an image file", type: "error" });
-    }
-  };
-
-  const handleButtonUpload = async (e) => {
-    e.preventDefault();
-    
-    if (!newButtonBackground) {
-      setMessage({ text: "Please select an image to upload", type: "error" });
-      return;
-    }
-    
-    setUploadingButton(true);
-    setMessage({ text: "", type: "" });
-    
-    try {
-      const url = await uploadButtonBackground(newButtonBackground, buttonType);
-      
-      // Update settings with the new button background
-      setSettings(prev => ({
-        ...prev,
-        [buttonType === "start" ? "start_button_background" : "continue_button_background"]: url
-      }));
-      
-      // Reset form
-      setNewButtonBackground(null);
-      document.getElementById("button-file-upload").value = "";
-      setMessage({ text: "Button background uploaded successfully!", type: "success" });
-      fetchButtonBackgrounds();
-    } catch (error) {
-      setMessage({ text: "Failed to upload button background", type: "error" });
-    } finally {
-      setUploadingButton(false);
-    }
-  };
+    fetchSettings();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setSettings({
       ...settings,
-      [name]: type === "checkbox" ? checked : 
-              type === "number" ? parseFloat(value) : value
+      [name]: type === "checkbox" ? checked : value
     });
+  };
+
+  const handleCustomFieldChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setNewCustomField({
+      ...newCustomField,
+      [name]: type === "checkbox" ? checked : value
+    });
+  };
+
+  // In the addCustomField function
+  const addCustomField = () => {
+    // Ensure custom_form_fields is initialized as an array
+    const currentFields = Array.isArray(settings.custom_form_fields) ? settings.custom_form_fields : [];
+    
+    setSettings({
+      ...settings,
+      custom_form_fields: [
+        ...currentFields,
+        { ...newCustomField, id: Date.now() }
+      ]
+    });
+    
+    // Reset the new field form
+    setNewCustomField({
+      label: "",
+      name: "",
+      type: "text",
+      required: false,
+      placeholder: ""
+    });
+  };
+
+  const removeCustomField = (index) => {
+    const updatedFields = [...settings.custom_form_fields];
+    updatedFields.splice(index, 1);
+    
+    setSettings({
+      ...settings,
+      custom_form_fields: updatedFields
+    });
+    
+    setMessage({ text: "Custom field removed.", type: "success" });
+  };
+
+  const toggleFormPreview = () => {
+    setShowFormPreview(!showFormPreview);
+  };
+
+  const handleBackgroundUpload = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage({ text: "Please upload a valid image file (JPEG, PNG, GIF).", type: "error" });
+      return;
+    }
+
+    setUploadingBackground(true);
+    setMessage({ text: "Uploading background image...", type: "info" });
+
+    try {
+      const uploadedUrl = await uploadButtonBackground(file);
+      
+      if (type === 'start') {
+        setSettings({
+          ...settings,
+          start_button_background: uploadedUrl
+        });
+      } else {
+        setSettings({
+          ...settings,
+          continue_button_background: uploadedUrl
+        });
+      }
+      
+      setMessage({ text: "Background image uploaded successfully.", type: "success" });
+    } catch (error) {
+      console.error("Error uploading background:", error);
+      setMessage({ text: "Failed to upload background image. Please try again.", type: "error" });
+    } finally {
+      setUploadingBackground(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSaving(true);
-    setMessage({ text: "", type: "" });
-
+    setMessage({ text: "Saving settings...", type: "info" });
+    
     try {
       await updateSettings(settings);
-      setMessage({ text: "Settings saved successfully", type: "success" });
+      setMessage({ text: "Settings saved successfully!", type: "success" });
     } catch (error) {
-      setMessage({ text: "Failed to save settings", type: "error" });
-    } finally {
-      setSaving(false);
+      console.error("Error saving settings:", error);
+      setMessage({ text: "Failed to save settings. Please try again.", type: "error" });
     }
   };
 
@@ -150,221 +208,118 @@ function SettingsAdmin() {
           )}
           
           {loading ? (
-            <div className="text-center py-8">
-              <p className="text-gray-500">Loading settings...</p>
+            <div className="flex justify-center p-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
-              <div className="space-y-6">
-                <div className="border-b border-gray-200 pb-6">
-                  <h2 className="text-xl font-semibold mb-4">General Settings</h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-gray-700 mb-2">Application Title</label>
-                      <input
-                        type="text"
-                        name="app_title"
-                        value={settings.app_title}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-gray-700 mb-2">Welcome Message</label>
-                      <input
-                        type="text"
-                        name="welcome_message"
-                        value={settings.welcome_message}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-gray-700 mb-2">Max Photo Size (MB)</label>
-                      <input
-                        type="number"
-                        name="max_photo_size_mb"
-                        value={settings.max_photo_size_mb}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        min="1"
-                        max="20"
-                        step="0.5"
-                      />
-                    </div>
-                  </div>
-                </div>
+              {/* General Settings Section */}
+              <GeneralSettings 
+                settings={settings} 
+                handleInputChange={handleInputChange} 
+              />
+              
+              {/* User Form Customization Section */}
+              // In the SettingsAdmin component
+              <UserFormCustomization 
+                settings={settings} 
+                handleInputChange={handleInputChange}
+                setSettings={setSettings} // Make sure this is the actual setState function from useState
+              />
+              
+              {/* Form Preview Section */}
+              <FormPreview 
+                settings={settings} 
+                showFormPreview={showFormPreview} 
+                toggleFormPreview={toggleFormPreview} 
+              />
+              
+              {/* Custom Form Fields Section */}
+              <CustomFormFields 
+                settings={settings}
+                setSettings={setSettings}
+                newCustomField={newCustomField}
+                setNewCustomField={setNewCustomField}
+                handleCustomFieldChange={handleCustomFieldChange}
+                addCustomField={addCustomField}
+                removeCustomField={removeCustomField}
+                buttonType="continue"
+              />
+              
+              {/* Button Background Upload Section */}
+              <div className="mb-8 border-b pb-6">
+                <h2 className="text-xl font-semibold mb-4">Button Background Images</h2>
                 
-                <div className="border-b border-gray-200 pb-6">
-                  <h2 className="text-xl font-semibold mb-4">Form Position & Appearance</h2>
-                  
-                  <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Form Position</label>
-                    <select
-                      name="form_position"
-                      value={settings.form_position}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                    >
-                      <option value="middle">Middle (50%)</option>
-                      <option value="top">Top (20%)</option>
-                      <option value="bottom">Bottom (80%)</option>
-                    </select>
-                  </div>
-                  
-                  {/* Button Background Upload */}
-                  <div className="mb-4 p-4 border border-gray-200 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-3">Button Backgrounds</h3>
-                    
-                    <div className="mb-3">
-                      <label className="block text-gray-700 mb-2">Button Type</label>
-                      <select
-                        value={buttonType}
-                        onChange={(e) => setButtonType(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="start">Start Button</option>
-                        <option value="continue">Continue Button</option>
-                      </select>
-                    </div>
-                    
-                    <div className="mb-3">
-                      <label className="block text-gray-700 mb-2">Select Image</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium mb-2">Continue Button Background</h3>
+                    <div className="mb-4">
                       <input
-                        id="button-file-upload"
                         type="file"
+                        id="continue_button_bg"
                         accept="image/*"
-                        onChange={handleButtonFileChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        onChange={(e) => handleBackgroundUpload(e, 'continue')}
+                        className="hidden"
+                        disabled={uploadingBackground}
                       />
+                      <label
+                        htmlFor="continue_button_bg"
+                        className="block w-full p-2 text-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                      >
+                        {uploadingBackground ? "Uploading..." : "Click to upload image"}
+                      </label>
                     </div>
                     
-                    <button
-                      type="button"
-                      onClick={handleButtonUpload}
-                      disabled={uploadingButton}
-                      className="bg-violet-600 text-white px-4 py-2 rounded-md hover:bg-violet-700 disabled:bg-gray-400"
-                    >
-                      {uploadingButton ? "Uploading..." : "Upload Button Background"}
-                    </button>
-                    
-                    {/* Display current button backgrounds */}
-                    <div className="mt-4 grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="font-semibold mb-2">Start Button:</p>
-                        {settings.start_button_background ? (
-                          <img 
-                            src={settings.start_button_background} 
-                            alt="Start Button Background" 
-                            className="w-full h-20 object-cover rounded-md"
-                          />
-                        ) : (
-                          <p className="text-gray-500">No background set</p>
-                        )}
+                    {settings.continue_button_background && (
+                      <div className="relative h-24 w-full bg-gray-100 rounded-md overflow-hidden">
+                        <img
+                          src={settings.continue_button_background}
+                          alt="Continue Button Background"
+                          className="h-full w-full object-cover"
+                        />
                       </div>
-                      <div>
-                        <p className="font-semibold mb-2">Continue Button:</p>
-                        {settings.continue_button_background ? (
-                          <img 
-                            src={settings.continue_button_background} 
-                            alt="Continue Button Background" 
-                            className="w-full h-20 object-cover rounded-md"
-                          />
-                        ) : (
-                          <p className="text-gray-500">No background set</p>
-                        )}
-                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-medium mb-2">Start Button Background</h3>
+                    <div className="mb-4">
+                      <input
+                        type="file"
+                        id="start_button_bg"
+                        accept="image/*"
+                        onChange={(e) => handleBackgroundUpload(e, 'start')}
+                        className="hidden"
+                        disabled={uploadingBackground}
+                      />
+                      <label
+                        htmlFor="start_button_bg"
+                        className="block w-full p-2 text-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                      >
+                        {uploadingBackground ? "Uploading..." : "Click to upload image"}
+                      </label>
                     </div>
-                  </div>
-                </div>
-                
-                <div className="border-b border-gray-200 pb-6">
-                  <h2 className="text-xl font-semibold mb-4">User Data Collection</h2>
-                  
-                  <div className="space-y-3">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="enable_data_collection"
-                        checked={settings.enable_data_collection}
-                        onChange={handleInputChange}
-                        className="mr-2"
-                      />
-                      <span>Enable user data collection form</span>
-                    </label>
                     
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="enable_email_collection"
-                        checked={settings.enable_email_collection}
-                        onChange={handleInputChange}
-                        className="mr-2"
-                      />
-                      <span>Collect user email addresses</span>
-                    </label>
-                    
-                    {/* Rest of the checkboxes remain the same */}
+                    {settings.start_button_background && (
+                      <div className="relative h-24 w-full bg-gray-100 rounded-md overflow-hidden">
+                        <img
+                          src={settings.start_button_background}
+                          alt="Start Button Background"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    )}
                   </div>
-                </div>
-                
-                <div>
-                  <h2 className="text-xl font-semibold mb-4">Legal Information</h2>
-                  
-                  <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Privacy Policy</label>
-                    <textarea
-                      name="privacy_policy"
-                      value={settings.privacy_policy}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      rows="6"
-                      placeholder="Enter your privacy policy text here..."
-                    ></textarea>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Terms of Service</label>
-                    <textarea
-                      name="terms_of_service"
-                      value={settings.terms_of_service}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      rows="6"
-                      placeholder="Enter your terms of service text here..."
-                    ></textarea>
-                  </div>
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Form Vertical Position (% from top)</label>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      name="form_position_percent"
-                      value={settings.form_position_percent || 50}
-                      onChange={handleInputChange}
-                      className="w-24 p-2 border border-gray-300 rounded-md mr-2"
-                      min="5"
-                      max="95"
-                      step="5"
-                    />
-                    <span>%</span>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">Position from the top of the screen (default: 50%)</p>
                 </div>
               </div>
               
-              <div className="mt-8 text-right">
+              {/* Save Button */}
+              <div className="flex justify-end">
                 <button
                   type="submit"
-                  disabled={saving}
-                  className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:bg-gray-400"
+                  className="px-6 py-3 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
                 >
-                  {saving ? "Saving..." : "Save Settings"}
+                  Save Settings
                 </button>
               </div>
             </form>
