@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { AdminNav } from "../components/admin/AdminNav";
+import { PhotoboothPreview } from "../components/admin/PhotoboothPreview";
 import CustomFormFields from "../components/admin/settings/CustomFormFields";
-import FormPreview from "../components/admin/settings/FormPreview";
 import GeneralSettings from "../components/admin/settings/GeneralSettings";
 import UserFormCustomization from "../components/admin/settings/UserFormCustomization";
 import { getButtonBackgrounds, uploadButtonBackground } from "../services/backgroundService";
@@ -196,134 +197,148 @@ function SettingsAdmin() {
     <div className="min-h-screen bg-gray-100">
       <AdminNav />
       
-      <div className="max-w-4xl mx-auto py-8 px-4">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-3xl font-bold mb-6 text-violet-800">Application Settings</h1>
-          
-          {/* Message display */}
-          {message.text && (
-            <div className={`p-4 mb-6 rounded-md ${message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-              {message.text}
-            </div>
-          )}
-          
-          {loading ? (
-            <div className="flex justify-center p-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              {/* General Settings Section */}
-              <GeneralSettings 
-                settings={settings} 
-                handleInputChange={handleInputChange} 
-              />
-              
-              {/* User Form Customization Section */}
-              // In the SettingsAdmin component
-              <UserFormCustomization 
-                settings={settings} 
-                handleInputChange={handleInputChange}
-                setSettings={setSettings} // Make sure this is the actual setState function from useState
-              />
-              
-              {/* Form Preview Section */}
-              <FormPreview 
-                settings={settings} 
-                showFormPreview={showFormPreview} 
-                toggleFormPreview={toggleFormPreview} 
-              />
-              
-              {/* Custom Form Fields Section */}
-              <CustomFormFields 
-                settings={settings}
-                setSettings={setSettings}
-                newCustomField={newCustomField}
-                setNewCustomField={setNewCustomField}
-                handleCustomFieldChange={handleCustomFieldChange}
-                addCustomField={addCustomField}
-                removeCustomField={removeCustomField}
-                buttonType="continue"
-              />
-              
-              {/* Button Background Upload Section */}
-              <div className="mb-8 border-b pb-6">
-                <h2 className="text-xl font-semibold mb-4">Button Background Images</h2>
+      <div className="flex h-[calc(100vh-64px)]">
+        {/* Left side - Settings */}
+        <div className="w-1/2 overflow-y-auto p-4">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-3xl font-bold mb-6 text-violet-800">Application Settings</h1>
+            
+            {/* Message display */}
+            {message.text && (
+              <div className={`p-4 mb-6 rounded-md ${message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                {message.text}
+              </div>
+            )}
+            
+            {loading ? (
+              <div className="flex justify-center p-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                {/* General Settings Section */}
+                <GeneralSettings 
+                  settings={settings} 
+                  handleInputChange={handleInputChange} 
+                />
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="font-medium mb-2">Continue Button Background</h3>
-                    <div className="mb-4">
-                      <input
-                        type="file"
-                        id="continue_button_bg"
-                        accept="image/*"
-                        onChange={(e) => handleBackgroundUpload(e, 'continue')}
-                        className="hidden"
-                        disabled={uploadingBackground}
-                      />
-                      <label
-                        htmlFor="continue_button_bg"
-                        className="block w-full p-2 text-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                      >
-                        {uploadingBackground ? "Uploading..." : "Click to upload image"}
-                      </label>
-                    </div>
-                    
-                    {settings.continue_button_background && (
-                      <div className="relative h-24 w-full bg-gray-100 rounded-md overflow-hidden">
-                        <img
-                          src={settings.continue_button_background}
-                          alt="Continue Button Background"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    )}
-                  </div>
+                {/* User Form Customization Section */}
+                <UserFormCustomization 
+                  settings={settings} 
+                  handleInputChange={handleInputChange}
+                  setSettings={setSettings}
+                />
+                
+                {/* Custom Form Fields Section */}
+                <CustomFormFields 
+                  settings={settings}
+                  setSettings={setSettings}
+                  newCustomField={newCustomField}
+                  setNewCustomField={setNewCustomField}
+                  handleCustomFieldChange={handleCustomFieldChange}
+                  addCustomField={addCustomField}
+                  removeCustomField={removeCustomField}
+                  buttonType="continue"
+                />
+                
+                {/* Button Background Upload Section */}
+                <div className="mb-8 border-b pb-6">
+                  <h2 className="text-xl font-semibold mb-4">Button Background Images</h2>
                   
-                  <div>
-                    <h3 className="font-medium mb-2">Start Button Background</h3>
-                    <div className="mb-4">
-                      <input
-                        type="file"
-                        id="start_button_bg"
-                        accept="image/*"
-                        onChange={(e) => handleBackgroundUpload(e, 'start')}
-                        className="hidden"
-                        disabled={uploadingBackground}
-                      />
-                      <label
-                        htmlFor="start_button_bg"
-                        className="block w-full p-2 text-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                      >
-                        {uploadingBackground ? "Uploading..." : "Click to upload image"}
-                      </label>
+                  <div className="grid grid-cols-1 gap-6">
+                    <div>
+                      <h3 className="font-medium mb-2">Continue Button Background</h3>
+                      <div className="mb-4">
+                        <input
+                          type="file"
+                          id="continue_button_bg"
+                          accept="image/*"
+                          onChange={(e) => handleBackgroundUpload(e, 'continue')}
+                          className="hidden"
+                          disabled={uploadingBackground}
+                        />
+                        <label
+                          htmlFor="continue_button_bg"
+                          className="block w-full p-2 text-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                        >
+                          {uploadingBackground ? "Uploading..." : "Click to upload image"}
+                        </label>
+                      </div>
+                      
+                      {settings.continue_button_background && (
+                        <div className="relative h-24 w-full bg-gray-100 rounded-md overflow-hidden">
+                          <img
+                            src={settings.continue_button_background}
+                            alt="Continue Button Background"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      )}
                     </div>
                     
-                    {settings.start_button_background && (
-                      <div className="relative h-24 w-full bg-gray-100 rounded-md overflow-hidden">
-                        <img
-                          src={settings.start_button_background}
-                          alt="Start Button Background"
-                          className="h-full w-full object-cover"
+                    <div>
+                      <h3 className="font-medium mb-2">Start Button Background</h3>
+                      <div className="mb-4">
+                        <input
+                          type="file"
+                          id="start_button_bg"
+                          accept="image/*"
+                          onChange={(e) => handleBackgroundUpload(e, 'start')}
+                          className="hidden"
+                          disabled={uploadingBackground}
                         />
+                        <label
+                          htmlFor="start_button_bg"
+                          className="block w-full p-2 text-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                        >
+                          {uploadingBackground ? "Uploading..." : "Click to upload image"}
+                        </label>
                       </div>
-                    )}
+                      
+                      {settings.start_button_background && (
+                        <div className="relative h-24 w-full bg-gray-100 rounded-md overflow-hidden">
+                          <img
+                            src={settings.start_button_background}
+                            alt="Start Button Background"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              {/* Save Button */}
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
-                >
-                  Save Settings
-                </button>
-              </div>
-            </form>
-          )}
+                
+                {/* Save Button */}
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
+                  >
+                    Save Settings
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+        
+        {/* Right side - Preview */}
+        <div className="w-1/2 bg-gray-800 relative">
+          <div className="absolute inset-0 flex flex-col">
+            <div className="bg-gray-700 text-white p-2 flex justify-between items-center">
+              <h3 className="font-medium">Live Preview</h3>
+              <Link 
+                to="/" 
+                target="_blank" 
+                className="text-sm text-blue-300 hover:text-blue-100"
+              >
+                Open in New Tab
+              </Link>
+            </div>
+            <div className="flex-1 overflow-auto">
+              <PhotoboothPreview settings={settings} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

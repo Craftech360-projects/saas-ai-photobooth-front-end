@@ -11,7 +11,8 @@ import { getSettings } from "../services/settingsService";
 import { getActiveThemes } from "../services/themeService";
 import { ThemeSlider } from "../theme-slider";
 
-function PhotoBooth() {
+// In your PhotoBooth component
+function PhotoBooth({ previewMode = false, previewSettings = null }) {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState("userForm");
   const [userDetails, setUserDetails] = useState({
@@ -25,10 +26,17 @@ function PhotoBooth() {
   const { backgrounds } = useBackgrounds(); // Get backgrounds from context
   console.log("Current backgrounds from context:", backgrounds);
   const [themes, setThemes] = useState([]);
-  const [settings, setSettings] = useState(null);
+  const [settings, setSettings] = useState(previewSettings || null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    // Update settings if they change in preview mode
+    if (previewSettings) {
+      setSettings(previewSettings);
+      setLoading(false);
+      return;
+    }
+    
     const fetchData = async () => {
       try {
         // Fetch themes
@@ -50,8 +58,10 @@ function PhotoBooth() {
       }
     };
     
-    fetchData();
-  }, []);
+    if (!previewMode) {
+      fetchData();
+    }
+  }, [previewMode, previewSettings]);
 
   const handleUserFormSubmit = (formData) => {
     setUserDetails({...userDetails, ...formData});
