@@ -132,3 +132,77 @@ export async function deleteBackground(id, url) {
     throw error;
   }
 }
+
+// New functions for button backgrounds
+export async function uploadButtonBackground(file, type) {
+  try {
+    // Create a unique filename
+    const timestamp = Date.now();
+    const filename = `${timestamp}-${file.name}`;
+    const storagePath = `button-backgrounds/${filename}`;
+    
+    // Upload the file to storage
+    const { error: uploadError } = await supabase.storage
+      .from("nielsen")
+      .upload(storagePath, file);
+    
+    if (uploadError) {
+      console.error("Error uploading button background:", uploadError);
+      throw uploadError;
+    }
+    
+    // Get the public URL
+    const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nielsen/${storagePath}`;
+    
+    // Since the button_backgrounds table doesn't exist yet, we'll just return the URL
+    // and skip trying to save to the database
+    console.log("Button background uploaded to storage:", publicURL);
+    
+    return publicURL;
+  } catch (error) {
+    console.error("Exception in uploadButtonBackground:", error);
+    throw error;
+  }
+}
+
+export async function getButtonBackgrounds() {
+  try {
+    // Since the button_backgrounds table doesn't exist yet, return an empty array
+    console.log("Note: button_backgrounds table doesn't exist yet. Returning empty array.");
+    return [];
+  } catch (error) {
+    console.error("Exception in getButtonBackgrounds:", error);
+    return [];
+  }
+}
+
+export async function deleteButtonBackground(id, url) {
+  try {
+    // Extract the file path from the URL
+    const urlParts = url.split("/");
+    const fileName = urlParts[urlParts.length - 1];
+    const filePath = `button-backgrounds/${fileName}`;
+    
+    // Delete from storage
+    const { error: storageError } = await supabase.storage
+      .from("nielsen")
+      .remove([filePath]);
+    
+    // Even if storage deletion fails, try to remove from database
+    if (storageError) {
+      console.warn("Error deleting button background from storage:", storageError);
+    }
+    
+    // Delete from database
+    const { error } = await supabase
+      .from("button_backgrounds")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Error deleting button background:", error);
+    throw error;
+  }
+}

@@ -39,6 +39,7 @@ function PhotoBooth() {
 
         // Fetch settings
         const settingsData = await getSettings();
+        console.log("Settings loaded in PhotoBooth:", settingsData);
         if (settingsData) {
           setSettings(settingsData);
         }
@@ -85,6 +86,7 @@ function PhotoBooth() {
   };
 
   // Render the appropriate step
+  // Modify the renderStep function to handle the case when user data collection is disabled
   const renderStep = () => {
     if (loading) {
       return (
@@ -97,14 +99,25 @@ function PhotoBooth() {
       );
     }
 
+    // In the renderStep function of PhotoBooth.jsx
     switch(currentStep) {
       case "userForm":
-        return <UserForm 
-          onSubmit={handleUserFormSubmit} 
-          initialValues={userDetails}
-          requireName={settings?.require_name}
-          requireEmail={settings?.enable_email_collection}
-        />;
+        // Check if data collection is enabled in settings
+        // In the renderStep function, update the UserForm rendering
+        if (settings?.enable_data_collection) {
+          return (
+            <UserForm 
+              onSubmit={handleUserFormSubmit} 
+              initialValues={userDetails}
+              requireName={settings?.require_name}
+              requireEmail={settings?.enable_email_collection}
+              position={settings?.form_position || "middle"}
+              style={{
+                top: `${settings?.form_position_percent || 50}%`,
+              }}
+            />
+          );
+        }
       case "gender":
         return <GenderSelector onSelect={handleGenderSelect} />;
       case "theme":

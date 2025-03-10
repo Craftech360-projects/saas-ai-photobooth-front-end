@@ -17,65 +17,53 @@ export async function getSettings() {
           privacy_policy: "",
           terms_of_service: "",
           max_photo_size_mb: 5,
+          enable_data_collection: true, // Add this default value
           enable_email_collection: true,
           require_name: true,
           require_gender: true,
           enable_analytics: false
         };
 
-        const { data: newData, error: insertError } = await supabase
+        const { data: newData, error: createError } = await supabase
           .from("settings")
-          .insert([defaultSettings])
+          .insert(defaultSettings)
           .select()
           .single();
 
-        if (insertError) throw insertError;
+        if (createError) {
+          console.error("Error creating default settings:", createError);
+          throw createError;
+        }
+
         return newData;
+      } else {
+        console.error("Error fetching settings:", error);
+        throw error;
       }
-      throw error;
     }
 
     return data;
   } catch (error) {
-    console.error("Error fetching settings:", error);
-    return null;
+    console.error("Exception in getSettings:", error);
+    throw error;
   }
 }
 
 export async function updateSettings(settings) {
   try {
-    // First, check if settings exist
-    const { data: existingData, error: checkError } = await supabase
+    const { error } = await supabase
       .from("settings")
-      .select("id")
-      .single();
+      .update(settings)
+      .eq("id", settings.id);
 
-    if (checkError && checkError.code !== "PGRST116") {
-      throw checkError;
+    if (error) {
+      console.error("Error updating settings:", error);
+      throw error;
     }
 
-    if (existingData) {
-      // Update existing settings
-      const { data, error } = await supabase
-        .from("settings")
-        .update(settings)
-        .eq("id", existingData.id)
-        .select();
-
-      if (error) throw error;
-      return data[0];
-    } else {
-      // Insert new settings
-      const { data, error } = await supabase
-        .from("settings")
-        .insert([settings])
-        .select();
-
-      if (error) throw error;
-      return data[0];
-    }
+    return true;
   } catch (error) {
-    console.error("Error updating settings:", error);
+    console.error("Exception in updateSettings:", error);
     throw error;
   }
 }
