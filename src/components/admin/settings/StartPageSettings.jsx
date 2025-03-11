@@ -13,93 +13,6 @@ function StartPageSettings({ settings, setSettings }) {
       
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Start Page Title Style
-        </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Font Size (rem)</label>
-            <input
-              type="text"
-              value={settings.start_title_font_size || "2.5"}
-              onChange={(e) => handleChange("start_title_font_size", e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="2.5"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Font Weight</label>
-            <select
-              value={settings.start_title_font_weight || "bold"}
-              onChange={(e) => handleChange("start_title_font_weight", e.target.value)}
-              className="w-full p-2 border rounded"
-            >
-              <option value="normal">Normal</option>
-              <option value="medium">Medium</option>
-              <option value="semibold">Semibold</option>
-              <option value="bold">Bold</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Text Color</label>
-            <input
-              type="color"
-              value={settings.start_title_color || "#000000"}
-              onChange={(e) => handleChange("start_title_color", e.target.value)}
-              className="w-full p-1 h-10 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Margin Bottom</label>
-            <input
-              type="text"
-              value={settings.start_title_margin_bottom || "6"}
-              onChange={(e) => handleChange("start_title_margin_bottom", e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="6"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Start Page Message Style
-        </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Font Size (rem)</label>
-            <input
-              type="text"
-              value={settings.start_message_font_size || "1.25"}
-              onChange={(e) => handleChange("start_message_font_size", e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="1.25"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Text Color</label>
-            <input
-              type="color"
-              value={settings.start_message_color || "#000000"}
-              onChange={(e) => handleChange("start_message_color", e.target.value)}
-              className="w-full p-1 h-10 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1">Margin Bottom</label>
-            <input
-              type="text"
-              value={settings.start_message_margin_bottom || "8"}
-              onChange={(e) => handleChange("start_message_margin_bottom", e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="8"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
           Start Button Style
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,6 +64,27 @@ function StartPageSettings({ settings, setSettings }) {
               className="w-full p-2 border rounded"
               placeholder="86"
             />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Position from Top (%)</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={settings.start_button_position_percent || "50"}
+                onChange={(e) => handleChange("start_button_position_percent", e.target.value)}
+                className="w-full"
+              />
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={settings.start_button_position_percent || "50"}
+                onChange={(e) => handleChange("start_button_position_percent", e.target.value)}
+                className="w-20 p-2 border rounded"
+              />
+            </div>
           </div>
           <div>
             <label className="block text-xs text-gray-500 mb-1">Position</label>

@@ -10,10 +10,11 @@ import SettingsAdmin from './pages/SettingsAdmin';
 import ThemeAdmin from './pages/ThemeAdmin';
 import Result from './Result';
 import Swap from './Swap';
-
+import { SettingsProvider } from './contexts/SettingsContext';
 function App() {
   return (
     <BackgroundProvider>
+       <SettingsProvider>
       <Router>
         <Routes>
           {/* Admin routes */}
@@ -35,6 +36,7 @@ function App() {
           <Route path="/error" element={<Error />} />
         </Routes>
       </Router>
+      </SettingsProvider>
     </BackgroundProvider>
   );
 }

@@ -67,3 +67,24 @@ export async function updateSettings(settings) {
     throw error;
   }
 }
+
+export const saveGenderButtonSettings = async (genderSettings) => {
+  try {
+    const { data, error } = await supabase
+      .from('genderbuttontable')
+      .upsert(
+        { 
+          id: '1', // Use a fixed ID for single-record settings
+          ...genderSettings,
+          updated_at: new Date()
+        }, 
+        { onConflict: 'id' }
+      );
+      
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Exception in saveGenderButtonSettings:", error);
+    throw error;
+  }
+};

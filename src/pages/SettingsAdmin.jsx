@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import { AdminNav } from "../components/admin/AdminNav";
 import { PhotoboothPreview } from "../components/admin/PhotoboothPreview";
 import CustomFormFields from "../components/admin/settings/CustomFormFields";
+import GenderPageSettings from "../components/admin/settings/GenderPageSettings";
 import GeneralSettings from "../components/admin/settings/GeneralSettings";
 import StartPageSettings from "../components/admin/settings/StartPageSettings";
 import UserFormCustomization from "../components/admin/settings/UserFormCustomization";
 import { useBackgrounds } from "../contexts/BackgroundContext";
 import { getButtonBackgrounds, uploadButtonBackground } from "../services/backgroundService";
-import { getSettings, updateSettings } from "../services/settingsService";
+import { getSettings, saveGenderButtonSettings, updateSettings } from "../services/settingsService";
 
 function SettingsAdmin() {
   // Get backgrounds from context
-  const { backgrounds, loading: backgroundsLoading } = useBackgrounds();
+  const { backgrounds, setBackgrounds, loading: backgroundsLoading } = useBackgrounds();
   
   // In your initial state definition
   const [settings, setSettings] = useState({
@@ -61,15 +62,18 @@ function SettingsAdmin() {
       setSettings(prevSettings => ({
         ...prevSettings,
         background_url: backgrounds.default,
-        userForm_background_url: backgrounds.userForm
+        // Remove or rename this field to match your database schema
+        // userForm_background_url: backgrounds.userForm
+        user_form_background: backgrounds.userForm // Use the column name that exists in your database
       }));
     }
   }, [backgrounds]);
 
+  // Update this section around line 70-80
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [showFormPreview, setShowFormPreview] = useState(false);
-  const [buttonBackgrounds, setButtonBackgrounds] = useState([]);
+  const [buttonBackgrounds, setButtonBackgrounds] = useState([]); // This is initialized here
   const [uploadingBackground, setUploadingBackground] = useState(false);
   const [newCustomField, setNewCustomField] = useState({
     name: "",
@@ -89,13 +93,14 @@ function SettingsAdmin() {
             ...data,
             // Preserve background URLs from context if they exist
             background_url: backgrounds.default || data.background_url,
-            userForm_background_url: backgrounds.userForm || data.userForm_background_url
+            // Update this line to use the correct column name
+            user_form_background: backgrounds.userForm || data.user_form_background
           }));
         }
         
-        const backgrounds = await getButtonBackgrounds();
-        if (backgrounds) {
-          setButtonBackgrounds(backgrounds);
+        const bgData = await getButtonBackgrounds();
+        if (bgData) {
+          setButtonBackgrounds(bgData); // Use setButtonBackgrounds here, not setBackgrounds2
         }
       } catch (error) {
         console.error("Error fetching settings:", error);
@@ -205,11 +210,55 @@ function SettingsAdmin() {
     setMessage({ text: "Saving settings...", type: "info" });
     
     try {
+      // Save settings to the database
       await updateSettings(settings);
+      
+      // Only update backgrounds if setBackgrounds is available
+      if (typeof setBackgrounds === 'function') {
+        setBackgrounds({
+          ...backgrounds,
+          default: settings.background_url || backgrounds.default,
+          userForm: settings.userForm_background_url || backgrounds.userForm
+        });
+      }
+      
+      // Store in sessionStorage for components that might not have direct access to this state
+      sessionStorage.setItem('appSettings', JSON.stringify(settings));
+      
       setMessage({ text: "Settings saved successfully!", type: "success" });
     } catch (error) {
       console.error("Error saving settings:", error);
       setMessage({ text: "Failed to save settings. Please try again.", type: "error" });
+    }
+  };
+
+  const [genderSettingsMessage, setGenderSettingsMessage] = useState({ text: "", type: "" });
+
+  const handleGenderSettingsSave = async () => {
+    setGenderSettingsMessage({ text: "Saving gender settings...", type: "info" });
+
+    try {
+      // Extract only the gender-related settings
+      const genderSettings = {
+        gender_selection_title: settings.gender_selection_title,
+        gender_title_color: settings.gender_title_color,
+        gender_button_bg_color: settings.gender_button_bg_color,
+        gender_button_text_color: settings.gender_button_text_color,
+        gender_button_width: settings.gender_button_width,
+        gender_button_height: settings.gender_button_height,
+        male_button_background: settings.male_button_background,
+        female_button_background: settings.female_button_background,
+        filename: settings.filename || "default_filename", // Ensure filename is provided
+        url: settings.url || "default_url" // Ensure url is provided
+      };
+
+      // Call a new service function to save gender settings to a separate table
+      await saveGenderButtonSettings(genderSettings);
+      console.log("success");
+      setGenderSettingsMessage({ text: "Gender settings saved successfully!", type: "success" });
+    } catch (error) {
+      console.error("Error saving gender settings:", error);
+      setGenderSettingsMessage({ text: "Failed to save gender settings. Please try again.", type: "error" });
     }
   };
 
@@ -229,13 +278,19 @@ function SettingsAdmin() {
                 {message.text}
               </div>
             )}
+
+            {/* Gender Settings Message display */}
+            {genderSettingsMessage.text && (
+              <div className={`p-4 mb-6 rounded-md ${genderSettingsMessage.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                {genderSettingsMessage.text}
+              </div>
+            )}
             
             {loading ? (
               <div className="flex justify-center p-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
               </div>
             ) : (
-              // In the form section, add the StartPageSettings component:
               <form onSubmit={handleSubmit}>
                 {/* General Settings Section */}
                 <GeneralSettings 
@@ -254,6 +309,15 @@ function SettingsAdmin() {
                   settings={settings} 
                   handleInputChange={handleInputChange}
                   setSettings={setSettings}
+                />
+                
+                {/* Gender Page Settings Section */}
+                <GenderPageSettings
+                  settings={settings}
+                  setSettings={setSettings}
+                  setMessage={setGenderSettingsMessage}
+                  onSave={handleGenderSettingsSave}
+                  showSaveButton={true}
                 />
                 
                 {/* Custom Form Fields Section */}
@@ -351,8 +415,7 @@ function SettingsAdmin() {
         </div>
         
         {/* Right side - Preview */}
-             {/* Right side - Preview */}
-             <div className="w-2/3 bg-gray-800 relative">
+        <div className="w-2/3 bg-gray-800 relative">
           <div className="absolute inset-0 flex flex-col">
             <div className="bg-gray-700 text-white p-2 flex justify-between items-center">
               <h3 className="font-medium">App Preview</h3>
@@ -366,7 +429,7 @@ function SettingsAdmin() {
                   settings={{
                     ...settings,
                     background_url: settings.background_url || backgrounds.default,
-                    userForm_background_url: settings.userForm_background_url || backgrounds.userForm
+                    user_form_background: settings.user_form_background || backgrounds.userForm
                   }} 
                 />
               </div>

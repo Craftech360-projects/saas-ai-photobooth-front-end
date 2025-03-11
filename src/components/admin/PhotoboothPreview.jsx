@@ -3,20 +3,25 @@ import { UserForm } from '../forms/UserForm';
 
 export function PhotoboothPreview({ settings }) {
   const [resolution, setResolution] = useState('desktop');
-  const [currentStep, setCurrentStep] = useState('welcome'); // 'welcome' or 'form'
+  const [currentStep, setCurrentStep] = useState('welcome'); // 'welcome', 'form', 'gender', or 'processing'
   
   // Mock functions
   const handleSubmit = (data) => {
     console.log("Form submitted in preview:", data);
-    setCurrentStep('processing');
+    setCurrentStep('gender');
   };
 
   const handleStartClick = () => {
     if (settings.enable_data_collection) {
       setCurrentStep('form');
     } else {
-      setCurrentStep('processing');
+      setCurrentStep('gender');
     }
+  };
+
+  const handleGenderSelect = (gender) => {
+    console.log("Gender selected in preview:", gender);
+    setCurrentStep('processing');
   };
 
   // Calculate position style based on form_position
@@ -129,6 +134,12 @@ export function PhotoboothPreview({ settings }) {
               </button>
             )}
             <button 
+              className={`px-2 py-1 text-xs rounded ${currentStep === 'gender' ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-200'}`}
+              onClick={() => setCurrentStep('gender')}
+            >
+              Gender
+            </button>
+            <button 
               className={`px-2 py-1 text-xs rounded ${currentStep === 'processing' ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-200'}`}
               onClick={() => setCurrentStep('processing')}
             >
@@ -136,49 +147,32 @@ export function PhotoboothPreview({ settings }) {
             </button>
           </div>
           
-      
-          
           {/* Welcome screen */}
-      
           {currentStep === 'welcome' && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-              <h1 
-                className={`font-${settings.start_title_font_weight || 'bold'} mb-6 text-center`}
-                style={{
-                  fontSize: settings.start_title_font_size ? `${settings.start_title_font_size}rem` : '2.5rem',
-                  color: settings.start_title_color || '#000000',
-                  marginBottom: settings.start_title_margin_bottom ? `${settings.start_title_margin_bottom}px` : '1.5rem'
-                }}
-              >
-                {settings.app_title || "AI Photobooth"}
-              </h1>
-              <p 
-                className="text-center"
-                style={{
-                  fontSize: settings.start_message_font_size ? `${settings.start_message_font_size}rem` : '1.25rem',
-                  color: settings.start_message_color || '#000000',
-                  marginBottom: settings.start_message_margin_bottom ? `${settings.start_message_margin_bottom}px` : '2rem'
-                }}
-              >
-                {settings.welcome_message || "Welcome to the AI Photobooth!"}
-              </p>
-              
-              <button
-                className="px-8 py-3 text-white rounded-md shadow-lg"
-                style={{
-                  backgroundColor: settings.button_style?.backgroundColor || '#8b5cf6',
-                  width: settings.button_style?.width || '312px',
-                  height: settings.button_style?.height || '86px',
-                  borderRadius: settings.button_style?.borderRadius || '8px',
-                  backgroundImage: settings.start_button_background ? `url(${settings.start_button_background})` : 'none',
-                  backgroundSize: '100% 100%',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                }}
-                onClick={handleStartClick}
-              >
-                {settings.start_button_text || "Start"}
-              </button>
+            <div className="absolute inset-0 flex flex-col items-center">
+              <div className="relative" style={{
+                position: 'absolute',
+                top: `${settings?.start_button_position_percent || 50}%`,
+                transform: 'translateY(-50%)'
+              }}>
+                <button
+                  className="rounded-md shadow-lg flex items-center justify-center"
+                  style={{
+                    backgroundColor: settings?.start_button_bg_color || '#8b5cf6',
+                    color: settings?.start_button_text_color || '#FFFFFF',
+                    width: `${settings?.start_button_width || 312}px`,
+                    height: `${settings?.start_button_height || 86}px`,
+                    fontSize: `${settings?.start_button_font_size || 1.25}rem`,
+                    backgroundImage: settings?.start_button_background ? `url(${settings.start_button_background})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                  }}
+                  onClick={handleStartClick}
+                >
+                  {settings?.start_button_text || "Start"}
+                </button>
+              </div>
             </div>
           )}
           
@@ -197,6 +191,53 @@ export function PhotoboothPreview({ settings }) {
               formStyle={settings.form_style || {}}
               buttonBackgroundUrl={settings.continue_button_background}
             />
+          )}
+          
+          {/* Gender selection screen */}
+      
+          {currentStep === 'gender' && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <h2 
+                className="text-3xl font-bold mb-8" 
+                style={{ color: settings?.gender_title_color || '#FFFFFF' }}
+              >
+                {settings?.gender_selection_title || "Select Your Gender"}
+              </h2>
+              
+              <div className="flex space-x-6">
+                <button
+                  className="px-8 py-4 rounded-lg shadow-lg text-xl font-medium"
+                  style={{
+                    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
+                    color: settings?.gender_button_text_color || '#FFFFFF',
+                    backgroundImage: settings?.male_button_background ? `url(${settings.male_button_background})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    width: `${settings?.gender_button_width || 150}px`,
+                    height: `${settings?.gender_button_height || 60}px`,
+                  }}
+                  onClick={() => handleGenderSelect('male')}
+                >
+                  {settings?.male_button_text || "Male"}
+                </button>
+                
+                <button
+                  className="px-8 py-4 rounded-lg shadow-lg text-xl font-medium"
+                  style={{
+                    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
+                    color: settings?.gender_button_text_color || '#FFFFFF',
+                    backgroundImage: settings?.female_button_background ? `url(${settings.female_button_background})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    width: `${settings?.gender_button_width || 150}px`,
+                    height: `${settings?.gender_button_height || 60}px`,
+                  }}
+                  onClick={() => handleGenderSelect('female')}
+                >
+                  {settings?.female_button_text || "Female"}
+                </button>
+              </div>
+            </div>
           )}
           
           {/* Processing screen */}

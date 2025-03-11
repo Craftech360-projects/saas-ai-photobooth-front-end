@@ -1,73 +1,59 @@
-import { useState, useEffect } from "react";
-import female from "/assets/female.jpg";
-import male from "/assets/male.jpg";
+import { useSettings } from '../../contexts/SettingsContext';
 
 export function GenderSelector({ onSelect }) {
-  const [selectedGender, setSelectedGender] = useState(null);
-  const [isLandscape, setIsLandscape] = useState(false);
-  const [buttonSize, setButtonSize] = useState({ width: 425, height: 483 });
-
-  // Check screen orientation on mount and when window resizes
-  useEffect(() => {
-    const checkOrientation = () => {
-      const isLandscapeView = window.innerWidth > window.innerHeight;
-      setIsLandscape(isLandscapeView);
-      
-      // Adjust button size based on orientation
-      if (isLandscapeView) {
-        // In landscape, make buttons smaller but maintain aspect ratio
-        setButtonSize({ width: 350, height: 400 });
-      } else {
-        // In portrait, use original size
-        setButtonSize({ width: 425, height: 483 });
-      }
-    };
-    
-    // Initial check
-    checkOrientation();
-    
-    // Add event listener for window resize
-    window.addEventListener('resize', checkOrientation);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', checkOrientation);
-  }, []);
-
-  const handleGenderSelect = (gender) => {
-    setSelectedGender(gender);
-    setTimeout(() => onSelect(gender), 500);
+  const { settings } = useSettings();
+  
+  const backgroundStyle = {
+    backgroundImage: settings?.gender_background_url ? `url(${settings.gender_background_url})` : 'none',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
   };
-
+  
+  const maleButtonStyle = {
+    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
+    color: settings?.gender_button_text_color || '#FFFFFF',
+    backgroundImage: settings?.male_button_background ? `url(${settings.male_button_background})` : 'none',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minWidth: '150px',
+    minHeight: '150px'
+  };
+  
+  const femaleButtonStyle = {
+    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
+    color: settings?.gender_button_text_color || '#FFFFFF',
+    backgroundImage: settings?.female_button_background ? `url(${settings.female_button_background})` : 'none',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minWidth: '150px',
+    minHeight: '60px'
+  };
+  
   return (
-    <div className="text-center w-screen h-screen flex flex-col items-center justify-center bg-no-repeat">
-      <div className="text-6xl font-semibold text-white tracking-wide mb-4">Select Gender</div>
-
-      <div className={`flex ${isLandscape ? 'flex-row' : 'flex-col'} items-center justify-center ${isLandscape ? 'gap-20' : 'gap-12'} mt-6`}>
+    <div className="absolute inset-0 flex flex-col items-center justify-center" style={backgroundStyle}>
+      <h2 
+        className="text-3xl font-bold mb-8" 
+        style={{ color: settings?.gender_title_color || '#FFFFFF' }}
+      >
+        {settings?.gender_selection_title || "Select Your Gender"}
+      </h2>
+      
+      <div className="flex space-x-6">
         <button
-          className="rounded-lg p-2 bg-cover bg-center bg-no-repeat border-none cursor-pointer bg-transparent transition-shadow duration-300"
-          style={{ 
-            backgroundImage: `url(${male})`,
-            width: `${buttonSize.width}px`,
-            height: `${buttonSize.height}px`
-          }}
-          onClick={(e) => {
-            e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
-            handleGenderSelect("male");
-          }}
-        ></button>
-
+          className="px-8 py-4 rounded-lg shadow-lg text-xl font-medium"
+          style={maleButtonStyle}
+          onClick={() => onSelect('male')}
+        >
+          {settings?.male_button_text || "Male"}
+        </button>
+        
         <button
-          className="rounded-lg p-2 bg-cover bg-center bg-no-repeat border-none cursor-pointer bg-transparent transition-shadow duration-300"
-          style={{ 
-            backgroundImage: `url(${female})`,
-            width: `${buttonSize.width}px`,
-            height: `${buttonSize.height}px`
-          }}
-          onClick={(e) => {
-            e.target.classList.add("shadow-[0px_0px_19px_16px_rgba(255,255,255,0.5)]");
-            handleGenderSelect("female");
-          }}
-        ></button>
+          className="px-8 py-4 rounded-lg shadow-lg text-xl font-medium"
+          style={femaleButtonStyle}
+          onClick={() => onSelect('female')}
+        >
+          {settings?.female_button_text || "Female"}
+        </button>
       </div>
     </div>
   );

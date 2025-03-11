@@ -165,16 +165,70 @@ export async function uploadButtonBackground(file, type) {
   }
 }
 
-export async function getButtonBackgrounds() {
+export const getButtonBackgrounds = async () => {
   try {
-    // Since the button_backgrounds table doesn't exist yet, return an empty array
-    console.log("Note: button_backgrounds table doesn't exist yet. Returning empty array.");
-    return [];
+    const { data, error } = await supabase
+      .from("genderbuttontable")
+      .select("*")
+      .order("created_at", { ascending: false });
+    
+    if (error) {
+      console.error("Error fetching gender button backgrounds:", error);
+      throw error;
+    }
+    
+    return data || [];
   } catch (error) {
-    console.error("Exception in getButtonBackgrounds:", error);
+    console.error('Error fetching button backgrounds:', error);
     return [];
   }
-}
+};
+
+// Update this function to use Supabase and save to genderbuttontable
+export const uploadGenderButtonBackground = async (file) => {
+  try {
+    // Create a unique filename
+    const timestamp = Date.now();
+    const filename = `${timestamp}-${file.name}`;
+    const storagePath = `gender-button-backgrounds/${filename}`;
+    
+    // Upload the file to storage
+    const { error: uploadError } = await supabase.storage
+      .from("nielsen")
+      .upload(storagePath, file);
+    
+    if (uploadError) {
+      console.error("Error uploading gender button background:", uploadError);
+      throw uploadError;
+    }
+    
+    // Get the public URL
+    const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nielsen/${storagePath}`;
+    
+    // Save the URL to the genderbuttontable
+    const { data, error } = await supabase
+      .from("genderbuttontable")
+      .insert([{
+        filename: filename,
+        url: publicURL,
+        type: 'gender',
+        created_at: new Date()
+      }])
+      .select();
+    
+    if (error) {
+      console.error("Error saving to genderbuttontable:", error);
+      // Even if DB insert fails, return the URL so the UI can still use it
+    } else {
+      console.log("Gender button background saved to database:", data);
+    }
+    
+    return publicURL;
+  } catch (error) {
+    console.error("Exception in uploadGenderButtonBackground:", error);
+    throw error;
+  }
+};
 
 export async function deleteButtonBackground(id, url) {
   try {

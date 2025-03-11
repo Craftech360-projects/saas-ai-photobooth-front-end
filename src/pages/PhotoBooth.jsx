@@ -217,50 +217,36 @@ function PhotoBooth({ previewMode = false, previewSettings = null }) {
       // In the renderStep function, update the "start" case:
       case "start":
         return (
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <h1 
-              className={`font-${settings?.start_title_font_weight || 'bold'} text-center`}
-              style={{ 
-                fontSize: settings?.start_title_font_size ? `${settings.start_title_font_size}rem` : '2.5rem',
-                color: settings?.start_title_color || 'black',
-                marginBottom: settings?.start_title_margin_bottom ? `${settings.start_title_margin_bottom}px` : '1.5rem'
-              }}
-            >
-              {settings?.app_title || "AI Photobooth"}
-            </h1>
-            <p 
-              className="text-center"
-              style={{ 
-                fontSize: settings?.start_message_font_size ? `${settings.start_message_font_size}rem` : '1.25rem',
-                color: settings?.start_message_color || 'black',
-                marginBottom: settings?.start_message_margin_bottom ? `${settings.start_message_margin_bottom}px` : '2rem'
-              }}
-            >
-              {settings?.welcome_message || "Welcome to the AI Photobooth!"}
-            </p>
-            
-            <button
-              className="px-8 py-3 text-white rounded-md shadow-lg"
-              style={{
-                backgroundColor: settings?.button_style?.backgroundColor || '#8b5cf6',
-                width: settings?.button_style?.width || '312px',
-                height: settings?.button_style?.height || '86px',
-                borderRadius: settings?.button_style?.borderRadius || '8px',
-                backgroundImage: settings?.start_button_background ? `url(${settings.start_button_background})` : 'none',
-                backgroundSize: '100% 100%',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-              }}
-              onClick={() => {
-                if (settings?.enable_data_collection) {
-                  setCurrentStep("userForm");
-                } else {
-                  setCurrentStep("gender");
-                }
-              }}
-            >
-              {settings?.start_button_text || "Start"}
-            </button>
+          <div className="absolute inset-0 flex flex-col items-center">
+            <div className="relative" style={{
+              position: 'absolute',
+              top: `${settings?.start_button_position_percent || 50}%`,
+              transform: 'translateY(-50%)'
+            }}>
+              <button
+                className="rounded-md shadow-lg flex items-center justify-center"
+                style={{
+                  backgroundColor: settings?.start_button_bg_color || '#8b5cf6',
+                  color: settings?.start_button_text_color || '#FFFFFF',
+                  width: `${settings?.start_button_width || 312}px`,
+                  height: `${settings?.start_button_height || 86}px`,
+                  fontSize: `${settings?.start_button_font_size || 1.25}rem`,
+                  backgroundImage: settings?.start_button_background ? `url(${settings.start_button_background})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
+                onClick={() => {
+                  if (settings?.enable_data_collection) {
+                    setCurrentStep("userForm");
+                  } else {
+                    setCurrentStep("gender");
+                  }
+                }}
+              >
+                {settings?.start_button_text || "Start"}
+              </button>
+            </div>
           </div>
         );
       case "userForm":
