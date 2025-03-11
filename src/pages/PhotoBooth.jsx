@@ -11,10 +11,112 @@ import { getSettings } from "../services/settingsService";
 import { getActiveThemes } from "../services/themeService";
 import { ThemeSlider } from "../theme-slider";
 
-// In your PhotoBooth component
+// In your Photobooth.jsx or similar main component
+
+function Photobooth() {
+  // Add a new state to track the current step
+  const [currentStep, setCurrentStep] = useState('start'); // 'start', 'gender', 'processing', etc.
+  
+  // Handle start button click
+  const handleStartClick = () => {
+    setCurrentStep('gender');
+  };
+  
+  // Render different screens based on currentStep
+  return (
+    <div className="relative h-screen w-screen overflow-hidden">
+      {/* Background image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${settings.background_url})` }}
+      >
+        {/* Start screen */}
+        {currentStep === 'start' && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <h1 className="text-4xl font-bold mb-6 text-center text-white">
+              {settings.app_title || "AI Photobooth"}
+            </h1>
+            <p className="text-xl mb-8 text-center text-white">
+              {settings.welcome_message || "Welcome to the AI Photobooth!"}
+            </p>
+            
+            <button
+              className="px-8 py-3 text-white rounded-md shadow-lg"
+              style={{
+                backgroundColor: settings.button_style?.backgroundColor || '#8b5cf6',
+                width: settings.button_style?.width || '312px',
+                height: settings.button_style?.height || '86px',
+                borderRadius: settings.button_style?.borderRadius || '8px',
+                backgroundImage: settings.start_button_background ? `url(${settings.start_button_background})` : 'none',
+                backgroundSize: '100% 100%',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+              onClick={handleStartClick}
+            >
+              Start
+            </button>
+          </div>
+        )}
+        
+        {/* Gender selection screen */}
+        {currentStep === 'gender' && (
+          <div className="gender-selection-container">
+            {/* Your existing gender selection UI */}
+          </div>
+        )}
+        
+        {/* Other steps... */}
+      </div>
+    </div>
+  );
+}
+
 function PhotoBooth({ previewMode = false, previewSettings = null }) {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState("userForm");
+  // Update the initial state to be null or loading
+  const [currentStep, setCurrentStep] = useState("loading");
+  
+  // Then in the useEffect where you fetch settings:
+  useEffect(() => {
+    // Update settings if they change in preview mode
+    if (previewSettings) {
+      setSettings(previewSettings);
+      // Set the initial step based on the preview settings
+      setCurrentStep(previewSettings?.enable_data_collection ? "userForm" : "start");
+      setLoading(false);
+      return;
+    }
+    
+    const fetchData = async () => {
+      try {
+        // Fetch themes
+        const themesData = await getActiveThemes();
+        if (themesData && themesData.length > 0) {
+          setThemes(themesData);
+        }
+
+        // Fetch settings
+        const settingsData = await getSettings();
+        console.log("Settings loaded in PhotoBooth:", settingsData);
+        if (settingsData) {
+          setSettings(settingsData);
+          // Set the initial step based on the fetched settings
+          setCurrentStep(settingsData?.enable_data_collection ? "userForm" : "start");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // If there's an error, default to start
+        setCurrentStep("start");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (!previewMode) {
+      fetchData();
+    }
+  }, [previewMode, previewSettings]);
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
@@ -111,6 +213,56 @@ function PhotoBooth({ previewMode = false, previewSettings = null }) {
 
     // In the renderStep function of PhotoBooth.jsx
     switch(currentStep) {
+      // Update the start screen rendering in the renderStep function
+      // In the renderStep function, update the "start" case:
+      case "start":
+        return (
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <h1 
+              className={`font-${settings?.start_title_font_weight || 'bold'} text-center`}
+              style={{ 
+                fontSize: settings?.start_title_font_size ? `${settings.start_title_font_size}rem` : '2.5rem',
+                color: settings?.start_title_color || 'black',
+                marginBottom: settings?.start_title_margin_bottom ? `${settings.start_title_margin_bottom}px` : '1.5rem'
+              }}
+            >
+              {settings?.app_title || "AI Photobooth"}
+            </h1>
+            <p 
+              className="text-center"
+              style={{ 
+                fontSize: settings?.start_message_font_size ? `${settings.start_message_font_size}rem` : '1.25rem',
+                color: settings?.start_message_color || 'black',
+                marginBottom: settings?.start_message_margin_bottom ? `${settings.start_message_margin_bottom}px` : '2rem'
+              }}
+            >
+              {settings?.welcome_message || "Welcome to the AI Photobooth!"}
+            </p>
+            
+            <button
+              className="px-8 py-3 text-white rounded-md shadow-lg"
+              style={{
+                backgroundColor: settings?.button_style?.backgroundColor || '#8b5cf6',
+                width: settings?.button_style?.width || '312px',
+                height: settings?.button_style?.height || '86px',
+                borderRadius: settings?.button_style?.borderRadius || '8px',
+                backgroundImage: settings?.start_button_background ? `url(${settings.start_button_background})` : 'none',
+                backgroundSize: '100% 100%',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+              onClick={() => {
+                if (settings?.enable_data_collection) {
+                  setCurrentStep("userForm");
+                } else {
+                  setCurrentStep("gender");
+                }
+              }}
+            >
+              {settings?.start_button_text || "Start"}
+            </button>
+          </div>
+        );
       case "userForm":
         // Check if data collection is enabled in settings
         // In the renderStep function, update the UserForm rendering
@@ -145,6 +297,9 @@ function PhotoBooth({ previewMode = false, previewSettings = null }) {
             />
           );
         }
+        // If data collection is disabled, fall through to gender selection
+        setCurrentStep("gender");
+        return null;
       case "gender":
         return <GenderSelector onSelect={handleGenderSelect} />;
       case "theme":

@@ -8,7 +8,6 @@ export function PhotoboothPreview({ settings }) {
   // Mock functions
   const handleSubmit = (data) => {
     console.log("Form submitted in preview:", data);
-    // Simulate going to the next step after form submission
     setCurrentStep('processing');
   };
 
@@ -37,19 +36,40 @@ export function PhotoboothPreview({ settings }) {
 
   // Get container style based on selected resolution
   const getContainerStyle = () => {
+    const baseStyle = {
+      transition: 'width 0.3s, height 0.3s',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    };
+    
     switch(resolution) {
       case 'mobile':
-        return { width: '375px', height: '667px' };
+        return { ...baseStyle, width: '375px', height: '667px' };
       case 'tablet':
-        return { width: '768px', height: '1024px' };
+        return { ...baseStyle, width: '768px', height: '1024px' };
+      case 'desktop-vertical':
+        return { 
+          ...baseStyle, 
+          width: '540px',
+          height: '960px',
+          maxWidth: '100%', 
+          maxHeight: '90vh'
+        };
       case 'desktop':
       default:
-        return { width: '100%', height: '100%' };
+        return { 
+          ...baseStyle, 
+          width: '960px', 
+          height: '540px', 
+          maxWidth: '100%', 
+          maxHeight: '90vh' 
+        };
     }
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col ">
       <div className="bg-gray-800 p-2 flex items-center justify-between">
         <div className="text-white text-sm">Preview Resolution:</div>
         <div className="flex space-x-2">
@@ -71,15 +91,25 @@ export function PhotoboothPreview({ settings }) {
           >
             Desktop (Full)
           </button>
+          <button 
+            className={`px-3 py-1 text-xs rounded ${resolution === 'desktop-vertical' ? 'bg-violet-600 text-white' : 'bg-gray-600 text-gray-200'}`}
+            onClick={() => setResolution('desktop-vertical')}
+          >
+            Desktop (vertical)
+          </button>
         </div>
       </div>
       
-      <div className="flex-1 flex items-center justify-center bg-gray-700 overflow-auto p-4">
+      <div className="flex-1 flex items-center justify-center bg-gray-700 overflow-auto p-8">
         <div 
           className="bg-gray-100 relative overflow-hidden shadow-xl"
           style={{
             ...getContainerStyle(),
-            transition: 'width 0.3s, height 0.3s'
+            backgroundImage: currentStep === 'form' && settings?.userForm_background_url 
+              ? `url(${settings.userForm_background_url})` 
+              : settings?.background_url 
+                ? `url(${settings.background_url})` 
+                : 'none',
           }}
         >
           {/* Preview step controls */}
@@ -106,13 +136,30 @@ export function PhotoboothPreview({ settings }) {
             </button>
           </div>
           
+      
+          
           {/* Welcome screen */}
+      
           {currentStep === 'welcome' && (
             <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-              <h1 className="text-4xl font-bold mb-6 text-center">
+              <h1 
+                className={`font-${settings.start_title_font_weight || 'bold'} mb-6 text-center`}
+                style={{
+                  fontSize: settings.start_title_font_size ? `${settings.start_title_font_size}rem` : '2.5rem',
+                  color: settings.start_title_color || '#000000',
+                  marginBottom: settings.start_title_margin_bottom ? `${settings.start_title_margin_bottom}px` : '1.5rem'
+                }}
+              >
                 {settings.app_title || "AI Photobooth"}
               </h1>
-              <p className="text-xl mb-8 text-center">
+              <p 
+                className="text-center"
+                style={{
+                  fontSize: settings.start_message_font_size ? `${settings.start_message_font_size}rem` : '1.25rem',
+                  color: settings.start_message_color || '#000000',
+                  marginBottom: settings.start_message_margin_bottom ? `${settings.start_message_margin_bottom}px` : '2rem'
+                }}
+              >
                 {settings.welcome_message || "Welcome to the AI Photobooth!"}
               </p>
               
@@ -130,7 +177,7 @@ export function PhotoboothPreview({ settings }) {
                 }}
                 onClick={handleStartClick}
               >
-                Start
+                {settings.start_button_text || "Start"}
               </button>
             </div>
           )}

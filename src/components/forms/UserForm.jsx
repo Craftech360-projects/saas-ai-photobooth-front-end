@@ -89,7 +89,7 @@ export function UserForm({
   
   return (
     <div 
-      className="p-6 rounded-lg max-w-[750px] w-full absolute"
+      className="p-6 rounded-lg max-w-3xl w-full absolute"
       style={{...combinedStyle, ...formStyle}}
     >
       <h2 className="text-4xl font-bold mb-6 text-center" style={labelStyle}>{formTitle}</h2>
@@ -103,6 +103,7 @@ export function UserForm({
               name="name"
               value={formData.name || ""}
               onChange={handleChange}
+              placeholder="Enter your name"
               className="w-full p-2 border rounded-md"
               style={inputStyle}
               required
@@ -116,6 +117,7 @@ export function UserForm({
             <input
               type="email"
               name="email"
+              placeholder="Enter your email"
               value={formData.email || ""}
               onChange={handleChange}
               className="w-full p-2 border rounded-md"

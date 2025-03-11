@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { AdminNav } from "../components/admin/AdminNav";
 import { PhotoboothPreview } from "../components/admin/PhotoboothPreview";
 import CustomFormFields from "../components/admin/settings/CustomFormFields";
 import GeneralSettings from "../components/admin/settings/GeneralSettings";
+import StartPageSettings from "../components/admin/settings/StartPageSettings";
 import UserFormCustomization from "../components/admin/settings/UserFormCustomization";
+import { useBackgrounds } from "../contexts/BackgroundContext";
 import { getButtonBackgrounds, uploadButtonBackground } from "../services/backgroundService";
 import { getSettings, updateSettings } from "../services/settingsService";
 
 function SettingsAdmin() {
+  // Get backgrounds from context
+  const { backgrounds, loading: backgroundsLoading } = useBackgrounds();
+  
   // In your initial state definition
   const [settings, setSettings] = useState({
     app_title: "",
@@ -51,6 +55,17 @@ function SettingsAdmin() {
     }
   });
   
+  // Update settings with backgrounds from context
+  useEffect(() => {
+    if (backgrounds) {
+      setSettings(prevSettings => ({
+        ...prevSettings,
+        background_url: backgrounds.default,
+        userForm_background_url: backgrounds.userForm
+      }));
+    }
+  }, [backgrounds]);
+
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [showFormPreview, setShowFormPreview] = useState(false);
@@ -70,7 +85,12 @@ function SettingsAdmin() {
       try {
         const data = await getSettings();
         if (data) {
-          setSettings(data);
+          setSettings(prevSettings => ({
+            ...data,
+            // Preserve background URLs from context if they exist
+            background_url: backgrounds.default || data.background_url,
+            userForm_background_url: backgrounds.userForm || data.userForm_background_url
+          }));
         }
         
         const backgrounds = await getButtonBackgrounds();
@@ -86,7 +106,7 @@ function SettingsAdmin() {
     };
 
     fetchSettings();
-  }, []);
+  }, [backgrounds]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -199,7 +219,7 @@ function SettingsAdmin() {
       
       <div className="flex h-[calc(100vh-64px)]">
         {/* Left side - Settings */}
-        <div className="w-1/2 overflow-y-auto p-4">
+        <div className="w-1/3 overflow-y-auto p-4">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h1 className="text-3xl font-bold mb-6 text-violet-800">Application Settings</h1>
             
@@ -215,11 +235,18 @@ function SettingsAdmin() {
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
               </div>
             ) : (
+              // In the form section, add the StartPageSettings component:
               <form onSubmit={handleSubmit}>
                 {/* General Settings Section */}
                 <GeneralSettings 
                   settings={settings} 
                   handleInputChange={handleInputChange} 
+                />
+                
+                {/* Start Page Settings Section */}
+                <StartPageSettings
+                  settings={settings}
+                  setSettings={setSettings}
                 />
                 
                 {/* User Form Customization Section */}
@@ -308,6 +335,7 @@ function SettingsAdmin() {
                   </div>
                 </div>
                 
+                
                 {/* Save Button */}
                 <div className="flex justify-end">
                   <button
@@ -323,20 +351,25 @@ function SettingsAdmin() {
         </div>
         
         {/* Right side - Preview */}
-        <div className="w-1/2 bg-gray-800 relative">
+             {/* Right side - Preview */}
+             <div className="w-2/3 bg-gray-800 relative">
           <div className="absolute inset-0 flex flex-col">
             <div className="bg-gray-700 text-white p-2 flex justify-between items-center">
-              <h3 className="font-medium">Live Preview</h3>
-              <Link 
-                to="/" 
-                target="_blank" 
-                className="text-sm text-blue-300 hover:text-blue-100"
-              >
-                Open in New Tab
-              </Link>
+              <h3 className="font-medium">App Preview</h3>
+              {backgroundsLoading && (
+                <div className="text-xs text-gray-300">Loading backgrounds...</div>
+              )}
             </div>
-            <div className="flex-1 overflow-auto">
-              <PhotoboothPreview settings={settings} />
+            <div className="flex-1 overflow-auto bg-gray-700">
+              <div className="h-full flex items-center justify-center p-4">
+                <PhotoboothPreview 
+                  settings={{
+                    ...settings,
+                    background_url: settings.background_url || backgrounds.default,
+                    userForm_background_url: settings.userForm_background_url || backgrounds.userForm
+                  }} 
+                />
+              </div>
             </div>
           </div>
         </div>
