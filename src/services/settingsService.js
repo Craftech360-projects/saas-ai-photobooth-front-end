@@ -68,21 +68,55 @@ export async function updateSettings(settings) {
   }
 }
 
-export const saveGenderButtonSettings = async (genderSettings) => {
+export const saveGenderButtonSettings = async (settings) => {
   try {
-    const { data, error } = await supabase
+    // First get the existing row
+    const { data: existingData } = await supabase
       .from('genderbuttontable')
-      .upsert(
-        { 
-          id: '1', // Use a fixed ID for single-record settings
-          ...genderSettings,
-          updated_at: new Date()
-        }, 
-        { onConflict: 'id' }
-      );
-      
-    if (error) throw error;
-    return data;
+      .select('id')
+      .order('id', { ascending: true })
+      .limit(1);
+
+    if (existingData && existingData.length > 0) {
+      // Update existing row
+      const { error } = await supabase
+        .from('genderbuttontable')
+        .update({
+          gender_selection_title: settings.gender_selection_title,
+          gender_title_color: settings.gender_title_color,
+          gender_button_width: settings.gender_button_width,
+          gender_button_height: settings.gender_button_height,
+          male_button_background: settings.male_button_background,
+          female_button_background: settings.female_button_background,
+          gender_button_bg_color: settings.gender_button_bg_color,
+          gender_button_text_color: settings.gender_button_text_color,
+          male_button_text: settings.male_button_text,
+          female_button_text: settings.female_button_text
+        })
+        .eq('id', existingData[0].id);
+
+      if (error) throw error;
+    } else {
+      // Create new row if none exists
+      const { error } = await supabase
+        .from('genderbuttontable')
+        .insert([{
+          gender_selection_title: settings.gender_selection_title || "Select Your Gender",
+          gender_title_color: settings.gender_title_color || "#FFFFFF",
+          gender_button_width: settings.gender_button_width || 250,
+          gender_button_height: settings.gender_button_height || 250,
+          male_button_background: settings.male_button_background || "",
+          female_button_background: settings.female_button_background || "",
+          gender_button_bg_color: settings.gender_button_bg_color || "#8b5cf6",
+          gender_button_text_color: settings.gender_button_text_color || "#FFFFFF",
+          male_button_text: settings.male_button_text || "Male",
+          female_button_text: settings.female_button_text || "Female"
+        }]);
+
+      if (error) throw error;
+    }
+
+    return { success: true };
   } catch (error) {
     console.error("Exception in saveGenderButtonSettings:", error);
     throw error;

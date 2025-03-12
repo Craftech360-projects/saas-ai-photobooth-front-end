@@ -1,50 +1,79 @@
+import { useEffect, useState } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
+import { supabase } from '../../supabaseClient';
 
 export function GenderSelector({ onSelect }) {
   const { settings } = useSettings();
+  const [genderButtonSettings, setGenderButtonSettings] = useState({});
+
+  // Fetch gender button settings on mount
+  useEffect(() => {
+    const fetchGenderButtonSettings = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('genderbuttontable')
+          .select('*')
+          .single();
+        
+        if (error) throw error;
+        
+        setGenderButtonSettings(data || {});
+        console.log("Loaded gender button settings:", genderButtonSettings);
+        console.log("Loaded gender button settings:", genderButtonSettings.gender_button_height);
+        console.log("Loaded gender button width:", genderButtonSettings.gender_button_width);
+      } catch (error) {
+        console.error("Error loading gender button settings:", error);
+      }
+    };
+    
+    fetchGenderButtonSettings();
+  }, []);
   
   const backgroundStyle = {
-    backgroundImage: settings?.gender_background_url ? `url(${settings.gender_background_url})` : 'none',
+    backgroundImage: genderButtonSettings?.gender_background_url ? `url(${genderButtonSettings.gender_background_url})` : 'none',
     backgroundSize: 'cover',
     backgroundPosition: 'center'
   };
   
   const maleButtonStyle = {
-    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
-    color: settings?.gender_button_text_color || '#FFFFFF',
-    backgroundImage: settings?.male_button_background ? `url(${settings.male_button_background})` : 'none',
+  
+    color: genderButtonSettings?.gender_button_text_color || '#FFFFFF',
+    backgroundImage: genderButtonSettings?.male_button_background ? `url(${genderButtonSettings.male_button_background})` : 'none',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    minWidth: '150px',
-    minHeight: '150px'
+    width: genderButtonSettings?.gender_button_width ? `${genderButtonSettings.gender_button_width}px` : '250px',
+    height: genderButtonSettings?.gender_button_height ? `${genderButtonSettings.gender_button_height}px` : '250px'
   };
   
   const femaleButtonStyle = {
-    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
-    color: settings?.gender_button_text_color || '#FFFFFF',
-    backgroundImage: settings?.female_button_background ? `url(${settings.female_button_background})` : 'none',
+   
+    color: genderButtonSettings?.gender_button_text_color || '#FFFFFF',
+    backgroundImage: genderButtonSettings?.female_button_background ? `url(${genderButtonSettings.female_button_background})` : 'none',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    minWidth: '150px',
-    minHeight: '60px'
+    width: genderButtonSettings?.gender_button_width ? `${genderButtonSettings.gender_button_width}px` : '250px',
+    height: genderButtonSettings?.gender_button_height ? `${genderButtonSettings.gender_button_height}px` : '250px'
   };
   
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center" style={backgroundStyle}>
-      <h2 
-        className="text-3xl font-bold mb-8" 
-        style={{ color: settings?.gender_title_color || '#FFFFFF' }}
-      >
-        {settings?.gender_selection_title || "Select Your Gender"}
-      </h2>
+    <h2 
+  className="text-3xl font-bold mb-8" 
+  style={{ 
+    color: genderButtonSettings?.gender_title_color || '#FFFFFF',
+    fontSize: `${genderButtonSettings?.title_font_size || 24}px`
+  }}
+>
+  {genderButtonSettings?.gender_selection_title || "Select Your Gender"}
+</h2>
       
-      <div className="flex space-x-6">
+      <div className={`flex ${genderButtonSettings?.button_layout === 'column' ? 'flex-col space-y-6' : 'flex-row space-x-6'}`}>
         <button
           className="px-8 py-4 rounded-lg shadow-lg text-xl font-medium"
           style={maleButtonStyle}
           onClick={() => onSelect('male')}
         >
-          {settings?.male_button_text || "Male"}
+          {/* {genderButtonSettings?.male_button_text || "Male"} */}
         </button>
         
         <button
@@ -52,7 +81,7 @@ export function GenderSelector({ onSelect }) {
           style={femaleButtonStyle}
           onClick={() => onSelect('female')}
         >
-          {settings?.female_button_text || "Female"}
+          {/* {genderButtonSettings?.female_button_text || "Female"} */}
         </button>
       </div>
     </div>

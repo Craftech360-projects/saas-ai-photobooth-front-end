@@ -2,9 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import * as React from "react"
-// import left from "../assets/left.png"; // Relative path
-// import right from "../assets/right.png"; // Relative path
-// import right from "/right.png";
+
 export function ThemeSlider({ themes, onSelect }) {
   const [activeIndex, setActiveIndex] = React.useState(0)
   const [isAnimating, setIsAnimating] = React.useState(false)
@@ -33,7 +31,7 @@ export function ThemeSlider({ themes, onSelect }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-7xl font-semibold text-white">Select your theme</h1>
+        <h1 className="mb-2 text-7xl font-semibold text-black">Select your theme</h1>
       </div>
 
       <div className="relative flex items-center justify-center px-20">

@@ -1,9 +1,25 @@
-import { useState } from 'react';
+
+import { useEffect, useState } from 'react';
+import { supabase } from '../../supabaseClient';
 import { UserForm } from '../forms/UserForm';
 
 export function PhotoboothPreview({ settings }) {
   const [resolution, setResolution] = useState('desktop');
   const [currentStep, setCurrentStep] = useState('welcome'); // 'welcome', 'form', 'gender', or 'processing'
+  const [genderButtonSettings, setGenderButtonSettings] = useState({});
+  
+  // Add this useEffect to listen for updates
+  useEffect(() => {
+    const handleSettingsUpdate = (e) => {
+      setGenderButtonSettings(e.detail.settings);
+    };
+
+    window.addEventListener('genderSettingsUpdated', handleSettingsUpdate);
+    
+    return () => {
+      window.removeEventListener('genderSettingsUpdated', handleSettingsUpdate);
+    };
+  }, []);
   
   // Mock functions
   const handleSubmit = (data) => {
@@ -72,6 +88,32 @@ export function PhotoboothPreview({ settings }) {
         };
     }
   };
+
+  // Fetch gender button settings on mount and when updated
+  useEffect(() => {
+    const fetchGenderButtonSettings = async () => {
+      try {
+        // Modified to get only the first row by ordering by id and limiting to 1
+        const { data, error } = await supabase
+          .from('genderbuttontable')
+          .select('*')
+          .order('id', { ascending: true })
+          .limit(1);
+        
+        if (error) throw error;
+          
+        // Use the first row if available
+        if (data && data.length > 0) { 
+          setGenderButtonSettings(data[0]);
+          console.log("Preview loaded gender settings:", data[0]);
+        }
+      } catch (error) {
+        console.error("Error loading gender button settings in preview:", error);
+      }
+    };
+    
+    fetchGenderButtonSettings();
+  }, [settings]); // Re-fetch when settings change
 
   return (
     <div className="w-full h-full flex flex-col ">
@@ -195,50 +237,53 @@ export function PhotoboothPreview({ settings }) {
           
           {/* Gender selection screen */}
       
-          {currentStep === 'gender' && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <h2 
-                className="text-3xl font-bold mb-8" 
-                style={{ color: settings?.gender_title_color || '#FFFFFF' }}
-              >
-                {settings?.gender_selection_title || "Select Your Gender"}
-              </h2>
-              
-              <div className="flex space-x-6">
-                <button
-                  className="px-8 py-4 rounded-lg shadow-lg text-xl font-medium"
-                  style={{
-                    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
-                    color: settings?.gender_button_text_color || '#FFFFFF',
-                    backgroundImage: settings?.male_button_background ? `url(${settings.male_button_background})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    width: `${settings?.gender_button_width || 150}px`,
-                    height: `${settings?.gender_button_height || 60}px`,
-                  }}
-                  onClick={() => handleGenderSelect('male')}
-                >
-                  {settings?.male_button_text || "Male"}
-                </button>
-                
-                <button
-                  className="px-8 py-4 rounded-lg shadow-lg text-xl font-medium"
-                  style={{
-                    backgroundColor: settings?.gender_button_bg_color || '#8b5cf6',
-                    color: settings?.gender_button_text_color || '#FFFFFF',
-                    backgroundImage: settings?.female_button_background ? `url(${settings.female_button_background})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    width: `${settings?.gender_button_width || 150}px`,
-                    height: `${settings?.gender_button_height || 60}px`,
-                  }}
-                  onClick={() => handleGenderSelect('female')}
-                >
-                  {settings?.female_button_text || "Female"}
-                </button>
-              </div>
-            </div>
-          )}
+     
+
+{currentStep === 'gender' && (
+  <div className="absolute inset-0 flex flex-col items-center justify-center">
+  <h2 
+  className="text-3xl font-bold mb-8" 
+  style={{ 
+    color: genderButtonSettings?.gender_title_color || '#FFFFFF',
+    fontSize: `${genderButtonSettings?.title_font_size || 24}px`
+  }}
+>
+  {genderButtonSettings?.gender_selection_title || "Select Your Gender"}
+</h2>
+
+    
+    <div className={`flex ${genderButtonSettings?.button_layout === 'column' ? 'flex-col space-y-6' : 'flex-row space-x-6'}`}>
+      <button
+        className="rounded-lg shadow-lg flex items-center justify-center"
+        style={{
+          color: genderButtonSettings?.gender_button_text_color || '#FFFFFF',
+          backgroundImage: genderButtonSettings?.male_button_background ? `url(${genderButtonSettings.male_button_background})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: `${genderButtonSettings?.gender_button_width || 250}px`,
+          height: `${genderButtonSettings?.gender_button_height || 250}px`,
+        }}
+        onClick={() => handleGenderSelect('male')}
+      >
+      </button>
+      
+      <button
+        className="rounded-lg shadow-lg flex items-center justify-center"
+        style={{
+          color: genderButtonSettings?.gender_button_text_color || '#FFFFFF',
+          backgroundImage: genderButtonSettings?.female_button_background ? `url(${genderButtonSettings.female_button_background})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: `${genderButtonSettings?.gender_button_width || 250}px`,
+          height: `${genderButtonSettings?.gender_button_height || 250}px`,
+        }}
+        onClick={() => handleGenderSelect('female')}
+      >
+      </button>
+    </div>
+  </div>
+)}
+
           
           {/* Processing screen */}
           {currentStep === 'processing' && (

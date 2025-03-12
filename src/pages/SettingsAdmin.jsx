@@ -234,27 +234,40 @@ function SettingsAdmin() {
 
   const [genderSettingsMessage, setGenderSettingsMessage] = useState({ text: "", type: "" });
 
-  const handleGenderSettingsSave = async () => {
+  // In your handleGenderSettingsSave function
+  
+  // Update the GenderPageSettings component props to pass genderButtonSettings
+  <GenderPageSettings
+    settings={settings}
+    setSettings={setSettings}
+    setMessage={setGenderSettingsMessage}
+    onSave={(genderButtonSettings) => handleGenderSettingsSave(genderButtonSettings)}
+    showSaveButton={true}
+  />
+  
+  // Modify the handleGenderSettingsSave function to accept genderButtonSettings
+  const handleGenderSettingsSave = async (genderButtonSettings) => { 
     setGenderSettingsMessage({ text: "Saving gender settings...", type: "info" });
-
+  
     try {
-      // Extract only the gender-related settings
-      const genderSettings = {
-        gender_selection_title: settings.gender_selection_title,
-        gender_title_color: settings.gender_title_color,
-        gender_button_bg_color: settings.gender_button_bg_color,
-        gender_button_text_color: settings.gender_button_text_color,
-        gender_button_width: settings.gender_button_width,
-        gender_button_height: settings.gender_button_height,
-        male_button_background: settings.male_button_background,
-        female_button_background: settings.female_button_background,
-        filename: settings.filename || "default_filename", // Ensure filename is provided
-        url: settings.url || "default_url" // Ensure url is provided
-      };
-
-      // Call a new service function to save gender settings to a separate table
-      await saveGenderButtonSettings(genderSettings);
-      console.log("success");
+      console.log("herrrrrrrrrrr")
+      console.log("Saving gender settings:", genderButtonSettings);
+      
+      // Save gender settings directly from the passed genderButtonSettings
+      await saveGenderButtonSettings(genderButtonSettings);
+      
+      // After saving, refresh the entire settings to ensure the preview is updated
+      const refreshedSettings = await getSettings();
+      if (refreshedSettings) {
+        setSettings(prevSettings => ({
+          ...prevSettings,
+          ...refreshedSettings,
+          // Preserve background URLs from context
+          background_url: backgrounds.default || refreshedSettings.background_url,
+          user_form_background: backgrounds.userForm || refreshedSettings.user_form_background
+        }));
+      }
+      
       setGenderSettingsMessage({ text: "Gender settings saved successfully!", type: "success" });
     } catch (error) {
       console.error("Error saving gender settings:", error);
