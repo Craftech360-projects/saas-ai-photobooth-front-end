@@ -481,8 +481,8 @@ function SettingsAdmin() {
                 <div className="text-xs text-gray-300">Loading backgrounds...</div>
               )}
             </div>
-            <div className="flex-1 overflow-auto bg-gray-700">
-              <div className="h-full flex items-center justify-center p-4">
+            <div className="flex-1  bg-gray-700">
+              <div className="h-full overflow-auto flex items-center justify-center p-4">
                 {activePreview === 'photobooth' ? (
                   <PhotoboothPreview 
                     settings={{

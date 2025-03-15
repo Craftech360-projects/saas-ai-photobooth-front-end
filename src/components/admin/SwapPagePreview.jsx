@@ -10,6 +10,7 @@ function SwapPagePreview() {
     title_color: "#FFFFFF",
     title_font_size: 24,
     button_color: "#8b5cf6",
+    button_text_color: "#FFFFFF", // Added button text color
     qr_border_color: "#e11d48",
     image_width: 40,
     show_print_button: true
@@ -168,9 +169,10 @@ function SwapPagePreview() {
   {swapPageSettings?.show_print_button !== false && (
     <button
       type="button"
-      className={`text-white font-bold rounded-3xl hover:bg-opacity-90 transition-colors ${getButtonPadding()}`}
+      className={`font-bold rounded-3xl hover:bg-opacity-90 transition-colors ${getButtonPadding()}`}
       style={{ 
         backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
+        color: swapPageSettings?.button_text_color || "#FFFFFF", // Use button text color
         fontSize: `${getScaledFontSize(24)}px`,
         width: getButtonWidth()
       }}
@@ -180,9 +182,10 @@ function SwapPagePreview() {
   )}
 
   <button
-    className={`text-white font-bold rounded-3xl hover:bg-opacity-90 transition-colors ${getButtonPadding()}`}
+    className={`font-bold rounded-3xl hover:bg-opacity-90 transition-colors ${getButtonPadding()}`}
     style={{ 
       backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
+      color: swapPageSettings?.button_text_color || "#FFFFFF", // Use button text color
       fontSize: `${getScaledFontSize(24)}px`,
       width: getButtonWidth()
     }}
@@ -227,27 +230,27 @@ function SwapPagePreview() {
         >
           {resolution === 'desktop' ? (
             // Desktop layout (landscape)
-            <div className="flex flex-row items-center justify-center w-full h-full p-4 ">
+            <div className={`flex ${swapPageSettings?.desktop_layout === 'column' ? 'flex-col' : 'flex-row'} items-center justify-center w-full h-full p-4`}>
               {/* Left side - Image with dynamic width */}
               <div style={{ 
-                width: `${swapPageSettings?.image_width || 40}%`,
+                width: swapPageSettings?.desktop_layout === 'column' ? '100%' : `${swapPageSettings?.image_width || 40}%`,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'end',
-                height: '90%',
+                justifyContent: swapPageSettings?.desktop_layout === 'column' ? 'center' : 'end',
+                height: swapPageSettings?.desktop_layout === 'column' ? '50%' : '90%',
                 overflow: 'hidden',
-                marginTop: '5%',
+                marginTop: swapPageSettings?.desktop_layout === 'column' ? '0' : '5%',
               }}>
                 <img
                   src={sampleImageUrl}                  
                   alt="Result Preview"
-                  className="w-full object-contain"
-                  style={{ maxHeight: '90%', maxWidth: '100%' }}
+                   className="w-full h-auto object-contain max-h-[50vh] animate__animated animate__zoomIn"
+                
                 />
               </div>
 
               {/* Right side - QR code, text, and button */}
-              <div className="flex-1 flex flex-col items-center justify-end gap-3">
+              <div className={`${swapPageSettings?.desktop_layout === 'column' ? 'w-full' : 'flex-1'} flex flex-col items-center justify-end gap-3`}>
                 <h1 
                   className="font-bold text-center w-full leading-tight"
                   style={{ 
@@ -276,11 +279,13 @@ function SwapPagePreview() {
                   {swapPageSettings?.show_print_button !== false && (
                     <button
                       type="button"
-                      className="text-white px-6 py-3 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                      className="font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
                       style={{ 
                         backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
+                        color: swapPageSettings?.button_text_color || "#FFFFFF",
                         fontSize: `${getScaledFontSize(24)}px`,
-                        width: getButtonWidth()
+                        width: getButtonWidth(),
+                        padding: "0.75rem 1.5rem"
                       }}
                     >
                       Print
@@ -288,11 +293,13 @@ function SwapPagePreview() {
                   )}
 
                   <button
-                    className="text-white py-3 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                    className="font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
                     style={{ 
                       backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
+                      color: swapPageSettings?.button_text_color || "#FFFFFF",
                       fontSize: `${getScaledFontSize(24)}px`,
-                      width: getButtonWidth()
+                      width: getButtonWidth(),
+                      padding: "0.75rem 1.5rem"
                     }}
                   >
                     RESTART
@@ -306,11 +313,11 @@ function SwapPagePreview() {
               <img
                 src={sampleImageUrl}
                 alt="Result Preview"
-                className="w-full object-contain max-h-[50vh] animate__animated animate__zoomIn"
+                className="w-full object-contain max-h-[70vh] animate__animated animate__zoomIn"
                 style={{ maxWidth: '100%' }}
               />
               
-              <div className="flex flex-col md:flex-row justify-center items-center mt-6 gap-6">
+              <div className="flex flex-col md:flex-row justify-center items-center mt-6 gap-6 w-2/3">
                 <div 
                   className="bg-white p-3"
                   style={{
@@ -319,7 +326,7 @@ function SwapPagePreview() {
                     borderColor: swapPageSettings?.qr_border_color || "#e11d48"
                   }}
                 >
-                  <QRCodeSVG value={sampleImageUrl} size={resolution === 'mobile' ? 80 : 100} />
+                  <QRCodeSVG value={sampleImageUrl} size={resolution === 'mobile' ? 60 : 80} />
                 </div>
                 
                 <div className="flex flex-col items-center">
@@ -346,7 +353,7 @@ function SwapPagePreview() {
                         }}
                       >
                         Print
-                      </button>
+                      </button> 
                     )}
 
                     <button

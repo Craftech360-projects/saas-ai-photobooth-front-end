@@ -1,5 +1,3 @@
-
-// Import supabase at the top
 import { QRCodeSVG } from "qrcode.react";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,7 +25,15 @@ function Swap() {
     button_color: "#8b5cf6",
     qr_border_color: "#e11d48",
     image_width: 40,
-    show_print_button: true
+    show_print_button: true,
+    desktop_layout: "row",
+    print_button_text: "PRINT",
+    restart_button_text: "RESTART",
+    button_text_color: "#FFFFFF",
+    button_font_size: 24,
+    button_background: "",
+    button_height: 86,
+    button_width: 314
   });
   
   // Add state for background image
@@ -55,7 +61,15 @@ function Swap() {
             button_color: data.button_color || swapPageSettings.button_color,
             qr_border_color: data.qr_border_color || swapPageSettings.qr_border_color,
             image_width: data.image_width || swapPageSettings.image_width,
-            show_print_button: data.show_print_button !== false
+            show_print_button: data.show_print_button !== false,
+            desktop_layout: data.desktop_layout || "row",
+            print_button_text: data.print_button_text || "PRINT",
+            restart_button_text: data.restart_button_text || "RESTART",
+            button_text_color: data.button_text_color || "#FFFFFF",
+            button_font_size: data.button_font_size || 24,
+            button_background: data.button_background || "",
+            button_height: data.button_height || 86,
+            button_width: data.button_width || 314
           });
         }
         
@@ -158,18 +172,19 @@ function Swap() {
 
   // Helper function to convert image to JPEG
  
-   // Create a PrintableImage component using forwardRef
-   const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
-     return (
-       <div ref={ref}>
-         <img
-           src={resultImageUrl}
-           alt="Swapped Result"
-           style={{ width: "100%", height: "100%" }}
-         />
-       </div>
-     );
-   });
+  // Create a PrintableImage component using forwardRef
+  const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
+    return (
+      <div ref={ref}>
+        <img
+          src={resultImageUrl}
+          alt="Swapped Result"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+    );
+  });
+  
   const convertImageToJPEG = (blob) => {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
@@ -249,78 +264,98 @@ function Swap() {
     return (
       <div className="relative min-h-screen w-screen flex items-center justify-center p-4" style={containerStyle}>
         {/* For landscape orientation */}
-        <div className="hidden lg:flex flex-row items-center justify-between w-full max-w-[950px] px-4 md:px-8 gap-8 md:gap-20">
-          {/* Left side - Image with dynamic width */}
-          <div style={{ width: `${swapPageSettings.image_width}%` }} className="flex items-center justify-center">
-            <img
-              src={resultImageUrl}
-              alt="Swapped Result"
-              className="w-full h-auto object-contain max-h-[70vh] animate__animated animate__zoomIn"
-            />
-          </div>
-
-          {/* Right side - QR code, text, and button */}
-          <div className="flex-1 flex flex-col items-center justify-center self-center gap-4 md:gap-8">
-            <h1 
-              className="font-bold text-center w-full leading-tight"
-              style={{ 
-                color: swapPageSettings.title_color,
-                fontSize: calculateResponsiveFontSize(swapPageSettings.title_font_size)
-              }}
-            >
-              {swapPageSettings.title_text}
-            </h1>
-            
-            {/* QR Code */}
+        <div className="hidden lg:flex flex-col items-center justify-between w-full px-4 md:px-8 gap-8 md:gap-20">
+          <div className={`w-full flex ${swapPageSettings.desktop_layout === 'column' ? 'flex-col' : 'flex-row'} items-center justify-between gap-8 md:gap-20`}>
+            {/* Image with dynamic width */}
             <div 
-              className="bg-white p-3 md:p-6 shadow-lg"
-              style={{
-                borderWidth: '8px',
-                borderStyle: 'solid',
-                borderColor: swapPageSettings.qr_border_color
-              }}
+              style={{ 
+                width: swapPageSettings.desktop_layout === 'column' ? '100%' : `${swapPageSettings.image_width}%`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: swapPageSettings.desktop_layout === 'column' ? 'center' : 'flex-end'
+              }} 
+              className="flex items-center justify-center"
             >
-              <QRCodeSVG value={resultImageUrl} size={Math.min(window.innerWidth * 0.15, 200)} />
-            </div>
-
-            <div style={{ display: "none" }}>
-              <PrintableImage
-                ref={printRef}
-                resultImageUrl={resultImageUrl}
+              <img
+                src={resultImageUrl}
+                alt="Swapped Result"
+                className="w-full h-auto object-contain max-h-[56vh] animate__animated animate__zoomIn"
               />
             </div>
 
-            {/* Buttons */}
-            <div className="flex flex-col items-center gap-3 md:gap-5 mt-4 md:mt-6 w-full">
-              {/* Print button with conditional rendering */}
-              {swapPageSettings.show_print_button && (
-                <ReactToPrint
-                  trigger={() => (
-                    <button
-                      type="button"
-                      className="text-white w-full max-w-[314px] px-6 md:px-8 py-3 md:py-4 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
-                      style={{ 
-                        backgroundColor: swapPageSettings.button_color,
-                        fontSize: calculateResponsiveFontSize(24)
-                      }}
-                    >
-                      Print
-                    </button>
-                  )}
-                  content={() => printRef.current}
-                />
-              )}
-
-              <button
-                onClick={goHome}
-                className="text-white w-full max-w-[314px] py-3 md:py-4 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+            {/* QR code, text, and button */}
+            <div 
+              className={`${swapPageSettings.desktop_layout === 'column' ? 'w-full' : 'flex-1'} flex flex-col items-center justify-center self-center gap-4 md:gap-8`}
+            >
+              <h1 
+                className="font-bold text-center w-full leading-tight"
                 style={{ 
-                  backgroundColor: swapPageSettings.button_color,
-                  fontSize: calculateResponsiveFontSize(24)
+                  color: swapPageSettings.title_color,
+                  fontSize: calculateResponsiveFontSize(swapPageSettings.title_font_size)
                 }}
               >
-                RESTART
-              </button>
+                {swapPageSettings.title_text}
+              </h1>
+              
+              {/* QR Code */}
+              <div 
+                className="bg-white p-3 md:p-6 shadow-lg"
+                style={{
+                  borderWidth: '8px',
+                  borderStyle: 'solid',
+                  borderColor: swapPageSettings.qr_border_color
+                }}
+              >
+                <QRCodeSVG value={resultImageUrl} size={Math.min(window.innerWidth * 0.15, 200)} />
+              </div>
+
+              <div style={{ display: "none" }}>
+                <PrintableImage
+                  ref={printRef}
+                  resultImageUrl={resultImageUrl}
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex flex-col items-center gap-3 md:gap-5 mt-4 md:mt-6 w-full">
+                {/* Print button with conditional rendering */}
+                {swapPageSettings.show_print_button && (
+                  <ReactToPrint
+                    trigger={() => (
+                      <button
+                        type="button"
+                        className="w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 text-white font-bold rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+                        style={{ 
+                          backgroundColor: swapPageSettings.button_color,
+                          color: swapPageSettings.button_text_color || "#FFFFFF",
+                          maxWidth: "100%",
+                          minWidth: "200px",
+                          width: `min(${swapPageSettings.button_width || 314}px, 90vw)`,
+                          fontSize: calculateResponsiveFontSize(swapPageSettings.button_font_size || 24)
+                        }}
+                      >
+                        {swapPageSettings.print_button_text || "Print"}
+                      </button>
+                    )}
+                    content={() => printRef.current}
+                  />
+                )}
+
+                <button
+                  onClick={goHome}
+                  className="w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 text-white font-bold rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+                  style={{ 
+                    backgroundColor: swapPageSettings.button_color,
+                    color: swapPageSettings.button_text_color || "#FFFFFF",
+                    maxWidth: "100%",
+                    minWidth: "200px",
+                    width: `min(${swapPageSettings.button_width || 314}px, 90vw)`,
+                    fontSize: calculateResponsiveFontSize(swapPageSettings.button_font_size || 24)
+                  }}
+                >
+                  {swapPageSettings.restart_button_text || "RESTART"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -371,14 +406,17 @@ function Swap() {
                     trigger={() => (
                       <button
                         type="button"
-                        className="text-white px-6 py-3 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                        className="w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 text-white font-bold rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
                         style={{ 
                           backgroundColor: swapPageSettings.button_color,
-                          fontSize: calculateResponsiveFontSize(24),
-                          width: '300px'
+                          color: swapPageSettings.button_text_color || "#FFFFFF",
+                          maxWidth: "100%",
+                          minWidth: "200px",
+                          width: `min(${swapPageSettings.button_width || 314}px, 90vw)`,
+                          fontSize: calculateResponsiveFontSize(swapPageSettings.button_font_size || 24)
                         }}
                       >
-                        Print
+                        {swapPageSettings.print_button_text || "Print"}
                       </button>
                     )}
                     content={() => printRef.current}
@@ -387,48 +425,22 @@ function Swap() {
 
                 <button
                   onClick={goHome}
-                  className="text-white py-3 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                  className="w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 text-white font-bold rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
                   style={{ 
                     backgroundColor: swapPageSettings.button_color,
-                    fontSize: calculateResponsiveFontSize(24),
-                    width: '300px'
+                    color: swapPageSettings.button_text_color || "#FFFFFF",
+                    maxWidth: "100%",
+                    minWidth: "200px",
+                    width: `min(${swapPageSettings.button_width || 314}px, 90vw)`,
+                    fontSize: calculateResponsiveFontSize(swapPageSettings.button_font_size || 24)
                   }}
                 >
-                  RESTART
+                  {swapPageSettings.restart_button_text || "RESTART"}
                 </button>
               </div>
 
               {/* Update mobile/tablet layout buttons */}
-              <div className="flex flex-col items-center gap-3">
-                {swapPageSettings.show_print_button && (
-                  <ReactToPrint
-                    trigger={() => (
-                      <button
-                        type="button"
-                        className="text-white w-[250px] md:w-[314px] px-6 py-2 md:py-3 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
-                        style={{ 
-                          backgroundColor: swapPageSettings.button_color,
-                          fontSize: calculateResponsiveFontSize(24)
-                        }}
-                      >
-                        Print
-                      </button>
-                    )}
-                    content={() => printRef.current}
-                  />
-                )}
-
-                <button
-                  onClick={goHome}
-                  className="text-white w-[250px] md:w-[314px] py-2 md:py-3 font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
-                  style={{ 
-                    backgroundColor: swapPageSettings.button_color,
-                    fontSize: calculateResponsiveFontSize(24)
-                  }}
-                >
-                  RESTART
-                </button>
-              </div>
+             
             </div>
           </div>
         </div>

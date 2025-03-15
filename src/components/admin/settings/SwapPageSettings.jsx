@@ -7,10 +7,13 @@ function SwapPageSettings({ setMessage }) {
     title_color: "#FFFFFF",
     title_font_size: 24,
     button_color: "#8b5cf6",
+    button_text_color: "#FFFFFF", // Added button text color
     qr_border_color: "#e11d48",
     background_image: "",
     image_width: 40,
-    show_print_button: true
+    show_print_button: true,
+    // Add desktop layout option
+    desktop_layout: "row" // "row" for flex-row, "column" for flex-col
   });
 
   const handleSave = async () => {
@@ -21,10 +24,13 @@ function SwapPageSettings({ setMessage }) {
         title_color: settings.title_color,
         title_font_size: settings.title_font_size,
         button_color: settings.button_color,
+        button_text_color: settings.button_text_color, // Added button text color
         qr_border_color: settings.qr_border_color,
         background_image: settings.background_image,
         image_width: settings.image_width,
-        show_print_button: settings.show_print_button
+        show_print_button: settings.show_print_button,
+        // Add desktop layout to saved settings
+        desktop_layout: settings.desktop_layout
       };
 
       const { data, error } = await supabase
@@ -66,10 +72,13 @@ function SwapPageSettings({ setMessage }) {
           title_color: data.title_color,
           title_font_size: data.title_font_size,
           button_color: data.button_color,
+          button_text_color: data.button_text_color || "#FFFFFF", // Added button text color with default
           qr_border_color: data.qr_border_color,
           background_image: data.background_image,
           image_width: data.image_width || 40,
-          show_print_button: data.show_print_button !== false
+          show_print_button: data.show_print_button !== false,
+          // Load desktop layout setting
+          desktop_layout: data.desktop_layout || "row"
         });
       } else {
         // If no data exists, create a default entry
@@ -80,10 +89,12 @@ function SwapPageSettings({ setMessage }) {
             title_color: "#FFFFFF",
             title_font_size: 24,
             button_color: "#8b5cf6",
+            button_text_color: "#FFFFFF", // Added button text color
             qr_border_color: "#e11d48",
             background_image: "",
             image_width: 40,
-            show_print_button: true
+            show_print_button: true,
+            desktop_layout: "row"
           }])
           .select()
           .single();
@@ -139,6 +150,17 @@ function SwapPageSettings({ setMessage }) {
         />
       </div>
       
+      {/* Add Button Text Color option */}
+      <div>
+        <label className="block mb-1">Button Text Color</label>
+        <input
+          type="color"
+          value={settings?.button_text_color || "#FFFFFF"}
+          onChange={(e) => setSettings({...settings, button_text_color: e.target.value})}
+          className="w-1/4 border rounded"
+        />
+      </div>
+      
       <div>
         <label className="block mb-1">QR Border Color</label>
         <input
@@ -161,6 +183,35 @@ function SwapPageSettings({ setMessage }) {
           className="w-full"
         />
         <div className="text-sm text-gray-500">{settings?.image_width || 40}%</div>
+      </div>
+      
+      {/* Add desktop layout option */}
+      <div>
+        <label className="block mb-1">Desktop Layout</label>
+        <div className="flex space-x-4">
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="desktop_layout"
+              value="row"
+              checked={settings?.desktop_layout === "row"}
+              onChange={() => setSettings({...settings, desktop_layout: "row"})}
+              className="mr-2"
+            />
+            Horizontal (Row)
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="desktop_layout"
+              value="column"
+              checked={settings?.desktop_layout === "column"}
+              onChange={() => setSettings({...settings, desktop_layout: "column"})}
+              className="mr-2"
+            />
+            Vertical (Column)
+          </label>
+        </div>
       </div>
       
       <div className="flex items-center mt-4">

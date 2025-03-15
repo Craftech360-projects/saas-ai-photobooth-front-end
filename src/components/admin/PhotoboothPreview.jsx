@@ -211,7 +211,7 @@ export function PhotoboothPreview({ settings }) {
   }, []);
  
   return (
-    <div className="w-full h-full flex flex-col ">
+    <div className="w-full h-full flex flex-col p-20 ">
       <div className="bg-gray-800 p-2 flex items-center justify-between">
         <div className="text-white text-sm">Preview Resolution:</div>
         <div className="flex space-x-2">
