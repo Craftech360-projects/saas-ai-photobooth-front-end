@@ -148,24 +148,14 @@ function SwapPageSettings({ setMessage }) {
           className="w-1/4 border rounded"
         />
       </div>
-      
-      <div>
-        <label className="block mb-1">Background Image URL</label>
-        <input
-          type="text"
-          value={settings?.background_image || ""}
-          onChange={(e) => setSettings({...settings, background_image: e.target.value})}
-          className="w-full p-2 border rounded"
-          placeholder="https://example.com/image.jpg"
-        />
-      </div>
+     
       
       <div>
         <label className="block mb-1">Image Width (%)</label>
         <input
           type="range"
           min="20"
-          max="60"
+          max="100"
           value={settings?.image_width || 40}
           onChange={(e) => setSettings({...settings, image_width: parseInt(e.target.value)})}
           className="w-full"
