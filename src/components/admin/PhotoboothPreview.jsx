@@ -1,26 +1,93 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import SceneSlider from '../../SceneSlider';
 import { supabase } from '../../supabaseClient';
+import { ThemeSlider } from '../../theme-slider';
 import { UserForm } from '../forms/UserForm';
 
+import { CameraView } from '../camera/CameraView';
+import redcarpet from "/redcarpet.png";
+import Scifi from "/scifi.png";
+import outerspace from "/space.png";
+import sports from "/sports.png";
+import superheros from "/superheros.png";
+
+const themes = [
+  { id: 1, name: "Red Carpet", image: redcarpet },
+  { id: 2, name: "Space", image: outerspace },
+  { id: 3, name: "Sci-fi", image: Scifi },
+  { id: 4, name: "Sports", image: sports },
+  { id: 5, name: "Superheros", image: superheros },
+];
 export function PhotoboothPreview({ settings }) {
   const [resolution, setResolution] = useState('desktop');
-  const [currentStep, setCurrentStep] = useState('welcome'); // 'welcome', 'form', 'gender', or 'processing'
+  const [currentStep, setCurrentStep] = useState('welcome');
   const [genderButtonSettings, setGenderButtonSettings] = useState({});
-  
-  // Add this useEffect to listen for updates
+  const [themePageSettings, setThemePageSettings] = useState({});
+  const [scenePageSettings, setScenePageSettings] = useState({});
+  const [cameraPageSettings, setCameraPageSettings] = useState({});
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [userDetails] = useState({}); // 
+  const [selectedScene, setSelectedScene] = useState(null);
+  const handleCapture = () => {
+    console.log("Mock photo capture in preview");
+  };
+  // Add camera settings fetch and update effects
   useEffect(() => {
-    const handleSettingsUpdate = (e) => {
-      setGenderButtonSettings(e.detail.settings);
+    const fetchCameraPageSettings = async () => {
+      const { data } = await supabase
+      .from('camera_page_settings')
+      .select('*')
+      .single();
+      if (data) {
+        setCameraPageSettings(data);
+      }
     };
-
-    window.addEventListener('genderSettingsUpdated', handleSettingsUpdate);
-    
+    fetchCameraPageSettings();
+  }, []);
+  // Add this useEffect in your PhotoboothPreview component
+  // Add this useEffect to listen for camera settings updates
+  useEffect(() => {
+    const handleCameraSettingsUpdate = (e) => {
+      setCameraPageSettings(e.detail.settings);
+      console.log("Preview updated with camera settings:", e.detail.settings);
+    };
+  
+    window.addEventListener('cameraSettingsUpdated', handleCameraSettingsUpdate);
+  
     return () => {
-      window.removeEventListener('genderSettingsUpdated', handleSettingsUpdate);
+      window.removeEventListener('cameraSettingsUpdated', handleCameraSettingsUpdate);
     };
   }, []);
+  // Add scene settings fetch and update effects
+  useEffect(() => {
+    const fetchScenePageSettings = async () => {
+      const { data } = await supabase
+        .from('scene_page_settings')
+        .select('*')
+        .single();
+      if (data) {
+        setScenePageSettings(data);
+      }
+    };
+    fetchScenePageSettings();
+  }, []);
+
+  // Add this useEffect in your PhotoboothPreview component
+  useEffect(() => {
+    const handleSceneSettingsUpdate = (e) => {
+      setScenePageSettings(e.detail.settings);
+      console.log("Preview updated with scene settings:", e.detail.settings);
+     };
   
+    window.addEventListener('sceneSettingsUpdated', handleSceneSettingsUpdate);
+    
+    return () => {
+      window.removeEventListener('sceneSettingsUpdated', handleSceneSettingsUpdate);
+    };
+  }, []);
+
   // Mock functions
   const handleSubmit = (data) => {
     console.log("Form submitted in preview:", data);
@@ -115,6 +182,34 @@ export function PhotoboothPreview({ settings }) {
     fetchGenderButtonSettings();
   }, [settings]); // Re-fetch when settings change
 
+  // Add useEffect to fetch theme page settings
+  useEffect(() => {
+    const fetchThemePageSettings = async () => {
+      const { data } = await supabase
+        .from('theme_page_settings')
+        .select('*')
+        .single();
+      if (data) {
+        setThemePageSettings(data);
+      }
+    };
+    fetchThemePageSettings();
+    console.log("Preview loaded theme page settings:", themePageSettings);
+  }, []);
+  // Add this useEffect after your existing useEffects
+  useEffect(() => {
+    const handleThemeSettingsUpdate = (e) => {
+      setThemePageSettings(e.detail.settings);
+      console.log("Preview loaded theme settings:", e.detail.settings);
+    };
+  
+    window.addEventListener('themeSettingsUpdated', handleThemeSettingsUpdate);
+    
+    return () => {
+      window.removeEventListener('themeSettingsUpdated', handleThemeSettingsUpdate);
+    };
+  }, []);
+ 
   return (
     <div className="w-full h-full flex flex-col ">
       <div className="bg-gray-800 p-2 flex items-center justify-between">
@@ -148,8 +243,7 @@ export function PhotoboothPreview({ settings }) {
       </div>
       
       <div className="flex-1 flex items-center justify-center bg-gray-700 overflow-auto p-8">
-        <div 
-          className="bg-gray-100 relative overflow-hidden shadow-xl"
+        <div className="bg-gray-100 relative overflow-hidden shadow-xl"
           style={{
             ...getContainerStyle(),
             backgroundImage: currentStep === 'form' && settings?.userForm_background_url 
@@ -180,6 +274,24 @@ export function PhotoboothPreview({ settings }) {
               onClick={() => setCurrentStep('gender')}
             >
               Gender
+            </button>
+            <button 
+              className={`px-2 py-1 text-xs rounded ${currentStep === 'themes' ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-200'}`}
+              onClick={() => setCurrentStep('themes')}
+            >
+              Themes
+            </button>
+            <button 
+              className={`px-2 py-1 text-xs rounded ${currentStep === 'scenes' ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-200'}`}
+              onClick={() => setCurrentStep('scenes')}
+            >
+              Scenes
+            </button>
+            <button 
+              className={`px-2 py-1 text-xs rounded ${currentStep === 'camera' ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-200'}`}
+              onClick={() => setCurrentStep('camera')}
+            >
+              camera
             </button>
             <button 
               className={`px-2 py-1 text-xs rounded ${currentStep === 'processing' ? 'bg-green-600 text-white' : 'bg-gray-600 text-gray-200'}`}
@@ -236,9 +348,21 @@ export function PhotoboothPreview({ settings }) {
           )}
           
           {/* Gender selection screen */}
-      
+          {currentStep === 'scenes' && (
+  <SceneSlider 
+    scenes={[
+      'redcarpet/male/1.png',
+      'redcarpet/male/2.png',
+      'redcarpet/male/3.png'
+    ]}
+    onSelect={() => {
+      console.log("Scene selected in preview");
+      setCurrentStep('processing');
+    }}
+    scenePageSettings={scenePageSettings}
+  />
+)}
      
-
 {currentStep === 'gender' && (
   <div className="absolute inset-0 flex flex-col items-center justify-center">
   <h2 
@@ -299,8 +423,46 @@ export function PhotoboothPreview({ settings }) {
               </button>
             </div>
           )}
+
+{currentStep === 'themes' && (
+ 
+  
+      <ThemeSlider 
+        themes={[
+          { id: 1, name: "Red Carpet", image: redcarpet },
+          { id: 2, name: "Space", image: outerspace },
+          { id: 3, name: "Sci-fi", image: Scifi },
+          { id: 4, name: "Sports", image: sports },
+          { id: 5, name: "Superheros", image: superheros },
+        ]}
+        onSelect={() => {}}
+        showThemeName={themePageSettings?.show_theme_name}
+        buttonStyle={{
+          backgroundColor: themePageSettings?.button_bg_color,
+          color: themePageSettings?.button_text_color,
+        }}
+        themePageSettings={themePageSettings}
+      />
+ 
+)}
+
+{currentStep === 'camera' && (
+
+      <CameraView
+        videoRef={videoRef}
+        canvasRef={canvasRef}
+        onCapture={handleCapture}
+        userDetails={userDetails}
+        selectedImage={selectedScene}
+        cameraPageSettings={cameraPageSettings}
+      />
+   
+)}
         </div>
       </div>
     </div>
   );
 }
+
+export default PhotoboothPreview;
+

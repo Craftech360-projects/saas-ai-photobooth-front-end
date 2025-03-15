@@ -1,11 +1,11 @@
-// /* eslint-disable no-unused-vars */
-// import { QRCodeSVG } from "qrcode.react";
+
+// Import supabase at the top
 import { QRCodeSVG } from "qrcode.react";
-//import { useEffect, useRef, useState } from "react";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 import LoadingPage from "./LoadingPage";
+import { getActiveBackgrounds } from "./services/backgroundService";
 import { supabase } from "./supabaseClient";
 
 function Swap() {
@@ -15,92 +15,146 @@ function Swap() {
   const selectedImage = location.state?.selectedImage;
   const userDetails = location.state?.userDetails;
   const [loading, setLoading] = useState(false);
-  const [resultImageUrl, setResultImageUrl] = useState(null);
+  const [resultImageUrl, setResultImageUrl] = useState("https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/nimhans/1740565316686-result.jpg");
   const [error, setError] = useState(null);
   const printRef = useRef();
   
+  // Add state for swap page settings
+  const [swapPageSettings, setSwapPageSettings] = useState({
+    title_text: "Scan the QR code to download your AI avatar",
+    title_color: "#FFFFFF",
+    title_font_size: 24,
+    button_color: "#8b5cf6",
+    qr_border_color: "#e11d48",
+    image_width: 40,
+    show_print_button: true
+  });
+  
+  // Add state for background image
+  const [backgroundImage, setBackgroundImage] = useState(null);
+  
+  // Fetch swap page settings and background image
   useEffect(() => {
-    // Check if we have the required data
-    if (!sourceImageBlob || !selectedImage || !userDetails) {
-      console.error("Missing required data:", { sourceImageBlob, selectedImage, userDetails });
-      navigate("/");
-      return;
-    }
-   
-    const processImages = async () => {
-      setLoading(true);
+    const fetchSettings = async () => {
       try {
-        // Create FormData
-        const formData = new FormData();
-        formData.append(
-          "targetImage",
-          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
-        );
-
-        // Fetch the selected image and append it
-        const response = await fetch(selectedImage);
-        if (!response.ok) throw new Error("Failed to fetch selected image");
+        // Fetch swap page settings
+        const { data, error } = await supabase
+          .from('swap_page_settings')
+          .select('*')
+          .order('id', { ascending: true })
+          .limit(1)
+          .maybeSingle();
+          
+        if (error) throw error;
         
-        const targetImageBlob = await response.blob();
-        formData.append(
-          "sourceImage",
-          new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
-        );
-
-        // Add user details
-        formData.append("name", userDetails.name);
-        formData.append("email", userDetails.email);
-
-        // Make API call to swap faces
-        const swapResponse = await fetch(
-          "http://localhost:8000/api/swap-face/",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        if (!swapResponse.ok) {
-          throw new Error(`Swap API error: ${swapResponse.statusText}`);
-        }
-
-        const swappedImageBlob = await swapResponse.blob();
-        const convertedBlob = await convertImageToJPEG(swappedImageBlob);
-
-        // Generate filename with timestamp
-        const fileName = `swapped-images/nielsen${Date.now()}-result.jpg`;
-
-        // Upload to Supabase
-        const { error: uploadError } = await supabase.storage
-          .from("nielsen")
-          .upload(fileName, convertedBlob, {
-            contentType: "image/jpeg",
+        if (data) {
+          setSwapPageSettings({
+            title_text: data.title_text || swapPageSettings.title_text,
+            title_color: data.title_color || swapPageSettings.title_color,
+            title_font_size: data.title_font_size || swapPageSettings.title_font_size,
+            button_color: data.button_color || swapPageSettings.button_color,
+            qr_border_color: data.qr_border_color || swapPageSettings.qr_border_color,
+            image_width: data.image_width || swapPageSettings.image_width,
+            show_print_button: data.show_print_button !== false
           });
-
-        if (uploadError) throw uploadError;
-
-        // Get public URL
-        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nielsen/${fileName}`;
-        console.log("Public URL:", publicURL);
-
-        // // Save user details to database
-        const { error: insertError } = await supabase
-          .from("nielsen")
-          .insert([{ ...userDetails, publicURL }]);
-
-        if (insertError) throw insertError;
-
-        setResultImageUrl(publicURL);
+        }
+        
+        // Fetch active backgrounds
+        const backgrounds = await getActiveBackgrounds();
+        const userFormBg = backgrounds.find(bg => bg.name === 'userForm' && bg.is_active);
+        if (userFormBg) {
+          setBackgroundImage(userFormBg.url);
+        }
       } catch (err) {
-        console.error("Error processing images:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching settings:", err);
       }
     };
+    
+    fetchSettings();
+  }, []);
+  
+  // useEffect(() => {
+  //   // Check if we have the required data
+  //   if (!sourceImageBlob || !selectedImage || !userDetails) {
+  //     console.error("Missing required data:", { sourceImageBlob, selectedImage, userDetails });
+  //     navigate("/");
+  //     return;
+  //   }
+   
+  //   const processImages = async () => {
+  //     setLoading(true);
+  //     try {
+  //       // Create FormData
+  //       const formData = new FormData();
+  //       formData.append(
+  //         "targetImage",
+  //         new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
+  //       );
 
-    processImages();
-  }, []); // Empty dependency array since we want this to run once on mount
+  //       // Fetch the selected image and append it
+  //       const response = await fetch(selectedImage);
+  //       if (!response.ok) throw new Error("Failed to fetch selected image");
+        
+  //       const targetImageBlob = await response.blob();
+  //       formData.append(
+  //         "sourceImage",
+  //         new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
+  //       );
+
+  //       // Add user details
+  //       formData.append("name", userDetails.name);
+  //       formData.append("email", userDetails.email);
+
+  //       // Make API call to swap faces
+  //       const swapResponse = await fetch(
+  //         "http://localhost:8000/api/swap-face/",
+  //         {
+  //           method: "POST",
+  //           body: formData,
+  //         }
+  //       );
+
+  //       if (!swapResponse.ok) {
+  //         throw new Error(`Swap API error: ${swapResponse.statusText}`);
+  //       }
+
+  //       const swappedImageBlob = await swapResponse.blob();
+  //       const convertedBlob = await convertImageToJPEG(swappedImageBlob);
+
+  //       // Generate filename with timestamp
+  //       const fileName = `swapped-images/nielsen${Date.now()}-result.jpg`;
+
+  //       // Upload to Supabase
+  //       const { error: uploadError } = await supabase.storage
+  //         .from("nielsen")
+  //         .upload(fileName, convertedBlob, {
+  //           contentType: "image/jpeg",
+  //         });
+
+  //       if (uploadError) throw uploadError;
+
+  //       // Get public URL
+  //       const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nielsen/${fileName}`;
+  //       console.log("Public URL:", publicURL);
+
+  //       // // Save user details to database
+  //       const { error: insertError } = await supabase
+  //         .from("nielsen")
+  //         .insert([{ ...userDetails, publicURL }]);
+
+  //       if (insertError) throw insertError;
+
+  //       setResultImageUrl(publicURL);
+  //     } catch (err) {
+  //       console.error("Error processing images:", err);
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   processImages();
+  // }, []); // Empty dependency array since we want this to run once on mount
 
   // Helper function to convert image to JPEG
  
@@ -164,12 +218,20 @@ function Swap() {
   }
 
   if (resultImageUrl) {
+    // Apply background image from the backgrounds table
+    const containerStyle = {
+      backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    };
+    
     return (
-      <div className="relative min-h-screen w-screen flex items-center justify-center p-4">
+      <div className="relative min-h-screen w-screen flex items-center justify-center p-4" style={containerStyle}>
         {/* For landscape orientation */}
         <div className="hidden lg:flex flex-row items-center justify-between w-full max-w-[950px] px-8 gap-20">
-          {/* Left side - Image */}
-          <div className="w-[60%]">
+          {/* Left side - Image with dynamic width */}
+          <div style={{ width: `${swapPageSettings.image_width}%` }}>
             <img
               src={resultImageUrl}
               alt="Swapped Result"
@@ -178,13 +240,26 @@ function Swap() {
           </div>
 
           {/* Right side - QR code, text, and button */}
-          <div className="w-[35%] flex flex-col items-center justify-center self-center gap-8">
-            <h1 className="text-4xl font-bold text-white text-center w-full leading-tight">
-              Scan the QR code to<br/>download your AI avatar
+          <div className="flex-1 flex flex-col items-center justify-center self-center gap-8">
+            <h1 
+              className="font-bold text-center w-full leading-tight"
+              style={{ 
+                color: swapPageSettings.title_color,
+                fontSize: `${swapPageSettings.title_font_size}px`
+              }}
+            >
+              {swapPageSettings.title_text}
             </h1>
             
             {/* QR Code */}
-            <div className="bg-white p-6 border-8 border-rose-600 shadow-lg mt-4">
+            <div 
+              className="bg-white p-6 shadow-lg mt-4"
+              style={{
+                borderWidth: '8px',
+                borderStyle: 'solid',
+                borderColor: swapPageSettings.qr_border_color
+              }}
+            >
               <QRCodeSVG value={resultImageUrl} size={200} />
             </div>
 
@@ -197,21 +272,26 @@ function Swap() {
 
             {/* Buttons */}
             <div className="flex flex-col items-center gap-5 mt-6 w-full">
-              <ReactToPrint
-                trigger={() => (
-                  <button
-                    type="button"
-                    className="bg-violet-600 text-white w-full max-w-[314px] px-8 py-4 text-3xl font-bold rounded-3xl hover:bg-violet-700 transition-colors"
-                  >
-                    Print
-                  </button>
-                )}
-                content={() => printRef.current}
-              />
+              {/* Print button with conditional rendering */}
+              {swapPageSettings.show_print_button && (
+                <ReactToPrint
+                  trigger={() => (
+                    <button
+                      type="button"
+                      className="text-white w-full max-w-[314px] px-8 py-4 text-3xl font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                      style={{ backgroundColor: swapPageSettings.button_color }}
+                    >
+                      Print
+                    </button>
+                  )}
+                  content={() => printRef.current}
+                />
+              )}
 
               <button
                 onClick={goHome}
-                className="bg-violet-600 text-white w-full max-w-[314px] py-4 text-3xl font-bold rounded-3xl hover:bg-violet-700 transition-colors"
+                className="text-white w-full max-w-[314px] py-4 text-3xl font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                style={{ backgroundColor: swapPageSettings.button_color }}
               >
                 RESTART
               </button>
@@ -228,7 +308,14 @@ function Swap() {
           />
           
           <div className="flex flex-col md:flex-row justify-center items-center mt-6 gap-6">
-            <div className="bg-white p-4 border-12 border-rose-600">
+            <div 
+              className="bg-white p-4"
+              style={{
+                borderWidth: '8px',
+                borderStyle: 'solid',
+                borderColor: swapPageSettings.qr_border_color
+              }}
+            >
               <QRCodeSVG value={resultImageUrl} size={150} />
             </div>
             
@@ -239,27 +326,38 @@ function Swap() {
               />
             </div>
           
-            <div className="text-white flex flex-col items-center">
-              <h1 className="text-2xl md:text-3xl mb-4 font-semibold text-center">
-                Scan the QR code to download<br/>your AI avatar
+            <div className="flex flex-col items-center">
+              <h1 
+                className="mb-4 font-semibold text-center"
+                style={{ 
+                  color: swapPageSettings.title_color,
+                  fontSize: `${(swapPageSettings.title_font_size * 0.8)}px`
+                }}
+              >
+                {swapPageSettings.title_text}
               </h1>
 
               <div className="flex flex-col items-center gap-3">
-                <ReactToPrint
-                  trigger={() => (
-                    <button
-                      type="button"
-                      className="bg-violet-600 text-white w-[250px] md:w-[314px] px-6 py-3 text-3xl font-bold rounded-3xl"
-                    >
-                      Print
-                    </button>
-                  )}
-                  content={() => printRef.current}
-                />
+                {/* Print button with conditional rendering */}
+                {swapPageSettings.show_print_button && (
+                  <ReactToPrint
+                    trigger={() => (
+                      <button
+                        type="button"
+                        className="text-white w-[250px] md:w-[314px] px-6 py-3 text-3xl font-bold rounded-3xl"
+                        style={{ backgroundColor: swapPageSettings.button_color }}
+                      >
+                        Print
+                      </button>
+                    )}
+                    content={() => printRef.current}
+                  />
+                )}
 
                 <button
                   onClick={goHome}
-                  className="bg-violet-600 text-white w-[250px] md:w-[314px] py-3 text-3xl font-bold rounded-3xl"
+                  className="text-white w-[250px] md:w-[314px] py-3 text-3xl font-bold rounded-3xl"
+                  style={{ backgroundColor: swapPageSettings.button_color }}
                 >
                   RESTART
                 </button>

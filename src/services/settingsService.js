@@ -122,3 +122,40 @@ export const saveGenderButtonSettings = async (settings) => {
     throw error;
   }
 };
+
+// Add this function to your settingsService.js
+export const getThemePageSettings = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('theme_page_settings')
+      .select('*')
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching theme page settings:', error);
+    return null;
+  }
+};
+
+// Add this function to your settingsService.js file
+
+export const getScenePageSettings = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('scene_page_settings')
+      .select('*')
+      .single();
+    
+    if (error) {
+      console.error("Error fetching scene page settings:", error);
+      return null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Error in getScenePageSettings:", error);
+    return null;
+  }
+};

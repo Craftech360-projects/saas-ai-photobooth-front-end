@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function CameraView({ videoRef, canvasRef, onCapture, userDetails, selectedImage }) {
+export function CameraView({ videoRef, canvasRef, onCapture, userDetails, selectedImage, cameraPageSettings }) {
   const camera = "/camera.png";
   const [isCapturing, setIsCapturing] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -103,9 +103,25 @@ export function CameraView({ videoRef, canvasRef, onCapture, userDetails, select
   };
 
   return (
-    <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
-      <div className="text-center text-6xl font-semibold mb-2 text-white">Smile for the</div>
-      <div className="text-center text-6xl font-semibold mb-8 text-white">camera</div>
+    <div className="text-center w-full h-full flex flex-col justify-center items-center bg-no-repeat">
+      <div 
+        className="text-center text-3xl font-semibold mb-2" 
+        style={{ 
+          color: cameraPageSettings?.header_color || "#000000",
+          fontSize: `${cameraPageSettings?.header_font_size || 24}px`
+        }}
+      >
+        {cameraPageSettings?.header_text?.split(' ').slice(0, -1).join(' ') || "Smile for the"}
+      </div>
+      <div 
+        className="text-center text-2xl font-semibold mb-8" 
+        style={{ 
+          color: cameraPageSettings?.header_color || "#000000",
+          fontSize: `${(cameraPageSettings?.header_font_size || 24) * 0.8}px`
+        }}
+      >
+        {cameraPageSettings?.header_text?.split(' ').slice(-1)[0] || "camera"}
+      </div>
       
       {!capturedImage ? (
         // Camera view
@@ -114,17 +130,17 @@ export function CameraView({ videoRef, canvasRef, onCapture, userDetails, select
             ref={videoRef}
             autoPlay
             playsInline
-            className="block shadow-md object-cover w-full h-full max-w-[650px] max-h-[650px]"
+            className="block shadow-md object-cover w-1/2 max-w-[650px] max-h-[650px]"
           ></video>
 
           <canvas ref={canvasRef} className="hidden"></canvas>
-          <div className="w-[194px] h-[194px] cursor-pointer absolute top-[70%] left-1/2 -translate-x-1/2 z-20">
+          <div className="w-3rem h-3rem cursor-pointer absolute top-[70%] left-1/2 -translate-x-1/2 z-20">
             {isCapturing && (
               <div className="absolute inset-0 animate-ping-once rounded-full bg-white opacity-50 z-10"></div>
             )}
             <button
               onClick={handleCapture}
-              className={`w-full h-full transition-transform duration-300 ease-in-out ${isCapturing ? 'scale-110' : 'hover:scale-105'}`}
+              className={`w-1/2 h-1/2 transition-transform duration-300 ease-in-out ${isCapturing ? 'scale-110' : 'hover:scale-105'}`}
             >
               <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </button>
@@ -133,11 +149,11 @@ export function CameraView({ videoRef, canvasRef, onCapture, userDetails, select
       ) : (
         // Preview with submit/retake buttons
         <>
-          <div className="relative">
+          <div className="relative flex justify-center items-center">
             <img 
               src={capturedImage} 
               alt="Preview" 
-              className="block shadow-md object-cover w-full h-full max-w-[650px] max-h-[650px]" 
+              className="block shadow-md object-cover w-1/2 max-w-[650px] max-h-[650px]" 
               ref={previewRef}
             />
           </div>
@@ -152,7 +168,10 @@ export function CameraView({ videoRef, canvasRef, onCapture, userDetails, select
             
             <button 
               onClick={handleSubmit}
-              className="bg-violet-600 text-white px-12 py-6 rounded-full text-3xl font-bold transition-transform hover:scale-105 active:scale-95 shadow-md"
+              style={{
+                backgroundColor: cameraPageSettings?.button_color || "#8b5cf6",
+              }}
+              className="text-white px-12 py-6 rounded-full text-3xl font-bold transition-transform hover:scale-105 active:scale-95 shadow-md"
             >
               Submit
             </button>

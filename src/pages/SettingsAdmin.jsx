@@ -5,14 +5,23 @@ import CustomFormFields from "../components/admin/settings/CustomFormFields";
 import GenderPageSettings from "../components/admin/settings/GenderPageSettings";
 import GeneralSettings from "../components/admin/settings/GeneralSettings";
 import StartPageSettings from "../components/admin/settings/StartPageSettings";
+import ThemePageSettings from '../components/admin/settings/ThemePageSettings';
 import UserFormCustomization from "../components/admin/settings/UserFormCustomization";
 import { useBackgrounds } from "../contexts/BackgroundContext";
 import { getButtonBackgrounds, uploadButtonBackground } from "../services/backgroundService";
 import { getSettings, saveGenderButtonSettings, updateSettings } from "../services/settingsService";
+// Add import at the top
+import CameraPageSettings from '../components/admin/settings/CameraPageSettings';
+import ScenePageSettings from '../components/admin/settings/ScenePageSettings';
+import SwapPageSettings from '../components/admin/settings/SwapPageSettings';
+import SwapPagePreview from '../components/admin/SwapPagePreview';
 
 function SettingsAdmin() {
   // Get backgrounds from context
   const { backgrounds, setBackgrounds, loading: backgroundsLoading } = useBackgrounds();
+  
+  // Add state for active preview
+  const [activePreview, setActivePreview] = useState('photobooth');
   
   // In your initial state definition
   const [settings, setSettings] = useState({
@@ -333,6 +342,28 @@ function SettingsAdmin() {
                   showSaveButton={true}
                 />
                 
+                {/* Add Theme Page Settings Section */}
+                <ThemePageSettings
+                  settings={settings}
+                  setSettings={setSettings}
+                  setMessage={setMessage}
+                />
+                
+                {/* Scene Page Settings */}
+                <ScenePageSettings
+                  setMessage={setMessage}
+                />
+                
+                {/* Camera Page Settings */}
+                <CameraPageSettings
+                  setMessage={setMessage}
+                />
+                
+                {/* Swap Page Settings */}
+                <SwapPageSettings
+                  setMessage={setMessage}
+                />
+                
                 {/* Custom Form Fields Section */}
                 <CustomFormFields 
                   settings={settings}
@@ -432,19 +463,37 @@ function SettingsAdmin() {
           <div className="absolute inset-0 flex flex-col">
             <div className="bg-gray-700 text-white p-2 flex justify-between items-center">
               <h3 className="font-medium">App Preview</h3>
+              <div className="flex space-x-2">
+                <button
+                  className={`px-3 py-1 text-xs rounded ${activePreview === 'photobooth' ? 'bg-violet-600 text-white' : 'bg-gray-600 text-gray-200'}`}
+                  onClick={() => setActivePreview('photobooth')}
+                >
+                  Photobooth
+                </button>
+                <button
+                  className={`px-3 py-1 text-xs rounded ${activePreview === 'swap' ? 'bg-violet-600 text-white' : 'bg-gray-600 text-gray-200'}`}
+                  onClick={() => setActivePreview('swap')}
+                >
+                  Swap Page
+                </button>
+              </div>
               {backgroundsLoading && (
                 <div className="text-xs text-gray-300">Loading backgrounds...</div>
               )}
             </div>
             <div className="flex-1 overflow-auto bg-gray-700">
               <div className="h-full flex items-center justify-center p-4">
-                <PhotoboothPreview 
-                  settings={{
-                    ...settings,
-                    background_url: settings.background_url || backgrounds.default,
-                    user_form_background: settings.user_form_background || backgrounds.userForm
-                  }} 
-                />
+                {activePreview === 'photobooth' ? (
+                  <PhotoboothPreview 
+                    settings={{
+                      ...settings,
+                      background_url: settings.background_url || backgrounds.default,
+                      user_form_background: settings.user_form_background || backgrounds.userForm
+                    }} 
+                  />
+                ) : (
+                  <SwapPagePreview />
+                )}
               </div>
             </div>
           </div>

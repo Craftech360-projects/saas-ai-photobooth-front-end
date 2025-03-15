@@ -1,4 +1,9 @@
+
 import redcarpet from "/redcarpet.png";
+import Scifi from "/scifi.png";
+import outerspace from "/space.png";
+import sports from "/sports.png";
+import superheros from "/superheros.png";
 
 // export const THEMES = [
 //   { id: 1, name: "Red Carpet", image: redcarpet },
@@ -20,17 +25,37 @@ export const THEMES = [
   },
   {
     id: 2,
-    name: "Casual",
+    name: "Scifi",
     description: "Everyday casual wear for a relaxed look",
     thumbnail: "/themes/casual/thumbnail.jpg",
+    image: Scifi,
     is_active: true,
     display_order: 2
   },
   {
     id: 3,
-    name: "Formal",
+    name: "outerspace",
     description: "Elegant formal attire for special occasions",
     thumbnail: "/themes/formal/thumbnail.jpg",
+    image: outerspace,
+    is_active: true,
+    display_order: 3
+  },
+  {
+    id: 4,
+    name: "sports",
+    description: "Elegant formal attire for special occasions",
+    thumbnail: "/themes/formal/thumbnail.jpg",
+    image: sports,
+    is_active: true,
+    display_order: 3
+  },
+  {
+    id: 5,
+    name: "superheros",
+    description: "Elegant formal attire for special occasions",
+    thumbnail: "/themes/formal/thumbnail.jpg",
+    image: superheros,
     is_active: true,
     display_order: 3
   }

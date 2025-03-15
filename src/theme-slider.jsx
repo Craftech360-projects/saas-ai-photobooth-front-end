@@ -3,10 +3,10 @@
 import { cn } from "@/lib/utils"
 import * as React from "react"
 
-export function ThemeSlider({ themes, onSelect }) {
+export function ThemeSlider({ themes, onSelect, themePageSettings }) {
   const [activeIndex, setActiveIndex] = React.useState(0)
   const [isAnimating, setIsAnimating] = React.useState(false)
-
+// console.log(themes);
   const nextSlide = () => {
     setActiveIndex((prev) => (prev === themes.length - 1 ? 0 : prev + 1))
   }
@@ -29,25 +29,37 @@ export function ThemeSlider({ themes, onSelect }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="mb-8 text-center">
-        <h1 className="mb-2 text-7xl font-semibold text-black">Select your theme</h1>
+    <div className="flex  flex-col items-center justify-center mt-20">
+      <div className=" text-center">
+        <h2 
+          className="text-center mb-2"
+          style={{ 
+            color: themePageSettings?.title_color || '#000000',
+            fontSize: `${themePageSettings?.title_font_size || 48}px`
+          }}
+        >
+          {themePageSettings?.theme_page_title || "Select your theme"}
+        </h2>
       </div>
 
       <div className="relative flex items-center justify-center px-20">
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute -left-36 z-10 rounded-full p-2 text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
+          className="absolute -left-36 z-10 rounded-full p-2  text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
           aria-label="Previous slide"
         >
-          <div className="h-24 w-24 relative">
+          <div className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 relative">
             <img src="/assets/left.png" alt="Previous" className="h-full w-full object-contain" />
             <div className="absolute inset-0 mix-blend-overlay" />
           </div>
         </button>
       
-        <div className="relative h-[750px] w-[450px]">
+        <div className="relative" style={{
+            
+              height: `${themePageSettings?.theme_card_height || 410}px`,
+              width: `${themePageSettings?.theme_card_width || 230}px`
+        }}>
           {themes.map((theme, index) => {
             // Calculate position relative to active slide
             const position = index - activeIndex
@@ -94,10 +106,10 @@ export function ThemeSlider({ themes, onSelect }) {
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="absolute -right-36 z-10 rounded-full p-2 text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
+          className="absolute -right-36 z-10 rounded-full p-2  text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
           aria-label="Next slide"
         >
-          <img src="/assets/right.png" alt="Next" className="h-24 w-24 object-contain" />
+          <img src="/assets/right.png" alt="Next" className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 object-contain" />
         </button>
       </div>
 
@@ -117,16 +129,23 @@ export function ThemeSlider({ themes, onSelect }) {
       </div>
 
       {/* Theme Name */}
-      <div 
-        onClick={handleThemeSelect} 
-        className={cn(
-          "mt-8 rounded-4xl bg-violet-600 px-12 py-4 cursor-pointer transition-all duration-300",
-          // Replace bounce with a different animation
-          isAnimating ? "bg-yellow-500 scale-110 animate-ping-once" : "hover:scale-105"
-        )}
-      >
-        <span className="text-4xl font-bold uppercase text-white">{themes[activeIndex].name}</span>
-      </div>
+      {themePageSettings?.show_theme_name && (
+        <div 
+          onClick={handleThemeSelect} 
+          className={cn(
+            "mt-8 rounded-4xl px-6 sm:px-8 md:px-12 py-2 sm:py-3 md:py-4 cursor-pointer transition-all duration-300",
+            isAnimating ? "scale-110 animate-ping-once" : "hover:scale-105"
+          )}
+          style={{
+            backgroundColor: themePageSettings?.button_bg_color || '#7C3AED',
+            color: themePageSettings?.button_text_color || '#FFFFFF'
+          }}
+        >
+          <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold uppercase">
+            {themes[activeIndex].name}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

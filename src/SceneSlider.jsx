@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-function SceneSlider({ scenes, onSelect }) {
+function SceneSlider({ scenes, onSelect, scenePageSettings }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-
+console.log(scenePageSettings)
   const nextSlide = () => {
     setActiveIndex((prev) => (prev === scenes.length - 1 ? 0 : prev + 1));
   };
@@ -29,23 +29,38 @@ function SceneSlider({ scenes, onSelect }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-7xl font-semibold text-white">Select your scene</h1>
+        <h1 
+          className="mb-2 text-5xl md:text-7xl font-semibold text-white"
+          style={{ 
+            color: scenePageSettings?.title_color || '#FFFFFF',
+            fontSize: scenePageSettings?.title_font_size ? `${scenePageSettings.title_font_size}px` : undefined
+          }}
+        >
+          {scenePageSettings?.scene_page_title || "Select your scene"}
+        </h1>
       </div>
 
-      <div className="relative flex items-center justify-center px-20">
+      <div className="relative  flex items-center justify-center px-4 md:px-20 w-full">
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute -left-36 z-10 rounded-full p-2 text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
+          className=" left-0 md:-left-10 lg:-left-10 z-10 rounded-full p-1 md:p-2  text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
           aria-label="Previous slide"
         >
-          <div className="h-24 w-24 relative">
+          <div className="h-12 w-12 md:h-16 md:w-16 lg:h-24 lg:w-24 relative">
             <img src="/assets/left.png" alt="Previous" className="h-full w-full object-contain" />
             <div className="absolute inset-0 mix-blend-overlay" />
           </div>
         </button>
       
-        <div className="relative h-[750px] w-[450px]">
+        <div 
+          className="relative w-full max-w-[450px] mx-auto"
+          style={{ 
+            height: scenePageSettings?.scene_card_height ? `${scenePageSettings.scene_card_height}px` : '750px',
+            width: scenePageSettings?.scene_card_width ? `${scenePageSettings.scene_card_width}px` : '450px',
+            maxHeight: '80vh'
+          }}
+        >
           {scenes.map((scene, index) => {
             // Calculate position relative to active slide
             const position = index - activeIndex;
@@ -84,10 +99,10 @@ function SceneSlider({ scenes, onSelect }) {
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="absolute -right-36 z-10 rounded-full p-2 text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
+          className=" right-0 md:-right-10 lg:-right-36 z-10 rounded-full p-1 md:p-2 text-blue-900 transition-all duration-300 hover:scale-110 active:scale-90"
           aria-label="Next slide"
         >
-          <img src="/assets/right.png" alt="Next" className="h-24 w-24 object-contain" />
+          <img src="/assets/right.png" alt="Next" className="h-12 w-12 md:h-16 md:w-16 lg:h-24 lg:w-24 object-contain" />
         </button>
       </div>
 
@@ -110,11 +125,17 @@ function SceneSlider({ scenes, onSelect }) {
       <div 
         onClick={handleSceneSelect} 
         className={cn(
-          "mt-8 rounded-4xl bg-violet-600 px-12 py-4 cursor-pointer transition-all duration-300",
+          "mt-8 rounded-4xl px-8 md:px-12 py-3 md:py-4 cursor-pointer transition-all duration-300",
           isAnimating ? "bg-yellow-500 scale-110 animate-ping-once" : "hover:scale-105"
         )}
+        style={{
+          backgroundColor: scenePageSettings?.button_bg_color || '#7C3AED',
+          color: scenePageSettings?.button_text_color || '#FFFFFF'
+        }}
       >
-        <span className="text-4xl font-bold uppercase text-white">Select Scene</span>
+        <span className="text-2xl md:text-4xl font-bold uppercase text-white">
+          {scenePageSettings?.button_text || "Select Scene"}
+        </span>
       </div>
     </div>
   );
