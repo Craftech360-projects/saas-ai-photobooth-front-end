@@ -11,6 +11,7 @@ function SwapPagePreview() {
     title_font_size: 24,
     button_color: "#8b5cf6",
     button_text_color: "#FFFFFF", // Added button text color
+    button_roundness: "rounded-3xl", // Added button roundness
     qr_border_color: "#e11d48",
     image_width: 40,
     show_print_button: true
@@ -169,10 +170,10 @@ function SwapPagePreview() {
   {swapPageSettings?.show_print_button !== false && (
     <button
       type="button"
-      className={`font-bold rounded-3xl hover:bg-opacity-90 transition-colors ${getButtonPadding()}`}
+      className={`font-bold hover:bg-opacity-90 transition-colors ${getButtonPadding()} ${swapPageSettings?.button_roundness || "rounded-3xl"}`}
       style={{ 
         backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
-        color: swapPageSettings?.button_text_color || "#FFFFFF", // Use button text color
+        color: swapPageSettings?.button_text_color || "#FFFFFF",
         fontSize: `${getScaledFontSize(24)}px`,
         width: getButtonWidth()
       }}
@@ -182,10 +183,10 @@ function SwapPagePreview() {
   )}
 
   <button
-    className={`font-bold rounded-3xl hover:bg-opacity-90 transition-colors ${getButtonPadding()}`}
+    className={`font-bold hover:bg-opacity-90 transition-colors ${getButtonPadding()} ${swapPageSettings?.button_roundness || "rounded-3xl"}`}
     style={{ 
       backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
-      color: swapPageSettings?.button_text_color || "#FFFFFF", // Use button text color
+      color: swapPageSettings?.button_text_color || "#FFFFFF",
       fontSize: `${getScaledFontSize(24)}px`,
       width: getButtonWidth()
     }}
@@ -279,7 +280,8 @@ function SwapPagePreview() {
                   {swapPageSettings?.show_print_button !== false && (
                     <button
                       type="button"
-                      className="font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                      className={`font-bold hover:bg-opacity-90 transition-colors ${getButtonPadding()} ${swapPageSettings?.button_roundness || "rounded-3xl"}`}
+
                       style={{ 
                         backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
                         color: swapPageSettings?.button_text_color || "#FFFFFF",
@@ -293,7 +295,8 @@ function SwapPagePreview() {
                   )}
 
                   <button
-                    className="font-bold rounded-3xl hover:bg-opacity-90 transition-colors"
+                       className={`font-bold hover:bg-opacity-90 transition-colors ${getButtonPadding()} ${swapPageSettings?.button_roundness || "rounded-3xl"}`}
+
                     style={{ 
                       backgroundColor: swapPageSettings?.button_color || "#8b5cf6",
                       color: swapPageSettings?.button_text_color || "#FFFFFF",

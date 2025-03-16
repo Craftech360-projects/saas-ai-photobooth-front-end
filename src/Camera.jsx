@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SceneSlider from "./SceneSlider";
+import { supabase } from "./supabaseClient"; // Add this import
 import { ThemeSlider } from "./theme-slider";
 import female from "/assets/female.png";
 import male from "/assets/male.png";
@@ -236,6 +237,45 @@ function Camer() {
     setShowScene(false);
   };
 
+  // Add the cameraSettings state
+  const [cameraSettings, setCameraSettings] = useState({
+    header_text: "Smile for the camera!",
+    header_color: "#FFFFFF",
+    header_font_size: 24,
+    button_color: "#8b5cf6",
+    button_text_color: "#FFFFFF",
+    button_roundness: "rounded-3xl"
+  });
+
+  // Add this useEffect to fetch camera settings
+  useEffect(() => { 
+    console.log("hereeeee");
+    const fetchCameraSettings = async () => {
+      const { data } = await supabase
+        .from('camera_page_settings')
+        .select('*')
+        .single();
+      
+      if (data) {
+        setCameraSettings(data);
+      }
+      console.log("cameraSettings", cameraSettings);
+    };
+    
+    fetchCameraSettings();
+    
+    // Listen for settings updates
+    const handleCameraSettingsUpdate = (e) => {
+      setCameraSettings(e.detail.settings);
+    };
+    
+    window.addEventListener('cameraSettingsUpdated', handleCameraSettingsUpdate);
+    
+    return () => {
+      window.removeEventListener('cameraSettingsUpdated', handleCameraSettingsUpdate);
+    };
+  }, []);
+
   return (
     <section
       className="text-center w-screen h-screen"
@@ -271,7 +311,11 @@ function Camer() {
      {!showWarning && !emailError && (
   <button
     onClick={handleSubmit}
-    className="w-[428px] h-[104px] mt-16 cursor-pointer border-none transition-colors"
+    className={`w-[428px] h-[104px] mt-16 cursor-pointer border-none transition-colors ${cameraSettings?.button_roundness || "rounded-3xl"}`}
+    style={{
+      backgroundColor: cameraSettings?.button_color || "#8b5cf6",
+      color: cameraSettings?.button_text_color || "#FFFFFF"
+    }}
   >
     <img
       src={submit}
@@ -334,7 +378,7 @@ function Camer() {
             }}
           //   className="w-[194px] h-[194px] cursor-pointer  absolute top-[73%]"
           // >
-          className={`w-[194px] h-[194px] cursor-pointer absolute top-[73%] left-1/2 -translate-x-1/2 rounded-full transition-transform duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none ${isPressed ? 'scale-95 opacity-75' : ''}`}
+          className={`w-[194px] h-[194px] cursor-pointer absolute top-[73%] left-1/2 -translate-x-1/2 ${cameraSettings?.button_roundness || "rounded-full"} transition-transform duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none ${isPressed ? 'scale-95 opacity-75' : ''}`}
           >
             <img src={camera} alt="Capture" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </button>

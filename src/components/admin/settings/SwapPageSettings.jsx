@@ -7,13 +7,13 @@ function SwapPageSettings({ setMessage }) {
     title_color: "#FFFFFF",
     title_font_size: 24,
     button_color: "#8b5cf6",
-    button_text_color: "#FFFFFF", // Added button text color
+    button_text_color: "#FFFFFF",
+    button_roundness: "rounded-3xl", // Added button roundness option
     qr_border_color: "#e11d48",
     background_image: "",
     image_width: 40,
     show_print_button: true,
-    // Add desktop layout option
-    desktop_layout: "row" // "row" for flex-row, "column" for flex-col
+    desktop_layout: "row"
   });
 
   const handleSave = async () => {
@@ -24,12 +24,12 @@ function SwapPageSettings({ setMessage }) {
         title_color: settings.title_color,
         title_font_size: settings.title_font_size,
         button_color: settings.button_color,
-        button_text_color: settings.button_text_color, // Added button text color
+        button_text_color: settings.button_text_color,
+        button_roundness: settings.button_roundness, // Added button roundness
         qr_border_color: settings.qr_border_color,
         background_image: settings.background_image,
         image_width: settings.image_width,
         show_print_button: settings.show_print_button,
-        // Add desktop layout to saved settings
         desktop_layout: settings.desktop_layout
       };
 
@@ -72,12 +72,12 @@ function SwapPageSettings({ setMessage }) {
           title_color: data.title_color,
           title_font_size: data.title_font_size,
           button_color: data.button_color,
-          button_text_color: data.button_text_color || "#FFFFFF", // Added button text color with default
+          button_text_color: data.button_text_color || "#FFFFFF",
+          button_roundness: data.button_roundness || "rounded-3xl", // Added with default
           qr_border_color: data.qr_border_color,
           background_image: data.background_image,
           image_width: data.image_width || 40,
           show_print_button: data.show_print_button !== false,
-          // Load desktop layout setting
           desktop_layout: data.desktop_layout || "row"
         });
       } else {
@@ -89,7 +89,8 @@ function SwapPageSettings({ setMessage }) {
             title_color: "#FFFFFF",
             title_font_size: 24,
             button_color: "#8b5cf6",
-            button_text_color: "#FFFFFF", // Added button text color
+            button_text_color: "#FFFFFF",
+            button_roundness: "rounded-3xl", // Added default value
             qr_border_color: "#e11d48",
             background_image: "",
             image_width: 40,
@@ -159,6 +160,25 @@ function SwapPageSettings({ setMessage }) {
           onChange={(e) => setSettings({...settings, button_text_color: e.target.value})}
           className="w-1/4 border rounded"
         />
+      </div>
+      
+      {/* Add Button Roundness option */}
+      <div>
+        <label className="block mb-1">Button Corner Roundness</label>
+        <select
+          value={settings?.button_roundness || "rounded-3xl"}
+          onChange={(e) => setSettings({...settings, button_roundness: e.target.value})}
+          className="w-full p-2 border rounded"
+        >
+          <option value="rounded-none">None</option>
+          <option value="rounded">Small</option>
+          <option value="rounded-md">Medium</option>
+          <option value="rounded-lg">Large</option>
+          <option value="rounded-xl">Extra Large</option>
+          <option value="rounded-2xl">2XL</option>
+          <option value="rounded-3xl">3XL (Default)</option>
+          <option value="rounded-full">Full (Pill Shape)</option>
+        </select>
       </div>
       
       <div>

@@ -58,7 +58,7 @@ export function GenderSelector({ onSelect }) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center" style={backgroundStyle}>
     <h2 
-  className="text-3xl font-bold mb-8" 
+  className=" font-bold mb-8" 
   style={{ 
     color: genderButtonSettings?.gender_title_color || '#FFFFFF',
     fontSize: `${genderButtonSettings?.title_font_size || 24}px`

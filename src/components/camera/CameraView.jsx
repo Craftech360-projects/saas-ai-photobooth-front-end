@@ -161,7 +161,12 @@ export function CameraView({ videoRef, canvasRef, onCapture, userDetails, select
           <div className="flex gap-12 mt-12">
             <button 
               onClick={handleRetake}
-              className="bg-white text-violet-600 px-12 py-6 rounded-full text-3xl font-bold transition-transform hover:scale-105 active:scale-95 shadow-md"
+              style={{
+                backgroundColor: cameraPageSettings?.button_color || "#8b5cf6",
+                color: cameraPageSettings?.button_text_color || "#FFFFFF",
+                   
+              }}
+              className={` px-12 py-4 text-3xl font-bold transition-transform hover:scale-105 active:scale-95 shadow-md ${cameraPageSettings?.button_roundness || "rounded-3xl"}`}
             >
               Retake
             </button>
@@ -170,8 +175,9 @@ export function CameraView({ videoRef, canvasRef, onCapture, userDetails, select
               onClick={handleSubmit}
               style={{
                 backgroundColor: cameraPageSettings?.button_color || "#8b5cf6",
+                color: cameraPageSettings?.button_text_color || "#FFFFFF",
               }}
-              className="text-white px-12 py-6 rounded-full text-3xl font-bold transition-transform hover:scale-105 active:scale-95 shadow-md"
+              className={`px-12 py-4 text-3xl font-bold transition-transform hover:scale-105 active:scale-95 shadow-md ${cameraPageSettings?.button_roundness || "rounded-3xl"}`}
             >
               Submit
             </button>

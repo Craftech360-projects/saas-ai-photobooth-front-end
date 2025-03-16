@@ -198,7 +198,7 @@ function GenderPageSettings({ settings, setSettings, setMessage, onSave, showSav
     <input
       type="range"
       min="16"
-      max="48"
+      max="100"
       step="1"
       value={genderButtonSettings.title_font_size || 24}
       onChange={(e) => handleChange("title_font_size", parseInt(e.target.value))}
