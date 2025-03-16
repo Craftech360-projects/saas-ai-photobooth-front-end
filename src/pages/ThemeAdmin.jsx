@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AdminNav } from "../components/admin/AdminNav";
-import { 
-  getAllThemes, 
-  createTheme, 
-  updateTheme, 
+import {
+  createTheme,
   deleteTheme,
+  getAllThemes,
+  updateTheme,
   uploadThemeImage
 } from "../services/themeService";
 
@@ -20,8 +20,9 @@ function ThemeAdmin() {
     is_active: true,
     display_order: 0
   });
-  const [maleImages, setMaleImages] = useState([null, null, null]);
-  const [femaleImages, setFemaleImages] = useState([null, null, null]);
+  // Update arrays to have 5 elements instead of 3
+  const [maleImages, setMaleImages] = useState([null, null, null, null, null]);
+  const [femaleImages, setFemaleImages] = useState([null, null, null, null, null]);
   const [uploadingImages, setUploadingImages] = useState(false);
 
   useEffect(() => {
@@ -97,8 +98,9 @@ function ThemeAdmin() {
       is_active: true,
       display_order: themes.length + 1
     });
-    setMaleImages([null, null, null]);
-    setFemaleImages([null, null, null]);
+    // Reset with 5 null values
+    setMaleImages([null, null, null, null, null]);
+    setFemaleImages([null, null, null, null, null]);
     setIsEditing(false);
   };
 
@@ -113,12 +115,12 @@ function ThemeAdmin() {
         throw new Error("Theme name is required");
       }
 
-      // Check if we have all required images
-      const allMaleImagesProvided = maleImages.every(img => img !== null);
-      const allFemaleImagesProvided = femaleImages.every(img => img !== null);
+      // Check if we have at least one image for each gender
+      const hasMaleImage = maleImages.some(img => img !== null);
+      const hasFemaleImage = femaleImages.some(img => img !== null);
       
-      if (!allMaleImagesProvided || !allFemaleImagesProvided) {
-        throw new Error("Please provide all scene images for both genders");
+      if (!hasMaleImage || !hasFemaleImage) {
+        throw new Error("Please provide at least one scene image for each gender");
       }
 
       // Upload thumbnail if it's a file
@@ -137,7 +139,7 @@ function ThemeAdmin() {
       const maleScenes = [];
       const femaleScenes = [];
 
-      // Upload male images
+      // Upload male images (only the non-null ones)
       for (let i = 0; i < maleImages.length; i++) {
         if (maleImages[i] instanceof File) {
           const result = await uploadThemeImage(
@@ -151,7 +153,7 @@ function ThemeAdmin() {
         }
       }
 
-      // Upload female images
+      // Upload female images (only the non-null ones)
       for (let i = 0; i < femaleImages.length; i++) {
         if (femaleImages[i] instanceof File) {
           const result = await uploadThemeImage(
@@ -230,6 +232,7 @@ function ThemeAdmin() {
     }
   };
 
+  // Update the UI text to reflect the new requirements
   return (
     <div className="min-h-screen bg-gray-100">
       <AdminNav />
@@ -322,9 +325,9 @@ function ThemeAdmin() {
                 <h3 className="text-lg font-semibold mb-4">Scene Images</h3>
                 
                 <div className="mb-6">
-                  <h4 className="font-medium mb-2">Male Scenes</h4>
+                  <h4 className="font-medium mb-2">Male Scenes (Min: 1, Max: 5 images)</h4>
                   <div className="grid grid-cols-3 gap-3">
-                    {[0, 1, 2].map((index) => (
+                    {[0, 1, 2, 3, 4].map((index) => (
                       <div key={`male-${index}`} className="border border-gray-200 rounded-md p-2">
                         <input
                           type="file"
@@ -349,9 +352,9 @@ function ThemeAdmin() {
                 </div>
                 
                 <div className="mb-6">
-                  <h4 className="font-medium mb-2">Female Scenes</h4>
+                  <h4 className="font-medium mb-2">Female Scenes (Min: 1, Max: 5 images)</h4>
                   <div className="grid grid-cols-3 gap-3">
-                    {[0, 1, 2].map((index) => (
+                    {[0, 1, 2, 3, 4].map((index) => (
                       <div key={`female-${index}`} className="border border-gray-200 rounded-md p-2">
                         <input
                           type="file"

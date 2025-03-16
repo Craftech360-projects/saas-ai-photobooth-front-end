@@ -4,7 +4,8 @@ import { useState } from "react";
 function SceneSlider({ scenes, onSelect, scenePageSettings }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-console.log(scenePageSettings)
+  console.log("Scene images to display:", scenes);
+
   const nextSlide = () => {
     setActiveIndex((prev) => (prev === scenes.length - 1 ? 0 : prev + 1));
   };
@@ -20,11 +21,16 @@ console.log(scenePageSettings)
   const handleSceneSelect = () => {
     setIsAnimating(true);
     
-    // After animation completes, call onSelect
+    // After animation completes, call onSelect with the selected scene
     setTimeout(() => {
       onSelect(scenes[activeIndex]);
     }, 800);
   };
+
+  // Make sure we have scenes to display
+  if (!scenes || scenes.length === 0) {
+    return <div className="text-white text-2xl">No scenes available for this theme</div>;
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">

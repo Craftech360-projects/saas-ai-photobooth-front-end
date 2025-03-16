@@ -39,7 +39,7 @@ function PhotoBooth({ previewMode = false, previewSettings = null }) {
       try {
         const themesData = await getActiveThemes();
         if (themesData?.length) setThemes(themesData);
-
+         console.log("Themes loadeeed:", themesData);
         const settingsData = await getSettings();
         if (settingsData) {
           setSettings(settingsData);
@@ -173,20 +173,35 @@ function PhotoBooth({ previewMode = false, previewSettings = null }) {
         return <GenderSelector onSelect={handleGenderSelect} />;
 
       case "theme":
+        // Pass the complete theme objects to ThemeSlider
+        const formattedThemes = themes.length ? themes.map(theme => ({
+          ...theme, // Include all properties from the original theme
+          image: theme.thumbnail // Add image property for backward compatibility
+        })) : THEMES;
+        
+        console.log("Formatted themes for slider:", formattedThemes);
+        
         return <ThemeSlider
-          themes={themes.length ? themes : THEMES}
+          themes={formattedThemes}
           onSelect={handleThemeSelect}
           themePageSettings={themePageSettings}
         />;
 
       case "scene":
         let scenes = [];
+        console.log("Selected theme for scenes:", selectedTheme);
+        
         if (selectedTheme?.male_scenes && selectedTheme?.female_scenes) {
+          // Use the gender-specific scenes from the theme object
           scenes = userDetails.gender === 'male' ? selectedTheme.male_scenes : selectedTheme.female_scenes;
+          console.log(`Using ${userDetails.gender} scenes from theme:`, scenes);
         } else {
-          const imageFolder = `${selectedTheme.name.toLowerCase().replace(" ", "")}/${userDetails.gender}`;
+          // Fallback to the old method
+          const imageFolder = `${selectedTheme.name.toLowerCase().replace(/\s+/g, "")}/${userDetails.gender}`;
           scenes = [`${imageFolder}/1.png`, `${imageFolder}/2.png`, `${imageFolder}/3.png`];
+          console.log("Using fallback scenes:", scenes);
         }
+        
         return <SceneSlider scenes={scenes} onSelect={handleSceneSelect} scenePageSettings={scenePageSettings} />;
 
       case "camera":

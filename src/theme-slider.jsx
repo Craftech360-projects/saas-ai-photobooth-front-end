@@ -6,7 +6,7 @@ import * as React from "react"
 export function ThemeSlider({ themes, onSelect, themePageSettings }) {
   const [activeIndex, setActiveIndex] = React.useState(0)
   const [isAnimating, setIsAnimating] = React.useState(false)
-// console.log(themes);
+ console.log(themes);
   const nextSlide = () => {
     setActiveIndex((prev) => (prev === themes.length - 1 ? 0 : prev + 1))
   }
@@ -22,17 +22,18 @@ export function ThemeSlider({ themes, onSelect, themePageSettings }) {
   const handleThemeSelect = () => {
     setIsAnimating(true)
     
-    // After animation completes, call onSelect
+    // After animation completes, call onSelect with the complete theme object
     setTimeout(() => {
+      // Make sure we pass the complete theme object with male_scenes and female_scenes
       onSelect(themes[activeIndex])
     }, 800)
   }
 
   return (
-    <div className="flex  flex-col items-center justify-center mt-20">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className=" text-center">
         <h2 
-          className="text-center mb-2"
+          className="text-center mb-4 pt-50"
           style={{ 
             color: themePageSettings?.title_color || '#000000',
             fontSize: `${themePageSettings?.title_font_size || 48}px`
@@ -85,16 +86,11 @@ export function ThemeSlider({ themes, onSelect, themePageSettings }) {
                   onClick={position === 0 ? handleThemeSelect : undefined}
                 >
                   <img
-                    src={theme.image || "/placeholder.svg"}
+                    src={theme.thumbnail || theme.image || "/placeholder.svg"}
                     alt={theme.name}
                     className={cn(
                       "h-full w-full object-cover transition-transform",
-                      // Replace bounce with a scale effect
-                      // In your image element, replace:
                       position === 0 && isAnimating ? "scale-105 transition-all duration-500" : ""
-                      
-                      // // With:
-                      // position === 0 && isAnimating ? "animate-zoom-contained" : ""
                     )}
                   />
                 </div>
