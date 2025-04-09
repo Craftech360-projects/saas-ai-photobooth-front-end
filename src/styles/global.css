@@ -1,0 +1,96 @@
+@font-face {
+  font-family: "Heineken";
+  src: url("/fonts/heineken-regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Heineken-Bold";
+  src: url("/fonts/heineken-bold.ttf") format("truetype");
+}
+
+:root {
+  --primary-color: #fff;
+  --secondary-color: #0d8744;
+  --text-color: #fff;
+  --background-color: #ffffff;
+  --accent-color: #3a49d0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Heineken", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
+}
+
+.welcome-background,
+.thankyou-background {
+  background-image: url("/assets/Frame_1.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.content-background {
+  background-image: url("/assets/Frame_2.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.third-background{
+  background-image: url("/assets/Frame_3.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.subtitle {
+  font-size: 32px;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}

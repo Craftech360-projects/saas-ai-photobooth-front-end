@@ -1,0 +1,63 @@
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+.swipe-instruction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.swipe-arrow {
+  display: flex;
+}
+
+.swipe-arrow span {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-bottom: 5px solid white;
+  border-right: 5px solid white;
+  transform: rotate(-45deg);
+  margin: 0 5px;
+  animation: swipe 1.5s infinite;
+}
+
+.swipe-arrow span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.swipe-arrow span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes swipe {
+  0% {
+    opacity: 0;
+    transform: rotate(-45deg) translate(0, 0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-45deg) translate(-20px, 20px);
+  }
+}
+
+.title1 {
+  font-size: 80px;
+  line-height: 1.5;
+  color: white;
+  text-align: center;
+  margin-top: 60px;
+  letter-spacing: 2.5px;
+  font-family: "Heineken-Bold";
+}

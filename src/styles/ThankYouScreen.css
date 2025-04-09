@@ -1,0 +1,46 @@
+.thank-you-container {
+  margin-top: 40px;
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.thank-you-content {
+  margin-top: 20px 0;
+}
+
+.thank-you-message {
+  color: white;
+  font-size: 34px;
+  margin-bottom: 40px;
+}
+
+.countdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+}
+
+.countdown-timer {
+  font-size: 60px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 10px 0;
+}
+
+.start-over-button {
+  width: 200px;
+}
+
+.title7 {
+  color: white;
+  font-size: 66px;
+  text-align: center;
+  font-family: "Heineken-Bold";
+  margin-bottom: 10px;
+}

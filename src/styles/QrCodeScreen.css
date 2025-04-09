@@ -1,0 +1,178 @@
+.qr-code-container {
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 150px;
+  padding: 20px;
+}
+
+.title {
+  color: white;
+  font-size: 60px;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.1;
+}
+
+.qr-container {
+  margin-bottom: 20px;
+}
+
+.qr-code {
+  display: block;
+}
+
+.share-container {
+  background-color: white;
+  padding: 20px 20px;
+  margin-bottom: 20px;
+  width: 800px;
+  text-align: center;
+}
+
+.share-text {
+  color: #008754;
+  font-size: 38px;
+  font-family: "Heineken-Bold";
+  margin: 0;
+  line-height: 1.2;
+}
+
+.instagram-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.instagram-icon {
+  font-size: 42px;
+  color: #ff8d23;
+}
+
+.result-image-container2 {
+  width: 300px;
+  height: 450px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  box-sizing: border-box;
+  border: 3px solid white;
+}
+
+.result-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Add corner brackets */
+.result-image-container::before,
+.result-image-container::after,
+.result-image-container > *::before,
+.result-image-container > *::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-color: white;
+  border-style: solid;
+  z-index: 20;
+}
+
+/* Top left corner */
+.result-image-container::before {
+  top: -20px;
+  left: -20px;
+  border-width: 3px 0 0 3px;
+}
+
+/* Top right corner */
+.result-image-container::after {
+  top: -20px;
+  right: -20px;
+  border-width: 3px 3px 0 0;
+}
+
+/* Bottom left corner */
+.result-image-container > *::before {
+  bottom: -20px;
+  left: -20px;
+  border-width: 0 0 3px 3px;
+}
+
+/* Bottom right corner */
+.result-image-container > *::after {
+  bottom: -20px;
+  right: -20px;
+  border-width: 0 3px 3px 0;
+}
+
+.result-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.next-button {
+  width: 400px;
+  background-color: white;
+  color: #008754;
+  border: none;
+  height: 80px;
+  font-size: 40px;
+  font-family: "Heineken-Bold";
+  margin-top: 40px;
+}
+
+.content-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  margin: 30px 0;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.thumbnail-container {
+  width: 250px;
+  height: 350px;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 3px solid var(--primary-color);
+}
+
+.thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.qr-code {
+  margin-bottom: 15px;
+}
+
+.qr-instructions {
+  color: var(--text-color);
+  font-size: 16px;
+  text-align: center;
+  max-width: 200px;
+}

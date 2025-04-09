@@ -1,0 +1,81 @@
+.registration-container {
+  width: 100%;
+  max-width: 900px;
+  padding: 30px;
+  border-radius: 0; /* Remove border radius */
+  background-color: transparent; /* Remove background color */
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 120px;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-group {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  margin: 10px;
+}
+
+.form-group label {
+  font-size: 30px;
+  color: white;
+}
+
+.input-field {
+  width: calc(100% - 250px);
+  height: 70px;
+  border-radius: 4px;
+  border: 2px solid white;
+  background-color: transparent;
+  color: white;
+  padding: 0 15px;
+  font-size: 32px;
+  font-family: "Heineken";
+}
+
+/* Remove this block as it's no longer needed */
+/* .input-field::placeholder {
+  color: #fff;
+  font-family: "Heineken";
+} */
+
+.error {
+  color: #ff6900;
+  font-size: 14px;
+  position: absolute;
+  bottom: -20px;
+  left: 130px;
+}
+
+.submit-button {
+  width: calc(100% - 250px);
+  margin-top: 20px;
+  margin-left: 250px;
+  margin-bottom: 80px;
+  background-color: white;
+  color: #008754;
+  border: none;
+  height: 80px;
+  font-size: 40px;
+  font-family: "Heineken-Bold";
+}
+
+.title2 {
+  color: white;
+  font-size: 66px;
+  text-align: center;
+  font-family: "Heineken-Bold";
+  margin-bottom: 10px;
+}
