@@ -25,7 +25,7 @@ const ResultScreen = () => {
   return (
     <div className="screen third-background">
       <div className="result-container">
-        <h1 className="title">We are creating....</h1>
+        <h1 className="title9">We are creating....</h1>
 
         {swappedImage && (
           <div className="result-image-container">

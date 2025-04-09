@@ -33,6 +33,7 @@ export const swapFaces = async (
     }
 
     // Make API call to your face swap endpoint
+    // Update the API endpoint if needed
     const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
       method: "POST",
       body: formData,

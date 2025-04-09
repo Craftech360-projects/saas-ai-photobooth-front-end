@@ -90,10 +90,11 @@
   }
 }
 
-.title {
+.title8 {
   color: white;
-  font-size: 80px;
+  font-size: 66px;
   text-align: center;
+  font-family: "Heineken-Bold";
 }
 
 .next-button {

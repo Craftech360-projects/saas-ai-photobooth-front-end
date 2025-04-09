@@ -84,14 +84,12 @@ const CaptureScreen = () => {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     // Convert canvas to blob
+    // In the capturePhoto function, update the blob storage:
     canvas.toBlob(
       (blob) => {
-        setCapturedImage(URL.createObjectURL(blob));
-
-        // Store the blob for processing
-        localStorage.setItem("capturedImageBlob", blob);
-
-        // Stop the camera after capturing
+        const imageUrl = URL.createObjectURL(blob);
+        setCapturedImage(imageUrl);
+        localStorage.setItem("capturedImageBlob", imageUrl);
         stopCamera();
       },
       "image/jpeg",

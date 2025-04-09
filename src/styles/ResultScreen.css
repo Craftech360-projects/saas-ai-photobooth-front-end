@@ -100,3 +100,10 @@
 .retake-button:hover {
   background-color: #444;
 }
+
+.title9 {
+  color: white;
+  font-size: 66px;
+  text-align: center;
+  font-family: "Heineken-Bold";
+}

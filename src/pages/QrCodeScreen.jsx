@@ -16,7 +16,9 @@ const QrCodeScreen = () => {
       return;
     }
     setSwappedImage(imageUrl);
-    setDownloadUrl(`https://example.com/download?id=${Date.now()}`);
+    setDownloadUrl(imageUrl);
+    console.log(imageUrl); // Log the imageUr
+    console.log(downloadUrl);
   }, [navigate]);
 
   return (
@@ -27,7 +29,7 @@ const QrCodeScreen = () => {
         <div className="qr-container">
           <QRCode
             value={downloadUrl}
-            size={200}
+            size={300}
             level="H"
             includeMargin={true}
             renderAs="svg"
