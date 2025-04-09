@@ -12,8 +12,10 @@ const ProcessingScreen = () => {
         // Get the necessary data
         const capturedImageBlob = localStorage.getItem("capturedImageBlob");
         const selectedCharacter = localStorage.getItem("selectedCharacter");
+        const userDataString = localStorage.getItem("userData");
+        const userData = JSON.parse(userDataString);
 
-        if (!capturedImageBlob || !selectedCharacter) {
+        if (!capturedImageBlob || !selectedCharacter || !userData) {
           navigate("/capture");
           return;
         }
@@ -21,12 +23,12 @@ const ProcessingScreen = () => {
         // Convert base64 to Blob if needed
         const imageBlob = await fetch(capturedImageBlob).then((r) => r.blob());
 
-        // Call the face swap API
-        const swappedImageUrl = await swapFaces(
-          imageBlob,
-          selectedCharacter,
-          { name: "User", email: "user@example.com" } // Add user details as needed
-        );
+        // Call the face swap API with user details
+        const swappedImageUrl = await swapFaces(imageBlob, selectedCharacter, {
+          name: userData.name,
+          email: userData.email,
+          contact: userData.contact,
+        });
 
         // Store the result
         localStorage.setItem("swappedImageUrl", swappedImageUrl);

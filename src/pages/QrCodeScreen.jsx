@@ -1,13 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import QRCode from "qrcode.react";
-import { FaInstagram } from "react-icons/fa";
+import { FaInstagram, FaPrint } from "react-icons/fa";
+import { useReactToPrint } from "react-to-print";
 import "../styles/QrCodeScreen.css";
 
 const QrCodeScreen = () => {
   const navigate = useNavigate();
   const [swappedImage, setSwappedImage] = useState(null);
   const [downloadUrl, setDownloadUrl] = useState("");
+  const printRef = useRef();
+
+  // Print handler
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: "Heineken_Avatar",
+    onAfterPrint: () => console.log("Printed successfully!"),
+  });
 
   useEffect(() => {
     const imageUrl = localStorage.getItem("swappedImageUrl");
@@ -17,14 +26,14 @@ const QrCodeScreen = () => {
     }
     setSwappedImage(imageUrl);
     setDownloadUrl(imageUrl);
-    console.log(imageUrl); // Log the imageUr
-    console.log(downloadUrl);
   }, [navigate]);
 
   return (
     <div className="screen third-background">
       <div className="qr-code-container">
-        <h2 className="title">Scan the QR code<br/>to download your image</h2>
+        <h2 className="title9">
+          Scan the QR code to download your image
+        </h2>
 
         <div className="qr-container">
           <QRCode
@@ -46,7 +55,8 @@ const QrCodeScreen = () => {
           </p>
         </div>
 
-        {swappedImage && (
+        {/* Printable content */}
+        <div ref={printRef} className="print-content">
           <div className="result-image-container2">
             <div className="result-wrapper">
               <img
@@ -56,14 +66,19 @@ const QrCodeScreen = () => {
               />
             </div>
           </div>
-        )}
+        </div>
 
-        <button
-          className="button next-button"
-          onClick={() => navigate("/thank-you")}
-        >
-          NEXT
-        </button>
+        <div className="button-container">
+          <button className="button print-button" onClick={handlePrint}>
+            Print Image
+          </button>
+          <button
+            className="button next-button"
+            onClick={() => navigate("/thank-you")}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

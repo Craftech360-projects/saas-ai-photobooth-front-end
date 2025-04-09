@@ -9,10 +9,9 @@ export const swapFaces = async (
   userDetails
 ) => {
   try {
-    // Create a FormData object to send the images
     const formData = new FormData();
 
-    // Add the captured user image as targetImage (from camera)
+    // Add images
     formData.append(
       "targetImage",
       new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
@@ -26,14 +25,14 @@ export const swapFaces = async (
       new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
     );
 
-    // Add user details if available
+    // Add user details
     if (userDetails) {
-      formData.append("name", userDetails.name);
-      formData.append("email", userDetails.email);
+      formData.append("name", userDetails.name || "");
+      formData.append("email", userDetails.email || "");
+      formData.append("contact", userDetails.contact || "");
     }
 
-    // Make API call to your face swap endpoint
-    // Update the API endpoint if needed
+    // Make API call
     const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
       method: "POST",
       body: formData,
