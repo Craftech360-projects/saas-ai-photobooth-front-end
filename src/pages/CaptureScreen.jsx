@@ -30,7 +30,7 @@ const CaptureScreen = () => {
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
+        video: { facingMode: "environment" },
       });
 
       if (videoRef.current) {
