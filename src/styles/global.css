@@ -31,21 +31,21 @@ body {
 
 .welcome-background,
 .thankyou-background {
-  background-image: url("/assets/Frame_1.jpg");
+  background-image: url("/assets/Frame_1.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .content-background {
-  background-image: url("/assets/Frame_2.jpg");
+  background-image: url("/assets/Frame_2.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .third-background{
-  background-image: url("/assets/Frame_3.jpg");
+  background-image: url("/assets/Frame_3.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

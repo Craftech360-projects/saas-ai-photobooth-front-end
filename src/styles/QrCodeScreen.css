@@ -2,7 +2,7 @@
   width: 90%;
   max-width: 900px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
   align-items: center;
   position: fixed;
   bottom: 0;
@@ -11,6 +11,19 @@
   margin-bottom: 50px;
   padding: 20px;
 }
+.qr-code-frame {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: row; /* This is good */
+  align-items: center;
+  justify-content: center; /* Add this to center items horizontally */
+  gap: 40px; /* Adjust as needed for spacing between QR and image */
+  margin-bottom: 50px;
+  padding: 20px;
+  position: static; /* Change from fixed to static or relative unless you really want it fixed at the bottom */
+}
+
 
 .title9 {
   color: white;
@@ -18,6 +31,8 @@
   text-align: center;
   margin-bottom: 20px;
   line-height: 1.1;
+  margin-top: 151px;
+
 }
 
 .qr-container {
@@ -125,7 +140,7 @@
 .next-button {
   width: 400px;
   background-color: white;
-  color: #008754;
+  color: #EA002A;
   border: none;
   height: 80px;
   font-size: 40px;
@@ -187,7 +202,7 @@
 .print-button {
   width: 400px;
   background-color: white;
-  color: #008754;
+  color: #EA002A;
   border: none;
   height: 80px;
   font-size: 40px;

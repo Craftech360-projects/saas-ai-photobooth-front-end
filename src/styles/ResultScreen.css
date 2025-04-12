@@ -8,7 +8,7 @@
   bottom: 150px;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 150px;
+  margin-bottom: -65px;
   padding: 20px;
 }
 
@@ -89,7 +89,7 @@
 .next-button {
   width: 400px;
   background-color: white;
-  color: #008754;
+  color: #EA002A;
   border: none;
   height: 80px;
   font-size: 40px;

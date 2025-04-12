@@ -30,43 +30,36 @@ const QrCodeScreen = () => {
 
   return (
     <div className="screen third-background">
+      <h2 className="title9">
+        Scan the QR code to download your image
+      </h2>
       <div className="qr-code-container">
-        <h2 className="title9">
-          Scan the QR code to download your image
-        </h2>
+        <div className="qr-code-frame">
+          <div className="qr-container">
+            <QRCode
+              value={downloadUrl}
+              size={300}
+              level="H"
+              includeMargin={true}
+              renderAs="svg"
+              className="qr-code"
+            />
+          </div>
 
-        <div className="qr-container">
-          <QRCode
-            value={downloadUrl}
-            size={300}
-            level="H"
-            includeMargin={true}
-            renderAs="svg"
-            className="qr-code"
-          />
-        </div>
-
-        <div className="share-container">
-          <p className="share-text">
-            Share your avatar with your friends and tag
-            <span className="instagram-handle">
-              @Heineken_in <FaInstagram className="instagram-icon" />
-            </span>
-          </p>
-        </div>
-
-        {/* Printable content */}
-        <div ref={printRef} className="print-content">
-          <div className="result-image-container2">
-            <div className="result-wrapper">
-              <img
-                src={swappedImage}
-                alt="Face Swap Result"
-                className="result-image"
-              />
+          <div ref={printRef} className="print-content">
+            <div className="result-image-container2">
+              <div className="result-wrapper">
+                <img
+                  src={swappedImage}
+                  alt="Face Swap Result"
+                  className="result-image"
+                />
+              </div>
             </div>
           </div>
         </div>
+
+
 
         <div className="button-container">
           <button className="button print-button" onClick={handlePrint}>

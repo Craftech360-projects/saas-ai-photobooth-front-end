@@ -48,7 +48,6 @@ const ProcessingScreen = () => {
   return (
     <div className="screen third-background">
       <div className="processing-container">
-        <h1 className="title8">We are creating...</h1>
         <div className="processing-frame">
           <div className="loader-container">
             <div className="spinner"></div>

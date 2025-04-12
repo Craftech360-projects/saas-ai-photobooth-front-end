@@ -8,7 +8,7 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 220px;
+
 }
 
 .camera-frame {
@@ -114,7 +114,7 @@
 .capture-button {
   width: 550px;
   background-color: white;
-  color: #008754;
+  color: #EA002A;
   border: none;
   height: 80px;
   font-size: 40px;
@@ -134,7 +134,7 @@
 .retake-button {
   width: 550px;
   background-color: white;
-  color: #008754;
+  color: #EA002A;
   border: none;
   height: 80px;
   font-size: 40px;

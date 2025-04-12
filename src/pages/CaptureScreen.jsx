@@ -109,7 +109,6 @@ const CaptureScreen = () => {
   return (
     <div className="screen third-background">
       <div className="capture-container">
-        <h1 className="title5">Capture your face</h1>
 
         <div className="camera-frame">
           {!capturedImage ? (
