@@ -6,9 +6,9 @@ import "../styles/global.css";
 const RegistrationScreen = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    contact: "",
-    email: "",
+    name: "yamuna",
+    contact: "8197142794",
+    email: "yamun@craftech360.com",
   });
   const [errors, setErrors] = useState({});
 
@@ -26,11 +26,11 @@ const RegistrationScreen = () => {
       newErrors.name = "Name is required";
     }
 
-    if (!formData.contact.trim()) {
-      newErrors.contact = "Contact is required";
-    } else if (!/^\d{10}$/.test(formData.contact)) {
-      newErrors.contact = "Contact must be 10 digits";
-    }
+    // if (!formData.contact.trim()) {
+    //   newErrors.contact = "Contact is required";
+    // } else if (!/^\d{10}$/.test(formData.contact)) {
+    //   newErrors.contact = "Contact must be 10 digits";
+    // }
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";

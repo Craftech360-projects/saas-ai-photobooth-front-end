@@ -59,7 +59,24 @@ export const swapFaces = async (
     }
 
     // Get the public URL
-    const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
+    const publicURL = `https://cbjqtfkqfikxbwfetniz.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
+
+    // Save user details to Supabase if provided
+    if (userDetails && userDetails.email) {
+      const { error: userError } = await supabase
+        .from('userInfo')
+        .insert({  // Changed from upsert to insert
+          email: userDetails.email,
+          name: userDetails.name || '',
+          contact: userDetails.contact || '',
+          imageUrl: publicURL,
+          created_at: new Date().toISOString()
+        });
+
+      if (userError) {
+        console.error("Error saving user info:", userError);
+      }
+    }
     return publicURL;
   } catch (error) {
     console.error("Face swap error:", error);
