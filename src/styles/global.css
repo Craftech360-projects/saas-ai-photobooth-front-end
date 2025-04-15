@@ -1,11 +1,11 @@
 @font-face {
   font-family: "Heineken";
-  src: url("/fonts/heineken-regular.ttf") format("truetype");
+  src: url("/fonts/BebasNeue-Bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Heineken-Bold";
-  src: url("/fonts/heineken-bold.ttf") format("truetype");
+  src: url("/fonts/BebasNeue-Bold.ttf") format("truetype");
 }
 
 :root {
