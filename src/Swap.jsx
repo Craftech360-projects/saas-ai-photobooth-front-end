@@ -17,109 +17,109 @@ function Swap() {
   const [resultImageUrl, setResultImageUrl] = useState("https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/swapped-images/1745676112661-result.jpg");
   const [error, setError] = useState(null);
   const printRef = useRef();
-  const restart = "/plainb.png";
-  // useEffect(() => {
-  //   // Check if we have the required data
-  //   if (!sourceImageBlob || !selectedImage || !userDetails) {
-  //     console.error("Missing required data:", { sourceImageBlob, selectedImage, userDetails });
-  //     navigate("/");
-  //     return;
-  //   }
-  //   const LoadingAnimation = () => {
-  //     return (
-  //       <div
-  //         style={{
-  //           display: "flex",
-  //           flexDirection: "column",
-  //           justifyContent: "center",
-  //           alignItems: "center",
-  //           height: "100vh",
-  //           width: "100vw",
-  //         }}
-  //       >
-  //         <LoaderContainer>
-  //           <Bar color="rgb(255 255 255)" delay={0.3} /> {/* Blue */}
-  //           <Bar color="rgb(255 255 255)" delay={0.2} /> {/* Green */}
-  //           <Bar color="rgb(255 255 255)" delay={0.1} /> {/* Yellow */}
-  //           <Bar color="rgb(255 255 255)" delay={0} /> {/* Red */}
-  //         </LoaderContainer>
-  //       </div>
-  //     );
-  //   };
-  //   const processImages = async () => {
-  //     setLoading(true);
-  //     try {
-  //       // Create FormData
-  //       const formData = new FormData();
-  //       // formData.append(
-  //       //   "targetImage",
-  //       //   new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
-  //       // );
+  const restart = "/home.png";
+  useEffect(() => {
+    // Check if we have the required data
+    if (!sourceImageBlob || !selectedImage || !userDetails) {
+      console.error("Missing required data:", { sourceImageBlob, selectedImage, userDetails });
+      navigate("/");
+      return;
+    }
+    const LoadingAnimation = () => {
+      return (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          <LoaderContainer>
+            <Bar color="rgb(255 255 255)" delay={0.3} /> {/* Blue */}
+            <Bar color="rgb(255 255 255)" delay={0.2} /> {/* Green */}
+            <Bar color="rgb(255 255 255)" delay={0.1} /> {/* Yellow */}
+            <Bar color="rgb(255 255 255)" delay={0} /> {/* Red */}
+          </LoaderContainer>
+        </div>
+      );
+    };
+    const processImages = async () => {
+      setLoading(true);
+      try {
+        // Create FormData
+        const formData = new FormData();
+        formData.append(
+          "targetImage",
+          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
+        );
 
-  //       // Fetch the selected image and append it
-  //       const response = await fetch(selectedImage);
-  //       if (!response.ok) throw new Error("Failed to fetch selected image");
+        // Fetch the selected image and append it
+        const response = await fetch(selectedImage);
+        if (!response.ok) throw new Error("Failed to fetch selected image");
         
-  //       const targetImageBlob = await response.blob();
-  //       formData.append(
-  //         "sourceImage",
-  //         new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
-  //       );
+        const targetImageBlob = await response.blob();
+        formData.append(
+          "sourceImage",
+          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
+        );
 
-  //       // Add user details
-  //       formData.append("name", userDetails.name);
-  //       formData.append("email", userDetails.email);
-  //       formData.append("prompt", location.state.selectedImagePrompt);
-  //       console.log("FormData:", formData.get("name"), formData.get("email"), formData.get("prompt"));
-  //       // Make API call to swap faces
-  //       const swapResponse = await fetch(
-  //         "http://localhost:8000/api/swap-face/", {
-  //           method: "POST",
-  //           body: formData,
-  //         }
-  //       );
+        // Add user details
+        formData.append("name", userDetails.name);
+        formData.append("email", userDetails.email);
+        // formData.append("prompt", location.state.selectedImagePrompt);
+        console.log("FormData:", formData.get("name"), formData.get("email"), formData.get("prompt"));
+        // Make API call to swap faces
+        const swapResponse = await fetch(
+          "http://localhost:8000/api/swap-face/", {
+            method: "POST",
+            body: formData,
+          }
+        );
 
-  //       if (!swapResponse.ok) {
-  //         throw new Error(`Swap API error: ${swapResponse.statusText}`);
-  //       }
+        if (!swapResponse.ok) {
+          throw new Error(`Swap API error: ${swapResponse.statusText}`);
+        }
 
-  //       const swappedImageBlob = await swapResponse.blob();
-  //       const convertedBlob = await convertImageToJPEG(swappedImageBlob);
+        const swappedImageBlob = await swapResponse.blob();
+        const convertedBlob = await convertImageToJPEG(swappedImageBlob);
 
-  //       // Generate filename with timestamp
-  //       const fileName = `swapped-images/${Date.now()}-result.jpg`;
+        // Generate filename with timestamp
+        const fileName = `swapped-images/${Date.now()}-result.jpg`;
 
-  //       // Upload to Supabase
-  //       const { error: uploadError } = await supabase.storage
-  //         .from("nimhans")
-  //         .upload(fileName, convertedBlob, {
-  //           contentType: "image/jpeg",
-  //         });
+        // Upload to Supabase
+        const { error: uploadError } = await supabase.storage
+          .from("nimhans")
+          .upload(fileName, convertedBlob, {
+            contentType: "image/jpeg",
+          });
 
-  //       if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-  //       // Get public URL
-  //       const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/${fileName}`;
-  //       console.log("Public URL:", publicURL);
+        // Get public URL
+        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/${fileName}`;
+        console.log("Public URL:", publicURL);
 
-  //       // // Save user details to database
-  //       // const { error: insertError } = await supabase
-  //       //   .from("nimhans")
-  //       //   .insert([{ ...userDetails, publicURL }]);
+        // // Save user details to database
+        // const { error: insertError } = await supabase
+        //   .from("nimhans")
+        //   .insert([{ ...userDetails, publicURL }]);
 
-  //       // if (insertError) throw insertError;
+        // if (insertError) throw insertError;
 
-  //       setResultImageUrl(publicURL);
-  //     } catch (err) {
-  //       console.error("Error processing images:", err);
-  //       setError(err.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        setResultImageUrl(publicURL);
+      } catch (err) {
+        console.error("Error processing images:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   processImages();
-  // }, []); 
+    processImages();
+  }, []); 
   
   // // Empty dependency array since we want this to run once on mount
 
@@ -208,7 +208,7 @@ if (resultImageUrl) {
 
             <button
               onClick={goHome}
-              className="w-[365px] h-[102px] text-black px-8 py-4 text-4xl font-bold rounded-lg bg-cover bg-center"
+              className="w-[365px] h-[102px] text-black px-8 py-6 text-4xl font-bold rounded-lg bg-cover bg-center mt-4"
               style={{
                 backgroundImage: `url(${restart})`,
                 backgroundSize: "cover",
@@ -216,7 +216,7 @@ if (resultImageUrl) {
                 fontFamily: 'Oswald, sans-serif',
               }}
             >
-              RESTART
+           
             </button>
           </div>
         </div>
