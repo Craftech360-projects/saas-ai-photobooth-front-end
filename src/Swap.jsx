@@ -14,7 +14,7 @@ function Swap() {
   const selectedImage = location.state?.selectedImage;
   const userDetails = location.state?.userDetails;
   const [loading, setLoading] = useState(false);
-  const [resultImageUrl, setResultImageUrl] = useState("https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/swapped-images/1745676112661-result.jpg");
+  const [resultImageUrl, setResultImageUrl] = useState();
   const [error, setError] = useState(null);
   const printRef = useRef();
   const restart = "/home.png";
@@ -63,17 +63,17 @@ function Swap() {
         const targetImageBlob = await response.blob();
         formData.append(
           "sourceImage",
-          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
+          new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
         );
 
         // Add user details
         formData.append("name", userDetails.name);
         formData.append("email", userDetails.email);
-        // formData.append("prompt", location.state.selectedImagePrompt);
-        console.log("FormData:", formData.get("name"), formData.get("email"), formData.get("prompt"));
+
         // Make API call to swap faces
         const swapResponse = await fetch(
-          "http://localhost:8000/api/swap-face/", {
+          "http://localhost:8000/api/swap-face/",
+          {
             method: "POST",
             body: formData,
           }
@@ -175,56 +175,57 @@ function Swap() {
   }
 
 
-if (resultImageUrl) {
-  return (
-    <div className="flex flex-col items-center justify-center  ">
-      <div className="w-full max-w-4xl mt-50 p-8   ">
-        <div className="flex justify-between items-center pt-20">
-          <div className="text-3xl text-white">&nbsp;</div>
-        </div>
-
-        {/* Centered Image */}
-        <div className="flex justify-center">
-          <img
-            src={resultImageUrl}
-            alt="Swapped Result"
-            className="w-full p-10 animate__animated animate__zoomIn max-h-[80vh]"
-            style={{ objectFit: "contain" }}
-          />
-        </div>
-
-        <div className="flex justify-start items-center mt-8 px-10">
-          <div className="bg-white p-4 border-12 border-orange-400">
-            <QRCodeSVG value={resultImageUrl} size={180} />
+  if (resultImageUrl) {
+    return (
+      <div className="flex flex-col items-center justify-center  ">
+        <div className="w-full max-w-4xl mt-8 p-8">
+          <div className="flex justify-between items-center pt-20">
+            <div className="text-3xl text-white">&nbsp;</div>
           </div>
-
-          <div className="text-white flex flex-col ml-50">
-            <h1
-              className="text-4xl mb-4 font-semibold text-center"
-              style={{ fontFamily: 'Oswald, sans-serif' }}
-            >
-              Scan the QR Code to download image
-            </h1>
-
-            <button
-              onClick={goHome}
-              className="w-[365px] h-[102px] text-black px-8 py-6 text-4xl font-bold rounded-lg bg-cover bg-center mt-4"
-              style={{
-                backgroundImage: `url(${restart})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                fontFamily: 'Oswald, sans-serif',
-              }}
-            >
-           
-            </button>
+  
+          {/* Centered Image */}
+          <div className="flex justify-center">
+            <img
+              src={resultImageUrl}
+              alt="Swapped Result"
+              className="w-full p-10 animate__animated animate__zoomIn max-h-[80vh]"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+  
+          <div className="flex justify-start items-center mt-8 px-10">
+            <div className="bg-white p-4 border-12 border-orange-400">
+              <QRCodeSVG value={resultImageUrl} size={180} />
+            </div>
+  
+            <div className="text-white flex flex-col ml-50">
+              <h1
+                className="text-4xl mb-4 font-semibold text-center"
+                style={{ fontFamily: 'Oswald, sans-serif' }}
+              >
+                Scan the QR Code to download image
+              </h1>
+  
+              <button
+                onClick={goHome}
+                className="w-[365px] h-[102px] text-black px-8 py-4 text-4xl font-bold rounded-lg bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${restart})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  fontFamily: 'Oswald, sans-serif',
+                }}
+              >
+                RESTART
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-  return null;
-}
+    );
+  }
+    return null;
+  }
+  
 
 export default Swap;
