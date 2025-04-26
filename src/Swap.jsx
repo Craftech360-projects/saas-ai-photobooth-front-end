@@ -216,7 +216,7 @@ function Swap() {
                   fontFamily: 'Oswald, sans-serif',
                 }}
               >
-                RESTART
+               
               </button>
             </div>
           </div>
