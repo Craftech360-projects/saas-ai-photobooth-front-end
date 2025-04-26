@@ -51,10 +51,10 @@ function Swap() {
       try {
         // Create FormData
         const formData = new FormData();
-        formData.append(
-          "targetImage",
-          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
-        );
+        // formData.append(
+        //   "targetImage",
+        //   new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
+        // );
 
         // Fetch the selected image and append it
         const response = await fetch(selectedImage);
@@ -63,17 +63,17 @@ function Swap() {
         const targetImageBlob = await response.blob();
         formData.append(
           "sourceImage",
-          new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
+          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
         );
 
         // Add user details
         formData.append("name", userDetails.name);
         formData.append("email", userDetails.email);
-
+        formData.append("prompt", location.state.selectedImagePrompt);
+        console.log("FormData:", formData.get("name"), formData.get("email"), formData.get("prompt"));
         // Make API call to swap faces
         const swapResponse = await fetch(
-          "http://localhost:8000/api/swap-face/",
-          {
+          "http://localhost:8000/api/swap-face/", {
             method: "POST",
             body: formData,
           }
@@ -91,7 +91,7 @@ function Swap() {
 
         // Upload to Supabase
         const { error: uploadError } = await supabase.storage
-          .from("infy")
+          .from("nimhans")
           .upload(fileName, convertedBlob, {
             contentType: "image/jpeg",
           });
@@ -99,15 +99,15 @@ function Swap() {
         if (uploadError) throw uploadError;
 
         // Get public URL
-        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/infy/${fileName}`;
+        const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/${fileName}`;
         console.log("Public URL:", publicURL);
 
         // // Save user details to database
-        const { error: insertError } = await supabase
-          .from("infy")
-          .insert([{ ...userDetails, publicURL }]);
+        // const { error: insertError } = await supabase
+        //   .from("nimhans")
+        //   .insert([{ ...userDetails, publicURL }]);
 
-        if (insertError) throw insertError;
+        // if (insertError) throw insertError;
 
         setResultImageUrl(publicURL);
       } catch (err) {
