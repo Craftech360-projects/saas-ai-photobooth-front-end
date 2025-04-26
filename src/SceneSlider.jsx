@@ -38,7 +38,7 @@ const SceneSlider = ({ scenes, onSelect }) => {
         </button>
 
         {/* Slides */}
-        <div className="relative h-[750px] w-[450px]">
+        <div className="relative h-[750px] w-[450px] justidfy-center item-center">
           {scenes.map((scene, index) => {
             // Calculate position relative to active slide
             const position = index - activeIndex;
@@ -46,18 +46,18 @@ const SceneSlider = ({ scenes, onSelect }) => {
             return (
               <div
                 key={scene}
-                 className={cn("absolute left-0 top-0 h-full w-full transition-all duration-300 ease-in-out", {
+                 className={cn("absolute left-0 top-30 h-full w-full transition-all duration-300 ease-in-out", {
                          "z-30 scale-100 rotate-0": position === 0,
                          "z-20 -translate-x-[40%] scale-80 rotate-[-0deg]": position === -1 || position === 2,
                          "z-10 translate-x-[40%] scale-80 rotate-[0deg]": position === 1 || position === -2,
                        })}
               >
-                <div className="relative h-full w-full overflow-hidden  border-2 border-yellow-400 bg-gray-900 shadow-xl">
+                <div className="relative h-auto w-full overflow-hidden  border-2 border-yellow-400 bg-gray-900 shadow-xl">
                   <img
                     onClick={handleSceneSelect}
                     src={scene}
                     alt={`Scene ${index + 1}`}
-                    className="h-full w-full object-cover"
+                    className="h-auto w-full object-cover"
                   />
                 </div>
               </div>

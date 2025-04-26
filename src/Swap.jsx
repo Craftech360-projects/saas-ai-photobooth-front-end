@@ -14,7 +14,7 @@ function Swap() {
   const selectedImage = location.state?.selectedImage;
   const userDetails = location.state?.userDetails;
   const [loading, setLoading] = useState(false);
-  const [resultImageUrl, setResultImageUrl] = useState();
+  const [resultImageUrl, setResultImageUrl] = useState(null);
   const [error, setError] = useState(null);
   const printRef = useRef();
   const restart = "/home.png";
@@ -121,7 +121,7 @@ function Swap() {
     processImages();
   }, []); 
   
-  // // Empty dependency array since we want this to run once on mount
+  // Empty dependency array since we want this to run once on mount
 
   // Helper function to convert image to JPEG
  
@@ -184,7 +184,7 @@ function Swap() {
           </div>
   
           {/* Centered Image */}
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-20">
             <img
               src={resultImageUrl}
               alt="Swapped Result"
@@ -195,10 +195,10 @@ function Swap() {
   
           <div className="flex justify-start items-center mt-8 px-10">
             <div className="bg-white p-4 border-12 border-orange-400">
-              <QRCodeSVG value={resultImageUrl} size={180} />
+              <QRCodeSVG value={resultImageUrl} size={240} />
             </div>
   
-            <div className="text-white flex flex-col ml-50">
+            <div className="text-white flex flex-col ml-20">
               <h1
                 className="text-4xl mb-4 font-semibold text-center"
                 style={{ fontFamily: 'Oswald, sans-serif' }}
