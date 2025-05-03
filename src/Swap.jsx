@@ -22,6 +22,8 @@ function Swap() {
     // Check if we have the required data
     if (!sourceImageBlob || !selectedImage || !userDetails) {
       console.error("Missing required data:", { sourceImageBlob, selectedImage, userDetails });
+
+      
       navigate("/");
       return;
     }
@@ -38,10 +40,10 @@ function Swap() {
           }}
         >
           <LoaderContainer>
-            <Bar color="rgb(255 255 255)" delay={0.3} /> {/* Blue */}
-            <Bar color="rgb(255 255 255)" delay={0.2} /> {/* Green */}
-            <Bar color="rgb(255 255 255)" delay={0.1} /> {/* Yellow */}
-            <Bar color="rgb(255 255 255)" delay={0} /> {/* Red */}
+            <Bar color="#fff" delay={0.3} />
+            <Bar color="#fff" delay={0.2} />
+            <Bar color="#fff" delay={0.1} />
+            <Bar color="#fff" delay={0} />
           </LoaderContainer>
         </div>
       );
@@ -69,6 +71,8 @@ function Swap() {
         // Add user details
         formData.append("name", userDetails.name);
         formData.append("email", userDetails.email);
+
+        console.log("FormData:", formData);
 
         // Make API call to swap faces
         const swapResponse = await fetch(
@@ -102,12 +106,21 @@ function Swap() {
         const publicURL = `https://fuhqxfbyvrklxggecynt.supabase.co/storage/v1/object/public/nimhans/${fileName}`;
         console.log("Public URL:", publicURL);
 
-        // // Save user details to database
-        // const { error: insertError } = await supabase
-        //   .from("nimhans")
-        //   .insert([{ ...userDetails, publicURL }]);
+        // Save user details to database
+        const { error: insertError } = await supabase
+          .from("nimhans")
+          .insert([{ 
+            name: userDetails.name,
+            email: userDetails.email,
+            gender: userDetails.gender,
+            publicURL: publicURL,
+            created_at: new Date().toISOString()
+          }]);
 
-        // if (insertError) throw insertError;
+        if (insertError) {
+          console.error("Error saving to database:", insertError);
+          throw insertError;
+        }
 
         setResultImageUrl(publicURL);
       } catch (err) {
@@ -165,42 +178,59 @@ function Swap() {
     );
   }
 
+  // Add this constant at the top with other constants
+    const backgroundImage2 = "/background.png";
+  
+  // Modify the loading return statement
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div 
+        className="flex items-center justify-center h-screen"
+        style={{ 
+          backgroundImage: `url(${backgroundImage2})`, 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center' 
+        }}
+      >
         <LoadingPage />
-      
       </div>
     );
   }
-
-
+  
+  // Modify the result return statement
   if (resultImageUrl) {
     return (
-      <div className="flex flex-col items-center justify-center  ">
+      <div 
+        className="flex flex-col items-center justify-center min-h-screen"
+        style={{ 
+          backgroundImage: `url(${backgroundImage2})`, 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center' 
+        }}
+      >
         <div className="w-full max-w-4xl mt-8 p-8">
           <div className="flex justify-between items-center pt-20">
             <div className="text-3xl text-white">&nbsp;</div>
           </div>
   
           {/* Centered Image */}
-          <div className="flex justify-center mt-20">
+          <div className="flex justify-center mt-38">
             <img
               src={resultImageUrl}
               alt="Swapped Result"
-              className="w-full p-10 animate__animated animate__zoomIn max-h-[80vh]"
+              className=" animate__animated animate__zoomIn max-h-[80vh]"
               style={{ objectFit: "contain" }}
             />
           </div>
   
           <div className="flex justify-start items-center mt-8 px-10">
-            <div className="bg-white p-4 border-12 border-orange-400">
+            <div className="bg-white p-4" style={{ border: '12px solid #09155B' }}>
               <QRCodeSVG value={resultImageUrl} size={240} />
             </div>
-  
+
             <div className="text-white flex flex-col ml-20">
               <h1
-                className="text-4xl mb-4 font-semibold text-center"
+                className="text-4xl mb-8 font-semibold text-center"
                 style={{ fontFamily: 'Oswald, sans-serif' }}
               >
                 Scan the QR Code to download image
@@ -208,7 +238,7 @@ function Swap() {
   
               <button
                 onClick={goHome}
-                className="w-[365px] h-[102px] text-black px-8 py-4 text-4xl font-bold rounded-lg bg-cover bg-center"
+                className="w-[365px] h-[111px] text-black px-8 py-4 text-4xl font-bold rounded-lg bg-cover bg-center"
                 style={{
                   backgroundImage: `url(${restart})`,
                   backgroundSize: "cover",

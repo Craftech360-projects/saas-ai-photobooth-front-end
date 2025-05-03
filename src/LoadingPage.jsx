@@ -93,7 +93,7 @@ const LoaderContainer = styled.div`
 const Loader = styled.div`
   width: 150px; /* Increased size */
   height: 150px; /* Increased size */
-  border: 10px solid #FFC462; /* Primary color */
+  border: 10px solid #fff; /* Primary color */
   border-radius: 50%;
   position: relative;
   animation: ${spinAndPulse} 2s linear infinite;

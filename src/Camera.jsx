@@ -36,22 +36,24 @@ const CaptureButton = styled.button`
 const StyledInput = styled.input`
   padding-left: 35px;
   font-size: 34px;
-  border: 4px solid #FFC462;
+  border: 4px solid #fff;
   text-align: left;
   color: #fff;
+  border-radius: 80px;
   font-weight: semi-bold;
   width: 760px;
   height: 110px;
   text-transform: capitalize;
-  background-color: #000000;
+  background-color: #091747;
   fontFamily: 'Inter, sans-serif'
+  margin-top: 150px;
   &::placeholder {
     color: #fff;
   }
 `;
 
-const backgroundImage = "/background2.jpg";
-const backgroundImage2 = "/background.jpg";
+const backgroundImage = "/background2.png";
+const backgroundImage2 = "/background.png";
 
 function Camer() {
   const videoRef = useRef(null);
@@ -63,8 +65,8 @@ function Camer() {
   const [showGenderSelection, setShowGenderSelection] = useState(false);
   const [isImg, setIsImg] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    name: "rahul",
-    email: "rahul@gamil.com",
+    name: "",
+    email: "",
     gender: "",
   });
   const [selectedOption, setSelectedOption] = useState(null);
@@ -75,18 +77,18 @@ function Camer() {
   const submit = "/submit.png";  
   const superheroPrompts = {
     male: {
-      "superheros/male/1.png": "superman",
-      "superheros/male/2.png": "Male superhero with lightning powers, electrifying aura, sleek costume, intense gaze",
-      "superheros/male/3.png": "Male superhero with flight ability, soaring through the sky, heroic pose, confident smile",
-      "superheros/male/4.png": "Male superhero with telekinetic powers, mind over matter, focused concentration, powerful stance",
-      "superheros/male/5.png": "Male superhero with super speed, blurring motion, aerodynamic suit, determined sprint",
+      "outerspace/male/1.png": "superman",
+      "outerspace/male/2.png": "Male superhero with lightning powers, electrifying aura, sleek costume, intense gaze",
+      "outerspace/male/3.png": "Male superhero with flight ability, soaring through the sky, heroic pose, confident smile",
+      "outerspace/male/4.png": "Male superhero with telekinetic powers, mind over matter, focused concentration, powerful stance",
+      "outerspace/male/5.png": "Male superhero with super speed, blurring motion, aerodynamic suit, determined sprint",
     },
     female: {
-      "superheros/female/1.png": "Female superhero with incredible agility, acrobatic prowess, flexible suit, graceful movements",
-      "superheros/female/2.png": "Female superhero with energy blasts, radiant energy, protective armor, fierce determination",
-      "superheros/female/3.png": "Female superhero with invisibility powers, cloaked in shadows, stealthy presence, mysterious allure",
-      "superheros/female/4.png": "Female superhero with healing abilities, soothing aura, compassionate expression, nurturing touch",
-      "superheros/female/5.png": "Female superhero with weather control, commanding the elements, flowing cape, powerful presence",
+      "outerspace/female/1.png": "Female superhero with incredible agility, acrobatic prowess, flexible suit, graceful movements",
+      "outerspace/female/2.png": "Female superhero with energy blasts, radiant energy, protective armor, fierce determination",
+      "outerspace/female/3.png": "Female superhero with invisibility powers, cloaked in shadows, stealthy presence, mysterious allure",
+      "outerspace/female/4.png": "Female superhero with healing abilities, soothing aura, compassionate expression, nurturing touch",
+      "outerspace/female/5.png": "Female superhero with weather control, commanding the elements, flowing cape, powerful presence",
     },
   };
 
@@ -134,7 +136,7 @@ function Camer() {
   const selectGender = (gender) => {
     setUserDetails(prev => ({...prev, gender}));
     setShowGenderSelection(false);
-    setImageFolder(`superheros/${gender}`);
+    setImageFolder(`outerspace/${gender}`); // Changed from superheros to outerspace
     setShowScene(true);
   };
 
@@ -195,17 +197,35 @@ function Camer() {
       className="text-center w-screen h-screen"
       style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-      {/* Initial Form - Name and Email */}
       {isStarted && (
         <div
-          className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center"
+          className="flex flex-col gap-5 w-full h-full rounded-lg items-center justify-center "
           style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
         >
-         
+          <div className="flex flex-col gap-6 mt-30">
+            <StyledInput
+              type="text"
+              name="name"
+              value={userDetails.name}
+              onChange={handleChange}
+              placeholder="Enter your name"
+              className={errors.name ? "error" : ""}
+            />
+            <StyledInput
+              type="email"
+              name="email"
+              value={userDetails.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              className={errors.email ? "error" : ""}
+            />
+            {errors.name && <div className="text-red-500">{errors.name}</div>}
+            {errors.email && <div className="text-red-500">{errors.email}</div>}
+          </div>
 
           <button
             onClick={handleInitialSubmit}
-            className="w-[428px] h-[104px] cursor-pointer border-none transition-colors absolute top-[75%]"
+            className="w-[428px] h-[104px] cursor-pointer border-none transition-colors absolute top-[65%]"
           >
             <img
               src={submit}
@@ -226,7 +246,7 @@ function Camer() {
             Select Your Gender
           </h1>
           
-          <div className="flex flex-col gap-8 items-center">
+          <div className="flex  gap-8 items-center">
             <div 
               className="cursor-pointer transition-transform hover:scale-105"
               onClick={() => selectGender("male")}
@@ -266,7 +286,10 @@ function Camer() {
 
       {/* Camera View */}
       {isCameraOn && (
-        <div className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat">
+        <div 
+          className="text-center w-screen h-screen flex flex-col justify-center items-center bg-no-repeat"
+          style={{ backgroundImage: `url(${backgroundImage2})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+        >
           <div className="text-center text-6xl font-semibold mb-48 text-white" style={{ fontFamily: 'Oswald, sans-serif' }}>
             Strike a Pose
           </div>
@@ -302,7 +325,19 @@ function Camer() {
 
       {/* Scene Selection */}
       {showScene && (
-        <SceneSlider scenes={scenes} onSelect={handleSceneSelection} />
+        <div 
+          className="w-screen h-screen relative"
+          style={{ 
+            backgroundImage: `url(${backgroundImage2})`, 
+            backgroundSize: 'cover', 
+            backgroundPosition: 'center',
+            zIndex: 10 // Add z-index to ensure content is clickable
+          }}
+        >
+          <div className="relative z-20"> {/* Wrapper with higher z-index */}
+            <SceneSlider scenes={scenes} onSelect={handleSceneSelection} />
+          </div>
+        </div>
       )}
     </section>
   );
