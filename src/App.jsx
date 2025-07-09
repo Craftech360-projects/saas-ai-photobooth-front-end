@@ -7,13 +7,15 @@ import Result from './Result';
 import LoadingPage from './LoadingPage';
 import Error from './Error';
 import Admin from './Admin';
+import Start from './Start';
 
 function App() {
   return (
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<Camer />} />
+          <Route path="/register" element={<Camer />} />
+                <Route path="/" element={<Start />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/result" element={<Result />} />
           <Route path="/loading" element={<LoadingPage />} />

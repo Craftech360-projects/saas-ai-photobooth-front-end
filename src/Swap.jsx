@@ -4,10 +4,10 @@ import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { supabase } from "./supabaseClient";
-import f1 from "/assets/f1.png"; // Import the PNG image
-import f2 from "/assets/f2.png"; // Import the PNG image
-import m1 from "/assets/m1.png"; // Import the PNG image
-import m2 from "/assets/m2.png"; // Import the PNG image
+import f1 from "/Female 01.jpg"; // Import the PNG image
+import f2 from "/Female 02.jpg"; // Import the PNG image
+import m1 from "/Male 01.jpg"; // Import the PNG image
+import m2 from "/Male 02.jpg"; // Import the PNG image
 
 function Swap() {
   const navigate = useNavigate();
@@ -36,6 +36,7 @@ function Swap() {
 
       try {
         const formData = new FormData();
+        console.log("sourceImageBlob", sourceImageBlob);
         formData.append(
           "targetImage",
           new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
@@ -192,6 +193,10 @@ function Swap() {
           justifyContent: "flex-start",
           alignItems: "center",
           paddingTop: "800px",
+          backgroundImage: `url(/bg2.png)`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
         }}
       >
         {isGender === "male" ? (
@@ -212,7 +217,7 @@ function Swap() {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
                 setTimeout(() => {
-                  handleSubmit(e, `m1.jpg`);
+                  handleSubmit(e, `Male 01.jpg`);
                 }, 500); // Wait 50ms then proceed
               }}
             />
@@ -232,7 +237,7 @@ function Swap() {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
                 setTimeout(() => {
-                  handleSubmit(e, `m2.jpg`);
+                  handleSubmit(e, `Male 02.jpg`);
                 }, 500); // Wait 50ms then proceed
               }}
             />
@@ -255,7 +260,7 @@ function Swap() {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
                 setTimeout(() => {
-                  handleSubmit(e, `f1.jpg`);
+                  handleSubmit(e, `Female 01.jpg`);
                 }, 500); // Wait 50ms then proceed
               }}
             />
@@ -275,7 +280,7 @@ function Swap() {
                 e.target.style.boxShadow =
                   "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
                 setTimeout(() => {
-                  handleSubmit(e, `f2.jpg`);
+                  handleSubmit(e, `female 02.jpg`);
                 }, 500); // Wait 50ms then proceed
               }}
             />
@@ -305,85 +310,7 @@ function Swap() {
     animation: ${animloader} 0.3s ${(props) => props.delay}s linear infinite alternate;
   `;
   
-  // const LoadingAnimation = () => {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         flexDirection: "column",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         height: "100vh",
-  //         width: "100vw",
-  //       }}
-  //     >
-  //       <LoaderContainer>
-  //         <Bar color="rgb(31 187 238)" delay={0.3} /> {/* Blue */}
-  //         <Bar color="rgb(176 210 55)" delay={0.2} /> {/* Green */}
-  //         <Bar color="rgb(255 202 7)" delay={0.1} /> {/* Yellow */}
-  //         <Bar color="rgb(212 58 42)" delay={0} /> {/* Red */}
-  //       </LoaderContainer>
-  //     </div>
-  //   );
-  // };
-  
-  // const LoadingAnimation = () => {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         flexDirection: "column",
-  //         justifyContent: "center",
-  //         alignItems: "flex-start", // Align items to the left
-  //         height: "100vh",
-  //         width: "100vw",
-  //         paddingLeft: "250px", // Add padding from the left
-  //       }}
-  //     >
-  //       {/* Display the loading text with animation */}
-  //       <div style={{ textAlign: "left" }}>
-  //         <h2
-  //           style={{
-  //             fontSize: "100px",
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             animation: "fadeInOut 3s infinite", // Apply animation
-  //           }}
-  //         >
-  //           <span style={{ fontWeight: "bold" }}>Sculpting</span>
-  //         </h2>
-  //         <h2
-  //           style={{
-  //             fontSize: "100px",
-  //             fontWeight: "normal", // Make this part normal weight
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             animation: "fadeInOut 3s infinite", // Apply animation to both lines
-  //           }}
-  //         >
-  //           your future self...
-  //         </h2>
-  //       </div>
-  
-  //       {/* Add CSS for the animation */}
-  //       <style>
-  //         {`
-  //           @keyframes fadeInOut {
-  //             0% {
-  //               opacity: 0;
-  //             }
-  //             50% {
-  //               opacity: 1;
-  //             }
-  //             100% {
-  //               opacity: 0;
-  //             }
-  //           }
-  //         `}
-  //       </style>
-  //     </div>
-  //   );
-  // };
+
   const LoadingAnimation = () => {
     return (
       <div
