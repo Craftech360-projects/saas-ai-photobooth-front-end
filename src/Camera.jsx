@@ -84,12 +84,15 @@ function Camer() {
     );
   };
 
-  const handleImageClick = () => {
-    setIsImg(`${isGender === "male" ? "m" : "f"}${currentIndex + 1}.png`);
-    setIsCameraOn(true);
-    setIsGender("");
-  };
+const handleImageClick = () => {
+  // Get the actual imported image (e.g., m1, f2) instead of a string
+  const selectedImageFile = images[isGender][currentIndex];
 
+  // Pass it in the navigation state
+  setIsImg(selectedImageFile);
+  setIsCameraOn(true);
+  setIsGender("");
+};
 
   const getTransformStyle = (index) => {
     const offset = index - currentIndex;

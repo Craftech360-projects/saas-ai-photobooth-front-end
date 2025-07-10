@@ -4,7 +4,7 @@
   src: url("/hoves.otf") format("truetype");
   /* Replace '/path/to/font.ttf' with the actual path to your .ttf file */
 }
-
+/* 
 body {
   margin: 0;
   padding: 0;
@@ -13,14 +13,13 @@ body {
   overflow: hidden;
   display: flex;
   place-items: center;
-  /* background-color: #eeeee4; */
   background-image: url("/bg.png");
   background-position: center;
   background-repeat: no-repeat;
   justify-content: center;
   background-size: cover;
   font-family: Roboto, sans-serif;
-}
+} */
 
 p {
   text-transform: capitalize;

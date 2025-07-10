@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import imageData from "../assets/test.json"; // Adjust the import path as necessary
 import captureImageIcon from "/assets/pmagic.png"; // Import the PNG imag
-import m1 from "/assets/m1.png"; // Import the PNG imag
-import m2 from "/assets/m2.png"; // Import the PNG imag
-import f1 from "/assets/f1.png"; // Import the PNG imag
-import f2 from "/assets/f2.png"; // Import the PNG imag
+import m1 from "/assets/Male 01.jpg"; // Import the PNG imag
+import m2 from "/assets/Male 02.jpg"; // Import the PNG imag
+import f1 from "/assets/Female 01.jpg"; // Import the PNG imag
+import f2 from "/assets/Female 02.jpg"; // Import the PNG imag
 const ImageSelectionForm = ({ selectImage, handleSubmit, setIsGender }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
@@ -44,7 +44,7 @@ const ImageSelectionForm = ({ selectImage, handleSubmit, setIsGender }) => {
             }}
             onClick={(e) => {
               e.target.style.border = "8px solid #30A6EC"; // Change background
-              selectImage(`m1.jpg`);
+              selectImage(`Male 01.jpg`);
               setTimeout(() => {
                 setIsSelected(true);
               }, 500); // Wait 50ms then proceed
@@ -64,7 +64,7 @@ const ImageSelectionForm = ({ selectImage, handleSubmit, setIsGender }) => {
             }}
             onClick={(e) => {
               e.target.style.border = "8px solid #30A6EC"; // Change background
-              selectImage(`m2.jpg`);
+              selectImage(`Male 02.jpg`);
               setTimeout(() => {
                 setIsSelected(true);
               }, 500); // Wait 50ms then proceed
@@ -89,7 +89,7 @@ const ImageSelectionForm = ({ selectImage, handleSubmit, setIsGender }) => {
             }}
             onClick={(e) => {
               e.target.style.border = "8px solid #30A6EC"; // Change background
-              selectImage(`f2.jpg`);
+              selectImage(`Femal 02.jpg`);
               setTimeout(() => {
                 setIsSelected(true);
               }, 500); // Wait 50ms then proceed
@@ -109,7 +109,7 @@ const ImageSelectionForm = ({ selectImage, handleSubmit, setIsGender }) => {
             }}
             onClick={(e) => {
               e.target.style.border = "8px solid #30A6EC"; // Change background
-              selectImage(`f1.jpg`);
+              selectImage(`Female 01.jpg`);
               setTimeout(() => {
                 setIsSelected(true);
               }, 500); // Wait 50ms then proceed

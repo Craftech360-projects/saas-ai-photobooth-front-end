@@ -1,579 +1,229 @@
-/* eslint-disable no-unused-vars */
 import QRCode from "qrcode.react";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { supabase } from "./supabaseClient";
-import f1 from "/Female 01.jpg"; // Import the PNG image
-import f2 from "/Female 02.jpg"; // Import the PNG image
-import m1 from "/Male 01.jpg"; // Import the PNG image
-import m2 from "/Male 02.jpg"; // Import the PNG image
+import bg2 from "/bg2.png";
+import home from "/assets/home.png";
+
+// --- Styled Spinner ---
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  border: 12px solid rgba(255, 255, 255, 0.2);
+  border-left-color: #7A4BFF;
+  border-right-color: #4FCFFB;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: ${spin} 1s linear infinite;
+`;
 
 function Swap() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const sourceImageBlob = location.state?.sourceImage;
   const selectedImage = location.state?.isImg;
   const userDetails = location.state?.userDetails;
-  const isGender = ""; // Static gender value from location state
-  const [loading, setLoading] = useState(false); // State to manage loading animation
-  const [resultImageUrl, setResultImageUrl] = useState(null); // Store the result image URL
-  const [imageLoaded, setImageLoaded] = useState(false); // State to check if image has been loaded
-  const printRef = useRef(); // Ref for printable image
 
-  const [hasFetched, setHasFetched] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [resultImageUrl, setResultImageUrl] = useState(null);
+  const [hasRun, setHasRun] = useState(false);
+  const printRef = useRef();
 
   useEffect(() => {
-    if (hasFetched) return; // Prevent re-execution
-    console.log("this one is working1")
-    const fetchData = async () => {
-      setHasFetched(true); // Mark as executed
-      if (!sourceImageBlob) {
-        console.error("Source image is not provided.");
+    if (hasRun || !sourceImageBlob || !selectedImage || !userDetails) {
+      if (!sourceImageBlob || !selectedImage || !userDetails) {
+        console.error("Incomplete data passed to Swap component. Redirecting home.");
         navigate("/");
       }
-      setLoading(true);
+      return;
+    }
 
+    const processAndSaveData = async () => {
+      setHasRun(true);
       try {
-        const formData = new FormData();
-        console.log("sourceImageBlob", sourceImageBlob);
-        formData.append(
-          "targetImage",
-          new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
-        );
+        const sourceFileName = `source-images/${Date.now()}-source.jpg`;
+        const { error: sourceUploadError } = await supabase.storage
+          .from("images")
+          .upload(sourceFileName, sourceImageBlob, {
+            contentType: "image/jpeg",
+            upsert: false,
+          });
 
-        const response = await fetch(selectedImage);
-        const targetImageBlob = await response.blob();
-        formData.append(
-          "sourceImage",
-          new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
-        );
+        if (sourceUploadError) throw new Error(`Source image upload failed: ${sourceUploadError.message}`);
+
+        const { data: { publicUrl: src_image_url } } = supabase.storage.from('images').getPublicUrl(sourceFileName);
+        if (!src_image_url) throw new Error("Failed to get public URL for source image.");
+
+        const targetImageResponse = await fetch(selectedImage);
+        if (!targetImageResponse.ok) throw new Error(`Failed to fetch target image: ${targetImageResponse.statusText}`);
+        const targetImageBlob = await targetImageResponse.blob();
+
+        const formData = new FormData();
+        formData.append("sourceImage", new File([sourceImageBlob], "source.jpg", { type: "image/jpeg" }));
+        formData.append("targetImage", new File([targetImageBlob], "target.jpg", { type: "image/jpeg" }));
         formData.append("name", userDetails.name);
         formData.append("email", userDetails.email);
-        console.log('Name:', userDetails.name); // Check if name is defined
-        console.log('Email:', userDetails.email); // Check if email is defined
-        console.log("formdata",formData);
 
-        const swapResponse = await fetch(
-          "http://localhost:8000/api/swap-face/",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
+          method: "POST",
+          body: formData,
+        });
 
         if (!swapResponse.ok) {
-          throw new Error("Something went wrong with the swap API call");
+          const errorData = await swapResponse.json();
+          throw new Error(errorData.detail || "Face swap API call failed");
         }
 
         const swappedImageBlob = await swapResponse.blob();
-        const convertedBlob = await convertImageToJPEG(swappedImageBlob);
-
-        const fileName = `swapped-images/${Date.now()}-result.jpg`;
-        const { error: uploadError } = await supabase.storage
-          .from("test-bucket")
-          .upload(fileName, convertedBlob, {
+        const resultFileName = `swapped-images/${Date.now()}-result.jpg`;
+        const { error: resultUploadError } = await supabase.storage
+          .from("images")
+          .upload(resultFileName, swappedImageBlob, {
             contentType: "image/jpeg",
+            upsert: false,
           });
 
-        if (uploadError) {
-          throw uploadError;
-        }
+        if (resultUploadError) throw new Error(`Result image upload failed: ${resultUploadError.message}`);
 
-        const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
-        if (publicURL) {
-          setResultImageUrl(publicURL); // Set the result image URL
-          setLoading(false); // Hide loading animation
-        } else {
-          console.error("Failed to get public URL");
-          navigate("/error");
-        }
+        const { data: { publicUrl: trg_image_url } } = supabase.storage.from('images').getPublicUrl(resultFileName);
+        if (!trg_image_url) throw new Error("Failed to get public URL for result image.");
+
+        const { error: insertError } = await supabase
+          .from("photobooth_data")
+          .insert([{ name: userDetails.name, email: userDetails.email, src_image_url, trg_image_url }]);
+
+        if (insertError) throw new Error(`Database insert failed: ${insertError.message}`);
+
+        setResultImageUrl(trg_image_url);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("An error occurred during the process:", error);
         navigate("/error");
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchData(); // Call the async function
-  }, [sourceImageBlob]); // Dependency array
+    processAndSaveData();
+  }, [hasRun, sourceImageBlob, selectedImage, userDetails, navigate]);
 
-  // Function to handle image submission and swapping
-  const handleSubmit = async (e, selectedImage) => {
-  console.log("this one is working2")
-    e.preventDefault();
-    setLoading(true); // Show loading animation
+  const LoadingAnimation = () => (
+    <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100%",
+      width: "100%",
+    }}>
+      <Spinner />
+    </div>
+  );
 
-    try {
-      const formData = new FormData();
-      formData.append(
-        "targetImage",
-        new File([sourceImageBlob], "sourceImage.jpg", { type: "image/jpeg" })
-      );
-
-      const response = await fetch(selectedImage);
-      const targetImageBlob = await response.blob();
-      formData.append(
-        "sourceImage",
-        new File([targetImageBlob], "targetImage.jpg", { type: "image/jpeg" })
-      );
-      formData.append("name", userDetails.name);
-      formData.append("email", userDetails.email);
-
-      const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!swapResponse.ok) {
-        throw new Error("Something went wrong with the swap API call");
-      }
-
-      const swappedImageBlob = await swapResponse.blob();
-      const convertedBlob = await convertImageToJPEG(swappedImageBlob);
-
-      const fileName = `swapped-images/${Date.now()}-result.jpg`;
-      const { error: uploadError } = await supabase.storage
-        .from("test-bucket")
-        .upload(fileName, convertedBlob, {
-          contentType: "image/jpeg",
-        });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const publicURL = `https://aimistcqlndneimalstl.supabase.co/storage/v1/object/public/test-bucket/${fileName}`;
-      if (publicURL) {
-        setResultImageUrl(publicURL); // Set the result image URL
-        setLoading(false); // Hide loading animation
-      } else {
-        console.error("Failed to get public URL");
-        navigate("/error");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      navigate("/error");
-    }
-  };
-
-  // Convert image to JPEG format
-  function convertImageToJPEG(blob) {
-    return new Promise((resolve, reject) => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img = new Image();
-
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        canvas.toBlob(resolve, "image/jpeg");
-      };
-
-      img.onerror = reject;
-      img.src = URL.createObjectURL(blob);
-    });
-  }
-  // Function to reset state and show image selection
-  const resetSelection = () => {
-    setResultImageUrl(null); // Reset the result image URL
-    setLoading(false); // Reset loading state
-    setImageLoaded(false); // Reset image loaded state
-  };
-
-  // Component to render the image selection (Male/Female)
-  const ImageSelectionForm = () => {
-    return (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          paddingTop: "800px",
-          backgroundImage: `url(/bg2.png)`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-        }}
-      >
-        {isGender === "male" ? (
-          <>
-            <img
-              src={m1}
-              alt="Swapped Result"
-              style={{
-                width: "70%",
-                objectFit: "cover",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "16px",
-                marginBottom: "42px",
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-                setTimeout(() => {
-                  handleSubmit(e, `Male 01.jpg`);
-                }, 500); // Wait 50ms then proceed
-              }}
-            />
-
-            <img
-              src={m2}
-              alt="Swapped Result"
-              style={{
-                width: "70%",
-                objectFit: "cover",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "16px",
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-                setTimeout(() => {
-                  handleSubmit(e, `Male 02.jpg`);
-                }, 500); // Wait 50ms then proceed
-              }}
-            />
-          </>
-        ) : (
-          <>
-            <img
-              src={f1}
-              alt="Swapped Result"
-              style={{
-                width: "70%",
-                objectFit: "cover",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "16px",
-                marginBottom: "42px",
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-                setTimeout(() => {
-                  handleSubmit(e, `Female 01.jpg`);
-                }, 500); // Wait 50ms then proceed
-              }}
-            />
-
-            <img
-              src={f2}
-              alt="Swapped Result"
-              style={{
-                width: "70%",
-                objectFit: "cover",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "16px",
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.target.style.boxShadow =
-                  "0px 0px 19px 16px rgba(255,255,255,0.5)"; // Change background
-                setTimeout(() => {
-                  handleSubmit(e, `female 02.jpg`);
-                }, 500); // Wait 50ms then proceed
-              }}
-            />
-          </>
-        )}
-      </div>
-    );
-  };
-  
-  const animloader = keyframes`
-    0% { height: 48px; }
-    100% { height: 4px; }
-  `;
-  
-  const LoaderContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px; /* Spacing between bars */
-  `;
-  
-  const Bar = styled.div`
-    width: 8px;
-    height: 40px;
-    border-radius: 4px;
-    background-color: ${(props) => props.color};
-    animation: ${animloader} 0.3s ${(props) => props.delay}s linear infinite alternate;
-  `;
-  
-
-  const LoadingAnimation = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start", // Align items to the left
-          height: "100vh",
-          width: "100vw",
-          paddingLeft: "50px", // Add padding from the left
-        }}
-      >
-        {/* Display the loading text with animation */}
-        <div style={{ textAlign: "left" }}>
-          <h2
-            style={{
-              fontSize: "80px",
-              color: "#fff",
-              letterSpacing: "2px",
-              lineHeight: "70px", // Reduced line height to decrease spacing
-              animation: "fadeInOut 3s infinite", // Apply animation
-            }}
-          >
-            <span style={{ fontWeight: "bold" }}>Sculpting</span>
-          </h2>
-          <h2
-            style={{
-              fontSize: "80px",
-              fontWeight: "normal", // Make this part normal weight
-              color: "#fff",
-              letterSpacing: "2px",
-              lineHeight: "70px", // Reduced line height to match the first line
-              animation: "fadeInOut 3s infinite", // Apply animation to both lines
-            }}
-          >
-            your future self...
-          </h2>
-        </div>
-  
-        {/* Add CSS for the animation */}
-        <style>
-          {`
-            @keyframes fadeInOut {
-              0% {
-                opacity: 0;
-              }
-              50% {
-                opacity: 1;
-              }
-              100% {
-                opacity: 0;
-              }
-            }
-          `}
-        </style>
-      </div>
-    );
-  };
-  
-  
-  
-  // const LoadingAnimation = () => {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         flexDirection: "column",
-  //         justifyContent: "center",
-  //         alignItems: "flex-start", // Align items to the left
-  //         height: "100vh",
-  //         width: "100vw",
-  //         paddingLeft: "250px", // Add padding from the left
-  //       }}
-  //     >
-  //       {/* Display the loading text with animation */}
-  //       <div style={{ textAlign: "left" }}>
-  //         <h2
-  //           style={{
-  //             fontSize: "100px",
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             lineHeight: "80px", // Reduced line height
-  //             animation: "pulseEffect 2s infinite", // New animation
-  //           }}
-  //         >
-  //           <span style={{ fontWeight: "bold" }}>Sculpting</span>
-  //         </h2>
-  //         <h2
-  //           style={{
-  //             fontSize: "100px",
-  //             fontWeight: "normal", // Make this part normal weight
-  //             color: "#fff",
-  //             letterSpacing: "2px",
-  //             lineHeight: "80px", // Reduced line height
-  //             animation: "pulseEffect 2s infinite", // Apply same animation to both lines
-  //           }}
-  //         >
-  //           your future self...
-  //         </h2>
-  //       </div>
-  
-  //       {/* Add CSS for the animation */}
-  //       <style>
-  //         {`
-  //           @keyframes pulseEffect {
-  //             0% {
-  //               transform: scale(1);
-  //               opacity: 0.8;
-  //               color: #fff;
-  //             }
-  //             50% {
-  //               transform: scale(1.1);
-  //               opacity: 1;
-  //               color: #30A6EC; /* Change to a highlight color */
-  //             }
-  //             100% {
-  //               transform: scale(1);
-  //               opacity: 0.8;
-  //               color: #fff;
-  //             }
-  //           }
-  //         `}
-  //       </style>
-  //     </div>
-  //   );
-  // };
-  
-  
-  
-
-  // Create a PrintableImage component using forwardRef
-  const PrintableImage = forwardRef(({ resultImageUrl }, ref) => {
-    return (
-      <div ref={ref}>
-        <img
-          src={resultImageUrl}
-          alt="Swapped Result"
-          style={{ width: "100%", height: "100%" }}
-        />
-      </div>
-    );
-  });
-
-  // Component to display result image and download/print options
   const ResultDisplay = () => {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     useEffect(() => {
       if (resultImageUrl) {
         const img = new Image();
-        img.onload = () => {
-          setImageLoaded(true);
-        };
+        img.onload = () => setImageLoaded(true);
         img.src = resultImageUrl;
       }
     }, [resultImageUrl]);
 
-    const goHome = () => {
-      navigate("/");
-    };
+    const goHome = () => navigate("/");
 
     return (
-      <div>
+      <div style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "2rem"
+      }}>
         {imageLoaded && (
-          <div
-            style={{
-             
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: "200px",
-            }}
-          >
-          
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "1.5rem",
+            maxWidth: "1200px",
+            marginTop: '326px'
+          }}>
+            {/* Image */}
             <img
-              className="animate__animated animate__zoomIn animate__delay-2s"
               src={resultImageUrl}
               alt="Swapped Result"
               style={{
-                width: "50%", // Set to 100% to fill the container
-                height: "auto", // Use auto for height to maintain aspect ratio
-                objectFit: "cover", 
-                display: "flex",
-                justifyContent: "center",
-                // Ensure the image covers the container
-                // borderRadius: "16px",
-                // border: "16px solid #30A6EC",
+                width: "60%",
+                height: "auto",
+                objectFit: "cover",
+                borderRadius: "16px",
+                border: "8px solid #30A6EC",
               }}
             />
-              <div
-              style={{
-                width: "25%",
+
+            {/* QR + Button Row */}
+            <div style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "2rem",
+              marginBottom: "1rem"
+            }}>
+              {/* QR Code */}
+              <div style={{
+                padding: "20px",
+                backgroundColor: "#fff",
+                borderRadius: "24px",
+                border: "8px solid #4FCFFB"
+              }}>
+                <QRCode value={resultImageUrl} size={250} />
+              </div>
+
+              {/* Home Button with Text */}
+              <div style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-              }}
-            >
-              <QRCode
-                value={resultImageUrl}
-                size={200}
-                style={{
-                  // border: "20px solid #30A6EC",
-                  // borderRadius: "16px",
-                  padding: "15px",
-                  backgroundColor: "#fff",
-                  marginBottom: "25px",
-                
-                
-                }}
-              />
-              <h1
-                style={{
-                  fontSize: "30px",
-                  lineHeight: "40px",
-                  fontWeight: "bold",
-                  color: "#fff",
-                }}
-              >
-                {" "}
-                Scan QR code
-              </h1>
-              <h1
-                style={{
-                  fontSize: "20px",
-                  lineHeight: "25px",
-                  marginTop: "-16px",
-                  color: "#fff",
-                }}
-              >
-                to download image
-              </h1>
-              <button
-                type="submit"
-                style={{
-                  width: "250px",
-                height: "80px",
-                cursor: "pointer",
-                border: " solid white", // White border
-                fontSize: "40px",
-                fontWeight: "bold",
-                 backgroundColor: "#001965",
-                color: "#fff", // White text color
-                transition: "background-color 0.3s ease, color 0.3s ease",
-                position: "absolute",
-                top: "80%",
-                borderRadius: "40px",
-                 
-                }}
-                onClick={(e) => {
-                  e.target.style.backgroundColor = "#30A6EC"; // Change background
-                  e.target.style.color = "#ffffff"; // Change text color
-                  setTimeout(goHome, 500); // Correctly invoke captureImage after 500ms
-                }}
-              >
-                Home
-              </button>
+                justifyContent: "center",
+              }}>
+                <p style={{
+                  fontSize: "40px",
+                  fontWeight: "800",
+                  color: "#7A4BFF",
+                  marginBottom: "12px",
+                  textAlign: "center",
+                  width: '413px'
+                }}>
+                  Scan the QR code <br />to download the image
+                </p>
+                <button
+                  style={{
+                    width: "240px",
+                    height: "60px",
+                    cursor: "pointer",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    backgroundImage: `url(${home})`,
+                    backgroundSize: "contain",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    transition: "transform 0.2s ease",
+                  }}
+                  onClick={goHome}
+                  onMouseOver={(e) => (e.target.style.transform = "scale(1.1)")}
+                  onMouseOut={(e) => (e.target.style.transform = "scale(1)")}
+                />
+              </div>
             </div>
-
-            
-          
           </div>
         )}
       </div>
@@ -581,15 +231,15 @@ function Swap() {
   };
 
   return (
-    <div>
-      {/* Show loading animation if loading, else show result, else show image selection */}
-      {loading ? (
-        <LoadingAnimation />
-      ) : resultImageUrl ? (
-        <ResultDisplay />
-      ) : (
-        <ImageSelectionForm />
-      )}
+    <div style={{
+      width: "100vw",
+      height: "100vh",
+      backgroundImage: `url(${bg2})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    }}>
+      {loading ? <LoadingAnimation /> : <ResultDisplay />}
     </div>
   );
 }

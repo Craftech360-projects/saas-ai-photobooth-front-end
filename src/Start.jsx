@@ -13,7 +13,7 @@ const Start = () => {
       style={{
         width: "100vw",
         height: "100vh",
-        backgroundImage: "url('/assets/bg.jpg')",
+        backgroundImage: "url('/assets/bg.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
