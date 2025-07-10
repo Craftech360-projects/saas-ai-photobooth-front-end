@@ -9,17 +9,20 @@ const Start = () => {
   };
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        backgroundImage: "url('/assets/bg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+  <div
+  style={{
+    width: "100vw",
+    height: "100vh",
+    overflow: "hidden", // <-- prevent scroll
+    backgroundImage: "url('/assets/bg.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }}
+
+
     >
       <button
         onClick={handleStartClick}

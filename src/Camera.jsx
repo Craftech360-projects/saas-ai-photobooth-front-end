@@ -1,5 +1,3 @@
-/* eslint-disable no-dupe-keys */
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -84,15 +82,16 @@ function Camer() {
     );
   };
 
-const handleImageClick = () => {
-  // Get the actual imported image (e.g., m1, f2) instead of a string
-  const selectedImageFile = images[isGender][currentIndex];
+  const handleImageClick = () => {
+    // Get the actual imported image (e.g., m1, f2) instead of a string
+    const selectedImageFile = images[isGender][currentIndex];
+  
+    // Pass it in the navigation state
+    setIsImg(selectedImageFile);
+    setIsCameraOn(true);
+    setIsGender("");
+  };
 
-  // Pass it in the navigation state
-  setIsImg(selectedImageFile);
-  setIsCameraOn(true);
-  setIsGender("");
-};
 
   const getTransformStyle = (index) => {
     const offset = index - currentIndex;
@@ -177,11 +176,6 @@ const handleImageClick = () => {
     setIsStarted(false);
     setIsGenderShow(false);
     setIsGender(value);
-    // setIsCameraOn(true);
-    // const selectedImg =
-    //   value === "male"
-    //     ? getRandomImage(maleImages)
-    //     : getRandomImage(femaleImages);
     setGender(value);
   };
 
@@ -248,17 +242,21 @@ const handleImageClick = () => {
     setIsStarted(false);
     console.log(userDetails, "userDetails");
   };
-  // 'animate__animated animate__bounceOut'
+  
   return (
     <section
       style={{
         textAlign: "center",
-        width: "100vw",
+        width: "100%", // Changed from 100vw
         height: "100vh",
         backgroundImage: `url(${bg2})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        overflow: "hidden", // Prevents any overflow
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box'
       }}
     >
       {/* Start button code  */}
@@ -373,8 +371,8 @@ const handleImageClick = () => {
         <div
           style={{
             textAlign: "center",
-            width: "100vw",
-            height: "100vh",
+            width: "100%",
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -468,8 +466,8 @@ const handleImageClick = () => {
         <div
           style={{
             textAlign: "center",
-            width: "100vw",
-            height: "100vh",
+            width: "100%",
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
@@ -547,8 +545,8 @@ const handleImageClick = () => {
         <div
           style={{
             textAlign: "center",
-            width: "100vw",
-            height: "100vh",
+            width: "100%",
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
