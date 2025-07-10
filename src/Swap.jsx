@@ -70,7 +70,7 @@ function Swap() {
         formData.append("name", userDetails.name);
         formData.append("email", userDetails.email);
 
-        const swapResponse = await fetch("http://localhost:8000/api/swap-face/", {
+        const swapResponse = await fetch("https://90973e4d3afa.ngrok-free.app/api/swap-face/", {
           method: "POST",
           body: formData,
         });
